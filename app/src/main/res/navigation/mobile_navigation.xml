@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.straccion.motos_admin.ui.inicio.HomeFragment"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_nav_home_to_detallesMoto"
+            app:destination="@id/detallesMoto" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_gallery"
+        android:name="com.straccion.motos_admin.ui.addmotos.GalleryFragment"
+        tools:layout="@layout/fragment_gallery" >
+        <action
+            android:id="@+id/action_nav_gallery_to_coloresFragment"
+            app:destination="@id/coloresFragment" />
+        <action
+            android:id="@+id/action_nav_gallery_to_aggImagenesFragment"
+            app:destination="@id/aggImagenesFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_slideshow"
+        android:name="com.straccion.motos_admin.ui.comparador.SlideshowFragment"
+        tools:layout="@layout/fragment_slideshow" />
+    <fragment
+        android:id="@+id/coloresFragment"
+        android:name="com.straccion.motos_admin.ui.addmotos.ColoresFragment" />
+    <fragment
+        android:id="@+id/detallesMoto"
+        android:name="com.straccion.motos_admin.ui.inicio.DetallesMoto"
+        tools:layout="@layout/fragment_detalles_moto" >
+        <action
+            android:id="@+id/action_detallesMoto_to_nuevoCompararFragment"
+            app:destination="@id/nuevoCompararFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/aggImagenesFragment"
+        android:name="com.straccion.motos_admin.ui.addmotos.AggImagenesFragment"
+        android:label="fragment_agg_imagenes"
+        tools:layout="@layout/fragment_agg_imagenes" />
+    <fragment
+        android:id="@+id/nuevoCompararFragment"
+        android:name="com.straccion.motos_admin.ui.inicio.NuevoCompararFragment"
+        android:label="fragment_nuevo_comparar"
+        tools:layout="@layout/fragment_nuevo_comparar" />
+    <fragment
+        android:id="@+id/nav_mimotoideal"
+        android:name="com.straccion.motos_admin.ui.mimoto.nav_mimotoideal"
+        tools:layout="@layout/fragment_nav_mimotoideal" />
+</navigation>

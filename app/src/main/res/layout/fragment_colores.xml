@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.addmotos.ColoresFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:layout_marginLeft="20dp">
+
+            <ImageView
+                android:id="@+id/imagen1"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/ic_menu_camera" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imagen2"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/ic_menu_camera" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp">
+
+            <ImageView
+                android:id="@+id/imagen3"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/ic_menu_camera"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="12dp">
+
+                <ImageView
+                    android:id="@+id/imagen4"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/ic_menu_camera"/>
+
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp">
+
+            <ImageView
+                android:id="@+id/imagen5"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/ic_menu_camera"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="5dp">
+
+            <EditText
+                android:id="@+id/edtColor1"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:hint="Color 1"/>
+
+            <EditText
+                android:id="@+id/edtColor2"
+                android:layout_width="190dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:hint="Color 2"
+                android:visibility="invisible"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp">
+
+            <EditText
+                android:id="@+id/edtColor3"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:hint="Color 3"
+                android:visibility="invisible"/>
+
+            <EditText
+                android:id="@+id/edtColor4"
+                android:layout_width="190dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:hint="Color 4"
+                android:visibility="invisible"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <EditText
+                android:id="@+id/edtColor5"
+                android:layout_width="190dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:hint="Color 5"
+                android:visibility="invisible"/>
+
+            <EditText
+                android:id="@+id/edtColor6"
+                android:layout_width="190dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:hint="Color 6"
+                android:visibility="invisible"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp">
+
+            <Button
+                android:id="@+id/btnGuardar1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GUARDAR1"
+                android:layout_marginLeft="10dp"/>
+            <Button
+                android:id="@+id/btnGuardar2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Guardar2"
+                android:layout_marginLeft="10dp"
+                android:visibility="invisible"/>
+            <Button
+                android:id="@+id/btnGuardar3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Guardar3"
+                android:layout_marginLeft="10dp"
+                android:visibility="invisible"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="10dp">
+
+            <Button
+                android:id="@+id/btnGuardar4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GUARDAR4"
+                android:layout_marginLeft="10dp"
+                android:visibility="invisible"/>
+            <Button
+                android:id="@+id/btnGuardar5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Guardar5"
+                android:layout_marginLeft="10dp"
+                android:visibility="invisible"/>
+            <Button
+                android:id="@+id/btnGuardar6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Guardar6"
+                android:layout_marginLeft="10dp"
+                android:visibility="invisible"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>
