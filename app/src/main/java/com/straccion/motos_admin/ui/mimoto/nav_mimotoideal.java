@@ -208,10 +208,10 @@ public class nav_mimotoideal extends Fragment {
         btnRespuesta4.setVisibility(View.VISIBLE);
         if (contador == 1){
             txtPregunta.setText(pregunta1);
-            btnRespuesta1.setText("Menos de $5.000.0000");
-            btnRespuesta2.setText("Entre $5.000.000 y $8.000.000");
-            btnRespuesta3.setText("Entre $8.000.000 y $10.000.000");
-            btnRespuesta4.setText("Mas de $10.000.000");
+            btnRespuesta1.setText("Menos de $7.000.0000");
+            btnRespuesta2.setText("Entre $7.000.000 y $10.000.000");
+            btnRespuesta3.setText("Entre $10.000.000 y $15.000.000");
+            btnRespuesta4.setText("Mas de $15.000.000");
         } else if (contador == 2) {
             txtPregunta.setText(pregunta2);
             btnRespuesta1.setText("Uso cotidiano en ciudad");

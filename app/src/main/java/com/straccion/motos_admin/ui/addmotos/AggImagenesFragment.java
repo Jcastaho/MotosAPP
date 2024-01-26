@@ -642,6 +642,9 @@ public class AggImagenesFragment extends Fragment {
                                 String valor = documentSnapshot.getString("cilindraje");
                                 cilindraje = Double.parseDouble(valor);
                             }
+                            if (documentSnapshot.getString("carpeta3") != null || documentSnapshot.getString("carpeta3") != "--"){
+                                carpeta3 = documentSnapshot.getString("carpeta3");
+                            }
 //                            if (documentSnapshot.getString("motor") != null){
 //                                motor.add(documentSnapshot.getString("motor"));
 //                            }
@@ -749,6 +752,9 @@ public class AggImagenesFragment extends Fragment {
                             if (documentSnapshot.getString("cilindraje") != null || documentSnapshot.getString("cilindraje") != "--"){
                                 String valor = documentSnapshot.getString("cilindraje");
                                 cilindraje = Double.parseDouble(valor);
+                            }
+                            if (documentSnapshot.getString("carpeta3") != null || documentSnapshot.getString("carpeta3") != "--"){
+                                carpeta3 = documentSnapshot.getString("carpeta3");
                             }
 //                            if (documentSnapshot.getString("peso") != null || documentSnapshot.getString("peso") != "--"){
 //                                txt1.add("Peso");
@@ -937,19 +943,18 @@ public class AggImagenesFragment extends Fragment {
         });
     }
     private void hacerAnalisis() {
-        if (cilindraje <= 125){
-            caracteristicas.add("Trabajo");
-        } else if (cilindraje <= 150) {
-            caracteristicas.add("Trabajo-Andar");
-        } else if (cilindraje <= 196) {
-            caracteristicas.add("Trabajo-Andar-Semideportiva");
-        } else if (cilindraje <= 400) {
-            caracteristicas.add("Semideportiva");
-        } else if (cilindraje <= 800) {
-            caracteristicas.add("Deportiva");
-        } else if (cilindraje > 800) {
-            caracteristicas.add("Superdeportiva");
+        if (carpeta3.equals("TODOTERRENO") || carpeta3.equals("URBANAS")){
+            if (cilindraje <= 100){
+                caracteristicas.add("Trabajo");
+            } else if (cilindraje <= 125) {
+                caracteristicas.add("MasTrabajo");
+            } else if (cilindraje <= 150) {
+                caracteristicas.add("Trabajo-Andar");
+            } else if (cilindraje <= 196) {
+                caracteristicas.add("Trabajo-Andar-Semideportiva");
+            }
         }
+
         Map<String, Object> updates = new HashMap<>();
         updates.put("clasificacion", caracteristicas);
         mpostProvider.updatePost(id, updates).addOnCompleteListener(new OnCompleteListener<Void>() {
