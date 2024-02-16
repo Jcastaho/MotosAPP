@@ -56,4 +56,9 @@
         android:id="@+id/nav_mimotoideal"
         android:name="com.straccion.motos_admin.ui.mimoto.nav_mimotoideal"
         tools:layout="@layout/fragment_nav_mimotoideal" />
+    <fragment
+        android:id="@+id/nav_estadisticaFragment"
+        android:name="com.straccion.motos_admin.ui.Estadistica.EstadisticaFragment"
+        android:label="fragment_estadistica"
+        tools:layout="@layout/fragment_estadistica" />
 </navigation>

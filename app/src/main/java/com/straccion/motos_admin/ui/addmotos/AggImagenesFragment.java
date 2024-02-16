@@ -61,13 +61,14 @@ public class AggImagenesFragment extends Fragment {
     ImageView imagen4;
     ImageView imagen5;
     Button btnGuardar;
-    Button btnHacerAnalisis;
-    EditText edtColorAdd;
-    Button btnActivarPrimario;
+    Button btnURL;
+    EditText edtURL;
+    Button btnActualizarPrecios;
     AppCompatSpinner spnTodo;
     AppCompatSpinner spnSinDatos;
     AppCompatSpinner spnColoresTodo;
 
+    WebScraping mWebScraping;
     PostProvider mpostProvider;
     ImageProvider mImageProvider;
 
@@ -101,9 +102,6 @@ public class AggImagenesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
     }
 
     @Override
@@ -120,9 +118,9 @@ public class AggImagenesFragment extends Fragment {
         imagen4 = mview.findViewById(R.id.imagen4);
         imagen5 = mview.findViewById(R.id.imagen5);
         btnGuardar = mview.findViewById(R.id.btnGuardar);
-        edtColorAdd = mview.findViewById(R.id.edtColorAdd);
-        btnHacerAnalisis = mview.findViewById(R.id.btnHacerAnalisis);
-        btnActivarPrimario = mview.findViewById(R.id.btnActivarPrimario);
+        btnURL = mview.findViewById(R.id.btnURL);
+        edtURL = mview.findViewById(R.id.edtURL);
+        btnActualizarPrecios = mview.findViewById(R.id.btnActualizarPrecios);
 
         mpostProvider = new PostProvider();
         mImageProvider = new ImageProvider();
@@ -201,30 +199,34 @@ public class AggImagenesFragment extends Fragment {
                 openGallery();
             }
         });
+        btnActualizarPrecios.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        WebScraping mWebScraping = new WebScraping(getContext());
+                        mWebScraping.obtenerNombreyPreciosAutecoTVSTrabajo();
 
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                            }
+                        });
+                    }
+                }).start();
+            }
+        });
         btnGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 guardar();
             }
         });
-        btnHacerAnalisis.setOnClickListener(new View.OnClickListener() {
+        btnURL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                recolectarDatos();
-            }
-        });
-        btnActivarPrimario.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (primarioAdicional == 0){
-                    primarioAdicional = 1;
-                    btnActivarPrimario.setText("DESACTIVAR");
-                }else {
-                    primarioAdicional = 0;
-                    btnActivarPrimario.setText("ACTIVAR");
-                }
-
+                llenarBasedatos();
             }
         });
 
@@ -233,27 +235,8 @@ public class AggImagenesFragment extends Fragment {
     }
 
     private void guardar(){
-        dato = edtColorAdd.getText().toString().toString();
         if (!dato.equals("")){
-            if (!seleccionMoto.equals("NINGUNA")){
-                String nombreImagen1 = seleccionMoto + "_" + edtColorAdd.getText().toString() + "_1";
-                String nombreImagen2 = seleccionMoto + "_" + edtColorAdd.getText().toString() + "_2";
-                String nombreImagen3 = seleccionMoto + "_" + edtColorAdd.getText().toString() + "_3";
-                String nombreImagen4 = seleccionMoto + "_" + edtColorAdd.getText().toString() + "_4";
-                String nombreImagen5 = seleccionMoto + "_" + edtColorAdd.getText().toString() + "_5";
-                saveImage(ImageFile1, ImageFile2, ImageFile3, ImageFile4, ImageFile5, nombreImagen1, nombreImagen2, nombreImagen3,
-                        nombreImagen4, nombreImagen5, carpeta1, carpeta2, carpeta3);
-            }
-            else {
-                String nombreImagen1 = seleccionMotoSin + "_" + edtColorAdd.getText().toString() + "_1";
-                String nombreImagen2 = seleccionMotoSin + "_" + edtColorAdd.getText().toString() + "_2";
-                String nombreImagen3 = seleccionMotoSin + "_" + edtColorAdd.getText().toString() + "_3";
-                String nombreImagen4 = seleccionMotoSin + "_" + edtColorAdd.getText().toString() + "_4";
-                String nombreImagen5 = seleccionMotoSin + "_" + edtColorAdd.getText().toString() + "_5";
 
-                saveImage(ImageFile1, ImageFile2, ImageFile3, ImageFile4, ImageFile5, nombreImagen1, nombreImagen2, nombreImagen3,
-                        nombreImagen4, nombreImagen5, carpeta1, carpeta2, carpeta3);
-            }
         }else {
             if (!seleccionMoto.equals("NINGUNA")){
                 String nombreImagen1 = seleccionMoto + "_" + seleccionColorMoto + "_1";
@@ -275,7 +258,6 @@ public class AggImagenesFragment extends Fragment {
                         nombreImagen4, nombreImagen5, carpeta1, carpeta2, carpeta3);
             }
         }
-
     }
 
 
@@ -340,7 +322,6 @@ public class AggImagenesFragment extends Fragment {
                                 }
                             }
                         });
-
                     }
                 } else {
                 }
@@ -538,7 +519,6 @@ public class AggImagenesFragment extends Fragment {
         }
         Map<String, Object> updates = new HashMap<>();
         ArrayList<String> imagenesColores = new ArrayList<>();
-        dato = edtColorAdd.getText().toString().toUpperCase();
         if (dato.equals("")){
             if (url1 != null){
                 imagenesColores.add(url1);
@@ -631,317 +611,7 @@ public class AggImagenesFragment extends Fragment {
         ImageFile5 = null;
     }
 
-    private void recolectarDatos(){
-        mpostProvider.getPostById(id).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    switch (marcaMoto) {
-                        case "AUTECO":
-                            if (documentSnapshot.getString("cilindraje") != null || documentSnapshot.getString("cilindraje") != "--"){
-                                String valor = documentSnapshot.getString("cilindraje");
-                                cilindraje = Double.parseDouble(valor);
-                            }
-                            if (documentSnapshot.getString("carpeta3") != null || documentSnapshot.getString("carpeta3") != "--"){
-                                carpeta3 = documentSnapshot.getString("carpeta3");
-                            }
-//                            if (documentSnapshot.getString("motor") != null){
-//                                motor.add(documentSnapshot.getString("motor"));
-//                            }
-//                            if (documentSnapshot.getString("torqueMaximo") != null){
-//                                txt2.add(documentSnapshot.getString("torqueMaximo"));
-//                            }
-//                            if (documentSnapshot.getString("potenciaMaxima") != null){
-//                                txt1.add("Potencia Maxima");
-//                                txt2.add(documentSnapshot.getString("potenciaMaxima"));
-//                            }
-//                            if (documentSnapshot.getString("relacionCompresion") != null){
-//                                txt1.add("Relacion de Compresión");
-//                                txt2.add(documentSnapshot.getString("relacionCompresion"));
-//                            }
-//                            if (documentSnapshot.getString("SistemaAlimentacion") != null){
-//                                txt1.add("Sistema de Alimentación");
-//                                txt2.add(documentSnapshot.getString("SistemaAlimentacion"));
-//                            }
-//                            if (documentSnapshot.getString("diametroCarrera") != null){
-//                                txt1.add("Diametro de Carrera");
-//                                txt2.add(documentSnapshot.getString("diametroCarrera"));
-//                            }
-//                            if (documentSnapshot.getString("refrigeracion") != null){
-//                                txt1.add("Refrigeración");
-//                                txt2.add(documentSnapshot.getString("refrigeracion"));
-//                            }
-//                            if (documentSnapshot.getString("combustible") != null){
-//                                txt1.add("Combustible");
-//                                txt2.add(documentSnapshot.getString("combustible"));
-//                            }
-//                            if (documentSnapshot.getString("arranque") != null){
-//                                txt1.add("Arranque");
-//                                txt2.add(documentSnapshot.getString("arranque"));
-//                            }
-                            if (documentSnapshot.getString("transmision") != null){
-                                transmision = documentSnapshot.getString("transmision");
-                            }
-//                            if (documentSnapshot.getString("capacidadTanque") != null){
-//                                txt1.add("Capacidad de Tanque");
-//                                txt2.add(documentSnapshot.getString("capacidadTanque"));
-//                            }
-//                            if (documentSnapshot.getString("suspensionDelantera") != null){
-//                                txt1.add("Suspensión Delantera");
-//                                txt2.add(documentSnapshot.getString("suspensionDelantera"));
-//                            }
-//                            if (documentSnapshot.getString("suspensionTrasera") != null){
-//                                txt1.add("Suspensión Trasera");
-//                                txt2.add(documentSnapshot.getString("suspensionTrasera"));
-//                            }
-//                            if (documentSnapshot.getString("frenoDelantero") != null){
-//                                txt1.add("Freno Delantero");
-//                                txt2.add(documentSnapshot.getString("frenoDelantero"));
-//                            }
-//                            if (documentSnapshot.getString("frenoTrasero") != null){
-//                                txt1.add("Freno Trasero");
-//                                txt2.add(documentSnapshot.getString("frenoTrasero"));
-//                            }
-//                            if (documentSnapshot.getString("llantaDelantera") != null){
-//                                txt1.add("Llanta Delantera");
-//                                txt2.add(documentSnapshot.getString("llantaDelantera"));
-//                            }
-//                            if (documentSnapshot.getString("llantaTrasera") != null){
-//                                txt1.add("Llanta Trasera");
-//                                txt2.add(documentSnapshot.getString("llantaTrasera"));
-//                            }
-//                            if (documentSnapshot.getString("rines") != null){
-//                                txt1.add("Rines");
-//                                txt2.add(documentSnapshot.getString("rines"));
-//                            }
-//                            if (documentSnapshot.getString("capacidadTanque") != null){
-//                                txt1.add("Capacidad de Tanque");
-//                                txt2.add(documentSnapshot.getString("capacidadTanque"));
-//                            }
-//                            if (documentSnapshot.getString("sistemaEncendido") != null){
-//                                txt1.add("Sistema de Encendido");
-//                                txt2.add(documentSnapshot.getString("sistemaEncendido"));
-//                            }
-//                            if (documentSnapshot.getString("largoTotal") != null){
-//                                txt1.add("Largo Total");
-//                                txt2.add(documentSnapshot.getString("largoTotal"));
-//                            }
-//                            if (documentSnapshot.getString("alturaTotal") != null){
-//                                txt1.add("Altura Total");
-//                                txt2.add(documentSnapshot.getString("alturaTotal"));
-//                            }
-//                            if (documentSnapshot.getString("anchoTotal") != null){
-//                                txt1.add("Ancho Total");
-//                                txt2.add(documentSnapshot.getString("anchoTotal"));
-//                            }
-//                            if (documentSnapshot.getString("distanciaEntreEjes") != null){
-//                                txt1.add("Distancia Entre Ejes");
-//                                txt2.add(documentSnapshot.getString("distanciaEntreEjes"));
-//                            }
-//                            if (documentSnapshot.getString("alturaSillin") != null){
-//                                txt1.add("Altura Sillin");
-//                                txt2.add(documentSnapshot.getString("alturaSillin"));
-//                            }
-//                            if (documentSnapshot.getString("pesoNeto") != null){
-//                                txt1.add("Peso Neto");
-//                                txt2.add(documentSnapshot.getString("pesoNeto"));
-//                            }
 
-                            break;
-                        case "YAMAHA":
-                            if (documentSnapshot.getString("cilindraje") != null || documentSnapshot.getString("cilindraje") != "--"){
-                                String valor = documentSnapshot.getString("cilindraje");
-                                cilindraje = Double.parseDouble(valor);
-                            }
-                            if (documentSnapshot.getString("carpeta3") != null || documentSnapshot.getString("carpeta3") != "--"){
-                                carpeta3 = documentSnapshot.getString("carpeta3");
-                            }
-//                            if (documentSnapshot.getString("peso") != null || documentSnapshot.getString("peso") != "--"){
-//                                txt1.add("Peso");
-//                                txt2.add(documentSnapshot.getString("peso"));
-//                            }
-//                            if (documentSnapshot.getString("potenciaMaxima") != null || documentSnapshot.getString("potenciaMaxima") != "--"){
-//                                txt1.add("Potencia Maxima");
-//                                txt2.add(documentSnapshot.getString("potenciaMaxima"));
-//                            }
-//                            if (documentSnapshot.getString("torqueMaximo") != null || documentSnapshot.getString("torqueMaximo") != "--"){
-//                                txt1.add("Torque Maximo");
-//                                txt2.add(documentSnapshot.getString("torqueMaximo"));
-//                            }
-//                            if (documentSnapshot.getString("tipoMotor") != null || documentSnapshot.getString("tipoMotor") != "--"){
-//                                txt1.add("Tipo de Motor");
-//                                txt2.add(documentSnapshot.getString("tipoMotor"));
-//                            }
-//                            if (documentSnapshot.getString("largoTotal") != null || documentSnapshot.getString("largoTotal") != "--"){
-//                                txt1.add("Largo Total");
-//                                txt2.add(documentSnapshot.getString("largoTotal"));
-//                            }
-//                            if (documentSnapshot.getString("anchoTotal") != null || documentSnapshot.getString("anchoTotal") != "--"){
-//                                txt1.add("Ancho Total");
-//                                txt2.add(documentSnapshot.getString("anchoTotal"));
-//                            }
-//                            if (documentSnapshot.getString("alturaTotal") != null || documentSnapshot.getString("alturaTotal") != "--"){
-//                                txt1.add("Altura Total");
-//                                txt2.add(documentSnapshot.getString("alturaTotal"));
-//                            }
-//                            if (documentSnapshot.getString("alturaAsiento") != null || documentSnapshot.getString("alturaAsiento") != "--"){
-//                                txt1.add("Altura del Asiento");
-//                                txt2.add(documentSnapshot.getString("alturaAsiento"));
-//                            }
-//                            if (documentSnapshot.getString("distanciaEntreEjes") != null || documentSnapshot.getString("distanciaEntreEjes") != "--"){
-//                                txt1.add("Distancia EntreEjes");
-//                                txt2.add(documentSnapshot.getString("distanciaEntreEjes"));
-//                            }
-//                            if (documentSnapshot.getString("distanciaMinimaPiso") != null || documentSnapshot.getString("distanciaMinimaPiso") != "--"){
-//                                txt1.add("Distancia Minima del Piso");
-//                                txt2.add(documentSnapshot.getString("distanciaMinimaPiso"));
-//                            }
-//                            if (documentSnapshot.getString("tipoLubricacion") != null || documentSnapshot.getString("tipoLubricacion") != "--"){
-//                                txt1.add("Tipo de Lubricación");
-//                                txt2.add(documentSnapshot.getString("tipoLubricacion"));
-//                            }
-//                            if (documentSnapshot.getString("bateria") != null || documentSnapshot.getString("bateria") != "--"){
-//                                txt1.add("Batería");
-//                                txt2.add(documentSnapshot.getString("bateria"));
-//                            }
-//                            if (documentSnapshot.getString("disposiciondeCilindros") != null || documentSnapshot.getString("disposiciondeCilindros") != "--"){
-//                                txt1.add("Disposición de Cilindros");
-//                                txt2.add(documentSnapshot.getString("disposiciondeCilindros"));
-//                            }
-//                            if (documentSnapshot.getString("diametroPorCarrera") != null || documentSnapshot.getString("diametroPorCarrera") != "--"){
-//                                txt1.add("Diametro Por Carrera");
-//                                txt2.add(documentSnapshot.getString("diametroPorCarrera"));
-//                            }
-//                            if (documentSnapshot.getString("relacionCompresion") != null || documentSnapshot.getString("relacionCompresion") != "--"){
-//                                txt1.add("Relación de Compresión");
-//                                txt2.add(documentSnapshot.getString("relacionCompresion"));
-//                            }
-//                            if (documentSnapshot.getString("arranque") != null || documentSnapshot.getString("arranque") != "--"){
-//                                txt1.add("Arranque");
-//                                txt2.add(documentSnapshot.getString("arranque"));
-//                            }
-//                            if (documentSnapshot.getString("sistemaAlimentacion") != null || documentSnapshot.getString("sistemaAlimentacion") != "--"){
-//                                txt1.add("Sistema de Alimentación");
-//                                txt2.add(documentSnapshot.getString("sistemaAlimentacion"));
-//                            }
-//                            if (documentSnapshot.getString("capacidadCombustible") != null || documentSnapshot.getString("capacidadCombustible") != "--"){
-//                                txt1.add("Capacidad de Combustible");
-//                                txt2.add(documentSnapshot.getString("capacidadCombustible"));
-//                            }
-//                            if (documentSnapshot.getString("encendido") != null || documentSnapshot.getString("encendido") != "--"){
-//                                txt1.add("Encendido");
-//                                txt2.add(documentSnapshot.getString("encendido"));
-//                            }
-//                            if (documentSnapshot.getString("capacidadBateria") != null || documentSnapshot.getString("capacidadBateria") != "--"){
-//                                txt1.add("Capacidad de Batería");
-//                                txt2.add(documentSnapshot.getString("capacidadBateria"));
-//                            }
-//                            if (documentSnapshot.getString("sistemadeReduccionPrimaria") != null || documentSnapshot.getString("sistemadeReduccionPrimaria") != "--"){
-//                                txt1.add("Sistema de Reducción Primaria");
-//                                txt2.add(documentSnapshot.getString("sistemadeReduccionPrimaria"));
-//                            }
-//                            if (documentSnapshot.getString("relaciondeReduccionPrimaria") != null || documentSnapshot.getString("relaciondeReduccionPrimaria") != "--"){
-//                                txt1.add("Relación de Reducción Primaria");
-//                                txt2.add(documentSnapshot.getString("relaciondeReduccionPrimaria"));
-//                            }
-//                            if (documentSnapshot.getString("sistemadeReduccionSecundaria") != null || documentSnapshot.getString("sistemadeReduccionSecundaria") != "--"){
-//                                txt1.add("Sistema de Reducción Secundaria");
-//                                txt2.add(documentSnapshot.getString("sistemadeReduccionSecundaria"));
-//                            }
-//                            if (documentSnapshot.getString("relaciondeReduccionSecundaria") != null || documentSnapshot.getString("relaciondeReduccionSecundaria") != "--"){
-//                                txt1.add("Relación de Reducción Secundaria");
-//                                txt2.add(documentSnapshot.getString("relaciondeReduccionSecundaria"));
-//                            }
-//                            if (documentSnapshot.getString("tipoEmbrague") != null || documentSnapshot.getString("tipoEmbrague") != "--"){
-//                                txt1.add("Tipo de Embrague");
-//                                txt2.add(documentSnapshot.getString("tipoEmbrague"));
-//                            }
-//                            if (documentSnapshot.getString("tipoTransmision") != null || documentSnapshot.getString("tipoTransmision") != "--"){
-//                                txt1.add("Tipo de Transmisión");
-//                                txt2.add(documentSnapshot.getString("tipoTransmision"));
-//                            }
-//                            if (documentSnapshot.getString("relacionTransmision1ra") != null || documentSnapshot.getString("relacionTransmision1ra") != "--"){
-//                                txt1.add("Relación Transmision en 1ra");
-//                                txt2.add(documentSnapshot.getString("relacionTransmision1ra"));
-//                            }
-//                            if (documentSnapshot.getString("relacionTransmision2da") != null || documentSnapshot.getString("relacionTransmision2da") != "--"){
-//                                txt1.add("Relación Transmision en 2da");
-//                                txt2.add(documentSnapshot.getString("relacionTransmision2da"));
-//                            }
-//                            if (documentSnapshot.getString("relacionTransmision3ra") != null || documentSnapshot.getString("relacionTransmision3ra") != "--"){
-//                                txt1.add("Relación Transmision en 3ra");
-//                                txt2.add(documentSnapshot.getString("relacionTransmision3ra"));
-//                            }
-//                            if (documentSnapshot.getString("relacionTransmision4ta") != null || documentSnapshot.getString("relacionTransmision4ta") != "--"){
-//                                txt1.add("Relación Transmision en 4ta");
-//                                txt2.add(documentSnapshot.getString("relacionTransmision4ta"));
-//                            }
-//                            if (documentSnapshot.getString("relacionTransmision5ta") != null || documentSnapshot.getString("relacionTransmision5ta") != "--"){
-//                                txt1.add("Relación Transmision en 5ta");
-//                                txt2.add(documentSnapshot.getString("relacionTransmision5ta"));
-//                            }
-//                            if (documentSnapshot.getString("relacionTransmision6ta") != null || documentSnapshot.getString("relacionTransmision6ta") != "--"){
-//                                txt1.add("Relación Transmision en 6ta");
-//                                txt2.add(documentSnapshot.getString("relacionTransmision6ta"));
-//                            }
-//                            if (documentSnapshot.getString("relacionEngranajes") != null || documentSnapshot.getString("relacionEngranajes") != "--"){
-//                                txt1.add("Relación de Engranajes");
-//                                txt2.add(documentSnapshot.getString("relacionEngranajes"));
-//                            }
-//                            if (documentSnapshot.getString("tipoChasis") != null || documentSnapshot.getString("tipoChasis") != "--"){
-//                                txt1.add("Tipo de Chasis");
-//                                txt2.add(documentSnapshot.getString("tipoChasis"));
-//                            }
-//                            if (documentSnapshot.getString("inclinacion") != null || documentSnapshot.getString("inclinacion") != "--"){
-//                                txt1.add("Inclinación");
-//                                txt2.add(documentSnapshot.getString("inclinacion"));
-//                            }
-//                            if (documentSnapshot.getString("avance") != null || documentSnapshot.getString("avance") != "--"){
-//                                txt1.add("Avance");
-//                                txt2.add(documentSnapshot.getString("avance"));
-//                            }
-//                            if (documentSnapshot.getString("ruedaDelantera") != null || documentSnapshot.getString("ruedaDelantera") != "--"){
-//                                txt1.add("Rueda Delantera");
-//                                txt2.add(documentSnapshot.getString("ruedaDelantera"));
-//                            }
-//                            if (documentSnapshot.getString("ruedaTrasera") != null || documentSnapshot.getString("ruedaTrasera") != "--"){
-//                                txt1.add("Rueda Trasera");
-//                                txt2.add(documentSnapshot.getString("ruedaTrasera"));
-//                            }
-//                            if (documentSnapshot.getString("frenoDelantero") != null || documentSnapshot.getString("frenoDelantero") != "--"){
-//                                txt1.add("Freno Delantero");
-//                                txt2.add(documentSnapshot.getString("frenoDelantero"));
-//                            }
-//                            if (documentSnapshot.getString("frenoTrasero") != null || documentSnapshot.getString("frenoTrasero") != "--"){
-//                                txt1.add("Freno Trasero");
-//                                txt2.add(documentSnapshot.getString("frenoTrasero"));
-//                            }
-//                            if (documentSnapshot.getString("tipoSuspensionDelantera") != null || documentSnapshot.getString("tipoSuspensionDelantera") != "--"){
-//                                txt1.add("Tipo de Suspensión Delantera");
-//                                txt2.add(documentSnapshot.getString("tipoSuspensionDelantera"));
-//                            }
-//                            if (documentSnapshot.getString("tipoSuspensionTrasera") != null || documentSnapshot.getString("tipoSuspensionTrasera") != "--"){
-//                                txt1.add("Tipo de Suspensión Trasera");
-//                                txt2.add(documentSnapshot.getString("tipoSuspensionTrasera"));
-//                            }
-//                            if (documentSnapshot.getString("LuzPrincipal") != null && documentSnapshot.getString("LuzPrincipal") != "--"){
-//                                txt1.add("Luz Principal");
-//                                txt2.add(documentSnapshot.getString("LuzPrincipal"));
-//                            }
-//
-//                            for (int i = 0; i < tamano; i++) {
-//                                TextView labelTextView = parentLinearLayout.findViewById(ids1.get(i));
-//                                labelTextView.setText(txt1.get(i));
-//                                TextView valueTextView = parentLinearLayout.findViewById(ids2.get(i));
-//                                valueTextView.setText(txt2.get(i));
-//                            }
-                            break;
-                    }
-                    hacerAnalisis();
-                }
-            }
-        });
-    }
     private void hacerAnalisis() {
         if (carpeta3.equals("TODOTERRENO") || carpeta3.equals("URBANAS")){
             if (cilindraje <= 100){
@@ -965,7 +635,24 @@ public class AggImagenesFragment extends Fragment {
                 }else {
                     Toast.makeText(getContext(), "Hubo un error", Toast.LENGTH_LONG).show();
                 }
+
             }
         });
+    }
+
+    private void llenarBasedatos(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mWebScraping = new WebScraping(id, edtURL.getText().toString(), getContext(), seleccionMotoSin, carpeta1, carpeta2, carpeta3);
+                mWebScraping.llenarInfo();
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                    }
+                });
+            }
+        }).start();
     }
 }

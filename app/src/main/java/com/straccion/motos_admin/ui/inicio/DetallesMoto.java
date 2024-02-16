@@ -39,9 +39,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
@@ -65,8 +68,10 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -142,6 +147,7 @@ public class DetallesMoto extends Fragment {
     String modelo = "";
     String DescripcionMoto = "";
     int precio = 0;
+    double numVisitas = 0;
     String elemento="";
     String archivo="";
     int colorCirculos=0;
@@ -149,33 +155,13 @@ public class DetallesMoto extends Fragment {
     int cantArchivos =0;
 
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     public DetallesMoto() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DetallesMoto.
-     */
-    // TODO: Rename and change types and number of parameters
     public static DetallesMoto newInstance(String param1, String param2) {
         DetallesMoto fragment = new DetallesMoto();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -184,8 +170,6 @@ public class DetallesMoto extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
             idDocument = getArguments().getString("idDocument");
         }
     }
@@ -224,7 +208,7 @@ public class DetallesMoto extends Fragment {
         mImageProvider = new ImageProvider();
         getPost();
 
-        Query query = mPostProvider.getAll();
+        //Query  = mPostProvider.getAll();
         fichaTecnicaAdapters = new FichaTecnicaAdapters(getContext(), idDocument);
         fichaTecnicaAdapters.showData(lnlDatos);
 
@@ -295,8 +279,6 @@ public class DetallesMoto extends Fragment {
 
                     }
                 });
-//                Animation scaleUpAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.comparar_animacion_1);
-//                Animation scaleDownAnimation  = AnimationUtils.loadAnimation(getContext(), R.anim.comparar_animacion_2);
                 btnComparar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -679,7 +661,11 @@ public class DetallesMoto extends Fragment {
                     if (documentSnapshot.contains("nombresArchivos")) {
                         nombreArchivosPDF = (List<String>) documentSnapshot.get("nombresArchivos");
                     }
+                    if (documentSnapshot.contains("vistas")) {
+                        numVisitas = Double.parseDouble(documentSnapshot.get("vistas").toString());
+                    }
                     instanceSlider();
+                    actualizarVistas();
                 }
                 txtModelo.setText(modelo);
                 txtNomMoto.setText(nombre);
@@ -706,6 +692,7 @@ public class DetallesMoto extends Fragment {
                 break;
             case "NEGRO":
             case "NEGRA":
+            case "NEGRO NEBULOSA - GRIS DORADO":
                 colorCirculos = ContextCompat.getColor(getContext(), R.color.black);
                 break;
             case "AMARILLO":
@@ -718,11 +705,15 @@ public class DetallesMoto extends Fragment {
             case "AZUL":
                 colorCirculos = ContextCompat.getColor(getContext(), R.color.azul);
                 break;
+            case "AZUL PETROLEO - GRIS DORADO":
+                colorCirculos = ContextCompat.getColor(getContext(), R.color.azulPetroleo);
+                break;
             case "BLANCO":
             case "BLANCA":
                 colorCirculos = ContextCompat.getColor(getContext(), R.color.white);
                 break;
             case "GRIS":
+            case "TOP FROST":
                 colorCirculos = ContextCompat.getColor(getContext(), R.color.grisOscuro);
                 break;
             case "DORADO":
@@ -850,6 +841,17 @@ public class DetallesMoto extends Fragment {
         } else {
             lnlInformacionAdd1.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void actualizarVistas(){
+        numVisitas = numVisitas + 1;
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("vistas", numVisitas);
+        mPostProvider.updatePost(idDocument, updates).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+            }
+        });
     }
 
 

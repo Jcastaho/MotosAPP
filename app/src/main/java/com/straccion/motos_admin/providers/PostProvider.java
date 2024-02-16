@@ -32,6 +32,12 @@ public class PostProvider {
     public Task<Void> updatePost(String postId, Map<String, Object> updates) {
         return mCollection.document(postId).update(updates);
     }
+    public Task<Void> updatePost2(String postId, Map<String, Object> updates) {
+        return mCollection.document(postId).update(updates);
+    }
+    public Task<Void> updatePost3(String postId, Map<String, Object> updates) {
+        return mCollection.document(postId).update(updates);
+    }
     public Query getAll(){
         return mCollection.orderBy("nombreMoto", Query.Direction.DESCENDING);
     }

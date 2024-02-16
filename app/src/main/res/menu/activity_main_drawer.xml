@@ -20,5 +20,9 @@
             android:id="@+id/nav_mimotoideal"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/menu_MiMoto" />
+        <item
+            android:id="@+id/nav_estadisticaFragment"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/menu_Estadistica" />
     </group>
 </menu>

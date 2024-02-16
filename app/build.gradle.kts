@@ -55,7 +55,9 @@ dependencies {
     implementation ("com.eightbitlab:blurview:1.6.6")
     implementation ("androidx.legacy:legacy-support-v4:1.0.0")
     implementation ("com.github.mancj:MaterialSearchBar:0.8.5")
-
+    implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation("org.jsoup:jsoup:1.17.2")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-auth:22.3.0")
