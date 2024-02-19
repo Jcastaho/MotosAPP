@@ -68,7 +68,12 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
         view.ViewHolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mostrarImagenAmpliada(viewPagerItem.getImageurl(), textoImagen.get(cantidad));
+                if (textoImagen == null){
+                    mostrarImagenAmpliada(viewPagerItem.getImageurl(), "");
+                }else {
+                    mostrarImagenAmpliada(viewPagerItem.getImageurl(), textoImagen.get(cantidad));
+                }
+
             }
         });
     }
@@ -107,7 +112,11 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
         TextView txtimgCaracteristicas = dialog.findViewById(R.id.txtimgCaracteristicas);
 
         Picasso.get().load(Url).into(imgCaracteristicas);
-        txtimgCaracteristicas.setText(texto);
+        if (texto != ""){
+            txtimgCaracteristicas.setText(texto);
+        }else {
+            txtimgCaracteristicas.setVisibility(View.GONE);
+        }
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
 
 

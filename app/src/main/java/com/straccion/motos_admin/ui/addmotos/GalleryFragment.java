@@ -59,25 +59,13 @@ public class GalleryFragment extends Fragment {
 
     View mview;
     Button btnGuardar;
-    Button btnpasar;
     Button btnPasar2;
-    ImageView imagen1;
-    ImageView imagen2;
-    ImageView imagen3;
-    ImageView imagen4;
-    ImageView imagen5;
-    File ImageFile1;
-    File ImageFile2;
-    File ImageFile3;
-    File ImageFile4;
-    File ImageFile5;
+
     EditText edtCarpeta1;
     EditText edtCarpeta2;
     EditText edtCarpeta3;
     EditText edtNombreMotos;
     ProgressBar ProgressBar;
-    EditText edtColor;
-    AppCompatSpinner spnCantidadColores;
 
     ImageProvider mImageProvider;
     PostProvider mPostProvider;
@@ -102,62 +90,30 @@ public class GalleryFragment extends Fragment {
     SharedPreferences sharedPreferences;
 
 
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     public GalleryFragment() {
         // Required empty public constructor
     }
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment reservaFiltro.
-     */
-    // TODO: Rename and change types and number of parameters
+
     public static GalleryFragment newInstance(String param1, String param2) {
         GalleryFragment fragment = new GalleryFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         mview = inflater.inflate(R.layout.fragment_gallery, container, false);
 
-        imagen1 = mview.findViewById(R.id.imagen1);
-        imagen2 = mview.findViewById(R.id.imagen2);
-        imagen3 = mview.findViewById(R.id.imagen3);
-        imagen4 = mview.findViewById(R.id.imagen4);
-        imagen5 = mview.findViewById(R.id.imagen5);
-        spnCantidadColores = mview.findViewById(R.id.spnCantidadColores);
         edtCarpeta1 = mview.findViewById(R.id.edtCarpeta1);
         edtCarpeta2 = mview.findViewById(R.id.edtCarpeta2);
         edtCarpeta3 = mview.findViewById(R.id.edtCarpeta3);
         edtNombreMotos = mview.findViewById(R.id.edtNombreMotos);
-        edtColor = mview.findViewById(R.id.edtColor);
         btnGuardar = mview.findViewById(R.id.btnGuardar);
-        btnpasar = mview.findViewById(R.id.btnpasar);
         btnPasar2 = mview.findViewById(R.id.btnPasar2);
         ProgressBar = mview.findViewById(R.id.progressBar);
         mImageProvider = new ImageProvider();
@@ -170,231 +126,48 @@ public class GalleryFragment extends Fragment {
         if (login() != 1){
             createUser();
         }
-        String[] cantidad = {"Cantidad de colores...", "1", "2", "3", "4", "5", "6"};
-        ArrayAdapter<String> adap = new ArrayAdapter<>(getContext(), R.layout.spinner_item_custom, cantidad);
-        spnCantidadColores.setAdapter(adap);
-
-        spnCantidadColores.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int posicion, long id) {
-                if (posicion > 1){
-                    btnGuardar.setText("Continuar");
-                    cantidadColores = Integer.parseInt(spnCantidadColores.getSelectedItem().toString());
-                }else {
-                    btnGuardar.setText("Guardar");
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
 
 
-        imagen1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                controlador = 1;
-                openGallery();
-            }
-        });
-        imagen2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                controlador = 2;
-                openGallery();
-            }
-        });
-
-        imagen3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                controlador = 3;
-                openGallery();
-            }
-        });
-        imagen4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                controlador = 4;
-                openGallery();
-            }
-        });
-        imagen5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                controlador = 5;
-                openGallery();
-            }
-        });
 
         btnGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                idImagen = edtNombreMotos.getText().toString() + "_" + edtColor.getText().toString();
+                idImagen = edtNombreMotos.getText().toString();
                 nombreMoto = edtNombreMotos.getText().toString();
-                String nombreImagen1 = edtNombreMotos.getText().toString() + "_" + edtColor.getText().toString() + "_1";
-                String nombreImagen2 = edtNombreMotos.getText().toString() + "_" + edtColor.getText().toString() + "_2";
-                String nombreImagen3 = edtNombreMotos.getText().toString() + "_" + edtColor.getText().toString() + "_3";
-                String nombreImagen4 = edtNombreMotos.getText().toString() + "_" + edtColor.getText().toString() + "_4";
-                String nombreImagen5 = edtNombreMotos.getText().toString() + "_" + edtColor.getText().toString() + "_5";
                 carpeta1 = edtCarpeta1.getText().toString().toUpperCase();
                 carpeta2 = edtCarpeta2.getText().toString().toUpperCase();
                 carpeta3 = edtCarpeta3.getText().toString().toUpperCase();
 
-                if (ImageFile1 == null && ImageFile2 == null && ImageFile3 == null && ImageFile4 == null && ImageFile5 == null){
-                    guardarDatos(null, null, null, null, null);
+                if (carpeta1 == "" && carpeta2 == "" && carpeta3 == "" && nombreMoto == ""){
+
                 }else {
-                    saveImage(ImageFile1, ImageFile2, ImageFile3, ImageFile4, ImageFile5, nombreImagen1, nombreImagen2, nombreImagen3,
-                            nombreImagen4, nombreImagen5, carpeta1, carpeta2, carpeta3);
+                    guardarDatos(carpeta1, carpeta2, carpeta3, nombreMoto);
                 }
 
 
-            }
-        });
-        btnpasar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                siguienteVentana(1);
             }
         });
         btnPasar2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                siguienteVentana(2);
+                siguienteVentana();
             }
         });
         return mview;
     }
 
-    private void saveImage(File ImageFile1, File ImageFile2, File ImageFile3, File ImageFile4, File ImageFile5, String nombreImagen1,
-                           String nombreImagen2, String nombreImagen3, String nombreImagen4, String nombreImagen5, String carpeta1, String carpeta2, String carpeta3) {
-        ProgressBar.setVisibility(View.VISIBLE);
-        btnGuardar.setVisibility(View.GONE);
-        mImageProvider.save(getContext(), ImageFile1, carpeta1, carpeta2, carpeta3, nombreImagen1.toUpperCase()).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                if (task.isSuccessful()){
-                    mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri1) {
-                            final String url1 = uri1.toString();
-                            if (ImageFile2 != null && ImageFile2.exists()) {
-                                mImageProvider.save(getContext(), ImageFile2, carpeta1, carpeta2, carpeta3, nombreImagen2.toUpperCase()).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task2) {
-                                        if (task2.isSuccessful()){
-                                            mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                                @Override
-                                                public void onSuccess(Uri uri2) {
-                                                    final String url2 = uri2.toString();
-                                                    if (ImageFile3 != null && ImageFile3.exists()) {
-                                                        mImageProvider.save(getContext(), ImageFile3, carpeta1, carpeta2, carpeta3, nombreImagen3.toUpperCase()).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task3) {
-                                                                if (task3.isSuccessful()){
-                                                                    mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                                                        @Override
-                                                                        public void onSuccess(Uri uri3) {
-                                                                            final String url3 = uri3.toString();
-                                                                            if (ImageFile4 != null && ImageFile4.exists()) {
-                                                                                mImageProvider.save(getContext(), ImageFile4, carpeta1, carpeta2, carpeta3, nombreImagen4.toUpperCase()).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                                                                                    @Override
-                                                                                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task4) {
-                                                                                        if (task4.isSuccessful()){
-                                                                                            mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                                                                                @Override
-                                                                                                public void onSuccess(Uri uri4) {
-                                                                                                    final String url4 = uri4.toString();
-                                                                                                    if (ImageFile5 != null && ImageFile5.exists()) {
-                                                                                                        mImageProvider.save(getContext(), ImageFile5, carpeta1, carpeta2, carpeta3, nombreImagen5.toUpperCase()).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                                                                                                            @Override
-                                                                                                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task4) {
-                                                                                                                if (task4.isSuccessful()){
-                                                                                                                    mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                                                                                                        @Override
-                                                                                                                        public void onSuccess(Uri uri5) {
-                                                                                                                            final String url5 = uri5.toString();
-                                                                                                                            guardarDatos(url1, url2, url3, url4, url5);
-                                                                                                                            ProgressBar.setVisibility(View.GONE);
-                                                                                                                            btnGuardar.setVisibility(View.VISIBLE);
-                                                                                                                        }
-                                                                                                                    });
-                                                                                                                }
-                                                                                                            }
-                                                                                                        });
-                                                                                                    } else {
-                                                                                                        guardarDatos(url1, url2, url3, url4, null);
-                                                                                                        ProgressBar.setVisibility(View.GONE);
-                                                                                                        btnGuardar.setVisibility(View.VISIBLE);
-                                                                                                    }
-                                                                                                }
-                                                                                            });
-                                                                                        }
-                                                                                    }
-                                                                                });
-                                                                            } else {
-                                                                                guardarDatos(url1, url2, url3, null, null);
-                                                                                ProgressBar.setVisibility(View.GONE);
-                                                                                btnGuardar.setVisibility(View.VISIBLE);
-                                                                            }
-                                                                        }
-                                                                    });
-                                                                }
-                                                            }
-                                                        });
-                                                    }else {
-                                                        guardarDatos(url1, url2, null, null, null);
-                                                        ProgressBar.setVisibility(View.GONE);
-                                                        btnGuardar.setVisibility(View.VISIBLE);
-                                                    }
-                                                }
-                                            });
-                                        }
-                                    }
-                                });
-                            }else {
-                                guardarDatos(url1, null, null, null, null);
-                                ProgressBar.setVisibility(View.GONE);
-                                btnGuardar.setVisibility(View.VISIBLE);
-                            }
-                        }
-                    });
-                }
-            }
-        });
 
 
-    }
-
-    private void guardarDatos(String url1, String url2, String url3, String url4, String url5){
-        String moto = edtCarpeta1.getText().toString().toUpperCase();
-        if (moto.equals("AUTECO")){
+    private void guardarDatos(String carpeta1, String carpeta2, String carpeta3, String nombre){
+        if (carpeta1.equals("AUTECO")){
             PostAuteco post = new PostAuteco();
             post.setId(idImagen.toUpperCase().trim());
-            post.setNombreMoto(edtNombreMotos.getText().toString().toUpperCase());
-            post.setCarpeta1(carpeta1);
-            post.setCarpeta2(carpeta2);
-            post.setCarpeta3(carpeta3);
-            ArrayList<String> colores = new ArrayList<>();
-            colores.add(edtColor.getText().toString().toUpperCase());
-            post.setColores(colores);
-            ArrayList<String> imagenes = new ArrayList<>();
-            if (url1 != null){
-                imagenes.add(url1);
-            }if (url2 != null) {
-                imagenes.add(url2);
-            }if (url3 != null) {
-                imagenes.add(url3);
-            }if (url4 != null) {
-                imagenes.add(url4);
-            }if (url5 != null) {
-                imagenes.add(url5);
-            }
+            post.setNombreMoto(nombre.toUpperCase());
+            post.setCarpeta1(carpeta1.toUpperCase());
+            post.setCarpeta2(carpeta2.toUpperCase());
+            post.setCarpeta3(carpeta3.toUpperCase());
             post.setMarcaMoto(carpeta1.toUpperCase());
-            post.setImagenes(imagenes);
-            mPostProvider.save1(post).addOnCompleteListener(new OnCompleteListener<Void>() {
+            mPostProvider.save(post).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()){
@@ -411,37 +184,21 @@ public class GalleryFragment extends Fragment {
                                 }
                             }
                         });
-                        Toast.makeText(getContext(), "Imagen guardada", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Moto Guardada", Toast.LENGTH_LONG).show();
                     }else {
-                        Toast.makeText(getContext(), "Hubo un error al almacenar la imagen", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Hubo un error al almacenar la moto", Toast.LENGTH_LONG).show();
                     }
                 }
             });
-        } else if (moto.equals("YAMAHA")) {
+        } else if (carpeta1.equals("YAMAHA")) {
             PostYamaha post = new PostYamaha();
             post.setId(idImagen.toUpperCase().trim());
-            post.setNombreMoto(edtNombreMotos.getText().toString().toUpperCase());
-            post.setCarpeta1(carpeta1);
-            post.setCarpeta2(carpeta2);
-            post.setCarpeta3(carpeta3);
-            ArrayList<String> colores = new ArrayList<>();
-            colores.add(edtColor.getText().toString().toUpperCase());
-            post.setColores(colores);
-            ArrayList<String> imagenes = new ArrayList<>();
-            if (url1 != null){
-                imagenes.add(url1);
-            }if (url2 != null) {
-                imagenes.add(url2);
-            }if (url3 != null) {
-                imagenes.add(url3);
-            }if (url4 != null) {
-                imagenes.add(url4);
-            }if (url5 != null) {
-                imagenes.add(url5);
-            }
+            post.setNombreMoto(nombre.toUpperCase());
+            post.setCarpeta1(carpeta1.toUpperCase());
+            post.setCarpeta2(carpeta2.toUpperCase());
+            post.setCarpeta3(carpeta3.toUpperCase());
             post.setMarcaMoto(carpeta1.toUpperCase());
-            post.setImagenes(imagenes);
-            mPostProvider.save2(post).addOnCompleteListener(new OnCompleteListener<Void>() {
+            mPostProvider.save(post).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()){
@@ -458,38 +215,22 @@ public class GalleryFragment extends Fragment {
                                 }
                             }
                         });
-                        Toast.makeText(getContext(), "Imagen guardada", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(),"Moto Guardada", Toast.LENGTH_LONG).show();
                     }else {
-                        Toast.makeText(getContext(), "Hubo un error al almacenar la imagen", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Hubo un error al almacenar la Moto", Toast.LENGTH_LONG).show();
                     }
                 }
             });
 
-        }else if (moto.equals("AKT")) {
+        }else if (carpeta1.equals("AKT")) {
             PostAKT post = new PostAKT();
             post.setId(idImagen.toUpperCase().trim());
-            post.setNombreMoto(edtNombreMotos.getText().toString().toUpperCase());
-            post.setCarpeta1(carpeta1);
-            post.setCarpeta2(carpeta2);
-            post.setCarpeta3(carpeta3);
-            ArrayList<String> colores = new ArrayList<>();
-            colores.add(edtColor.getText().toString().toUpperCase());
-            post.setColores(colores);
-            ArrayList<String> imagenes = new ArrayList<>();
-            if (url1 != null){
-                imagenes.add(url1);
-            }if (url2 != null) {
-                imagenes.add(url2);
-            }if (url3 != null) {
-                imagenes.add(url3);
-            }if (url4 != null) {
-                imagenes.add(url4);
-            }if (url5 != null) {
-                imagenes.add(url5);
-            }
+            post.setNombreMoto(nombre.toUpperCase());
+            post.setCarpeta1(carpeta1.toUpperCase());
+            post.setCarpeta2(carpeta2.toUpperCase());
+            post.setCarpeta3(carpeta3.toUpperCase());
             post.setMarcaMoto(carpeta1.toUpperCase());
-            post.setImagenes(imagenes);
-            mPostProvider.save3(post).addOnCompleteListener(new OnCompleteListener<Void>() {
+            mPostProvider.save(post).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()){
@@ -506,9 +247,9 @@ public class GalleryFragment extends Fragment {
                                 }
                             }
                         });
-                        Toast.makeText(getContext(), "Imagen guardada", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Moto guardada", Toast.LENGTH_LONG).show();
                     }else {
-                        Toast.makeText(getContext(), "Hubo un error al almacenar la imagen", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Hubo un error al almacenar la Moto", Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -516,43 +257,7 @@ public class GalleryFragment extends Fragment {
 
     }
 
-    private void openGallery() {
-        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        galleryIntent.setType("image/*");
-        GalleryLauncher.launch(galleryIntent);
-    }
 
-    ActivityResultLauncher<Intent> GalleryLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK){
-                        try {
-                            if (controlador == 1){
-                                ImageFile1 = FileUtil.from(getContext(), result.getData().getData());
-                                imagen1.setImageBitmap(BitmapFactory.decodeFile(ImageFile1.getAbsolutePath()));
-                            } else if (controlador == 2) {
-                                ImageFile2 = FileUtil.from(getContext(), result.getData().getData());
-                                imagen2.setImageBitmap(BitmapFactory.decodeFile(ImageFile2.getAbsolutePath()));
-                            }else if (controlador == 3) {
-                                ImageFile3 = FileUtil.from(getContext(), result.getData().getData());
-                                imagen3.setImageBitmap(BitmapFactory.decodeFile(ImageFile3.getAbsolutePath()));
-                            }else if (controlador == 4) {
-                                ImageFile4 = FileUtil.from(getContext(), result.getData().getData());
-                                imagen4.setImageBitmap(BitmapFactory.decodeFile(ImageFile4.getAbsolutePath()));
-                            }else if (controlador == 5) {
-                                ImageFile5 = FileUtil.from(getContext(), result.getData().getData());
-                                imagen5.setImageBitmap(BitmapFactory.decodeFile(ImageFile5.getAbsolutePath()));
-                            }
-                        }catch (Exception e){
-                            Log.d("Error", "Se produjo un error" + e.getMessage());
-                            Toast.makeText(getContext(), "Se produjo un error" + e.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                }
-            }
-    );
     private int login(){
         int ingreso = 0;
         String usuario = sharedPreferences.getString("correo","error");
@@ -625,23 +330,15 @@ public class GalleryFragment extends Fragment {
         return randomString.toString();
     }
 
-    public void siguienteVentana(int ventana){
+    public void siguienteVentana(){
         Bundle args = new Bundle();
         args.putInt("colores", cantidadColores);
         args.putString("carpeta1", carpeta1);
         args.putString("carpeta2", carpeta2);
         args.putString("carpeta3", carpeta3);
-        args.putString("color1", edtColor.getText().toString());
         args.putString("idImagen", documentId);
         args.putString("nombreMoto", nombreMoto);
-        if (ventana == 1){
-            NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
-            navController.navigate(R.id.action_nav_gallery_to_coloresFragment, args);
-        }else {
-            NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
-            navController.navigate(R.id.action_nav_gallery_to_aggImagenesFragment, args);
-        }
-
-
+        NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
+        navController.navigate(R.id.action_nav_gallery_to_aggImagenesFragment, args);
     }
 }

@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 
 import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -45,6 +46,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
@@ -80,11 +82,11 @@ import java.util.Map;
  */
 public class DetallesMoto extends Fragment {
     View mview;
-
-
-    LinearLayout lnlDato1;
     LinearLayout lnlMostrarManuales;
     LinearLayout lnlInformacionAdd1;
+    FrameLayout frameContenedor;
+    NestedScrollView nestedScrollView;
+    AppBarLayout appbarLayout;
     FloatingActionButton fabComparar;
     TextView txtExtendedComparar;
     ImageView imgExtendedFlecha;
@@ -100,20 +102,15 @@ public class DetallesMoto extends Fragment {
     TextView txtArchivo4;
     TextView txtArchivo5;
     TextView txtArchivo6;
-    TextView txtDato1;
-    TextView txtDato1_1;
-    LinearLayout lnlDato2;
-    TextView txtDato2;
-    TextView txtDato2_1;
-    LinearLayout lnlDato3;
-    TextView txtDato3;
-    TextView txtDato3_1;
+
 
 
     TextView txtModelo;
     TextView txtNomMoto;
     TextView txtDescripcionMoto;
     TextView txtPrecio;
+    TextView txtprecioAnterior;
+    LinearLayout lnlDescuento;
     ViewPager2 viewImagenesAdd;
     Handler viewImagenHandler = new Handler();
 
@@ -123,7 +120,6 @@ public class DetallesMoto extends Fragment {
     SliderAdapter mSliderAdapter;
     ViewPagerAdapter mViewPagerAdapter;
     PostProvider mPostProvider;
-    PostsAdapters mPostsAdapters;
     ListaCompararAdapter mListaCompararAdapter;
     ImageProvider mImageProvider;
     FichaTecnicaAdapters fichaTecnicaAdapters;
@@ -147,11 +143,12 @@ public class DetallesMoto extends Fragment {
     String modelo = "";
     String DescripcionMoto = "";
     int precio = 0;
+    int nuevoValorDescuento = 0;
+    boolean descuento;
     double numVisitas = 0;
     String elemento="";
     String archivo="";
     int colorCirculos=0;
-
     int cantArchivos =0;
 
 
@@ -180,12 +177,17 @@ public class DetallesMoto extends Fragment {
         mview = inflater.inflate(R.layout.fragment_detalles_moto, container, false);
 
         mSliderView = mview.findViewById(R.id.imageSlider);
+        appbarLayout = mview.findViewById(R.id.appbarLayout);
+        nestedScrollView = mview.findViewById(R.id.nestedScrollView);
+        frameContenedor = mview.findViewById(R.id.frameContenedor);
         viewImagenesAdd = mview.findViewById(R.id.viewImagenesAdd);
         txtModelo = mview.findViewById(R.id.txtModelo);
         txtNomMoto = mview.findViewById(R.id.txtNomMoto);
         lnlDatos = mview.findViewById(R.id.lnlDatos);
         txtDescripcionMoto = mview.findViewById(R.id.txtDescripcionMoto);
         txtPrecio = mview.findViewById(R.id.txtPrecio);
+        txtprecioAnterior = mview.findViewById(R.id.txtprecioAnterior);
+        lnlDescuento = mview.findViewById(R.id.lnlDescuento);
         lnlMostrarManuales = mview.findViewById(R.id.lnlMostrarManuales);
         lnlInformacionAdd1 = mview.findViewById(R.id.lnlInformacionAdd1);
         fabComparar = mview.findViewById(R.id.fabComparar);
@@ -549,7 +551,11 @@ public class DetallesMoto extends Fragment {
         mSliderView.startAutoCycle();
 
         //imagenes caractreristicas adicionales
-        mViewPagerAdapter = new ViewPagerAdapter(getContext(), viewPagerImagenes, viewImagenesAdd, listaTextoCaracteristicas);
+        if (listaTextoCaracteristicas == null){
+            mViewPagerAdapter = new ViewPagerAdapter(getContext(), viewPagerImagenes, viewImagenesAdd, null);
+        }else {
+            mViewPagerAdapter = new ViewPagerAdapter(getContext(), viewPagerImagenes, viewImagenesAdd, listaTextoCaracteristicas);
+        }
         viewImagenesAdd.setAdapter(mViewPagerAdapter);
         viewImagenesAdd.setOffscreenPageLimit(3);
         viewImagenesAdd.setClipChildren(false);
@@ -597,6 +603,7 @@ public class DetallesMoto extends Fragment {
     }
 
     private void getPost(){
+        mSliderItems.clear();
         mPostProvider.getPostById(idDocument).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -655,6 +662,12 @@ public class DetallesMoto extends Fragment {
                     if (documentSnapshot.contains("precio")) {
                         precio = Integer.parseInt(documentSnapshot.get("precio").toString());
                     }
+                    if (documentSnapshot.contains("nuevoValorDescuento")) {
+                        nuevoValorDescuento = Integer.parseInt(documentSnapshot.get("nuevoValorDescuento").toString());
+                    }
+                    if (documentSnapshot.contains("descuento")) {
+                        descuento = Boolean.parseBoolean(documentSnapshot.get("descuento").toString());
+                    }
                     if (documentSnapshot.contains("manualesArchivos")) {
                         archivosPDF = (List<String>) documentSnapshot.get("manualesArchivos");
                     }
@@ -671,14 +684,22 @@ public class DetallesMoto extends Fragment {
                 txtNomMoto.setText(nombre);
                 txtDescripcionMoto.setText(DescripcionMoto);
                 //muestra el seperador de puntos en el precio
+
                 DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
                 symbols.setGroupingSeparator('.');
                 symbols.setDecimalSeparator(',');
 
                 DecimalFormat formato = new DecimalFormat("#,###", symbols);
-
-                String numeroFormato = formato.format(precio);
+                String numeroFormato = formato.format(nuevoValorDescuento);
                 txtPrecio.setText("$" + numeroFormato);
+                if (descuento){
+                    String Formato = formato.format(precio);
+                    lnlDescuento.setVisibility(View.VISIBLE);
+                    txtprecioAnterior.setText("$"+Formato);
+                    txtprecioAnterior.setPaintFlags(txtprecioAnterior.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                }else {
+                    lnlDescuento.setVisibility(View.GONE);
+                }
             }
         });
     }
@@ -706,6 +727,7 @@ public class DetallesMoto extends Fragment {
                 colorCirculos = ContextCompat.getColor(getContext(), R.color.azul);
                 break;
             case "AZUL PETROLEO - GRIS DORADO":
+            case "AZUL PETRÓLEO - GRIS DORADO":
                 colorCirculos = ContextCompat.getColor(getContext(), R.color.azulPetroleo);
                 break;
             case "BLANCO":
@@ -780,6 +802,7 @@ public class DetallesMoto extends Fragment {
     }
     private void mostrarColores(int id){
         mSliderItems.clear();
+        int controlador=0;
         switch(id) {
             case 0:
                 for (String imagen : listaImagenes) {
@@ -793,6 +816,7 @@ public class DetallesMoto extends Fragment {
                     SliderItem item = new SliderItem();
                     item.setImageurl(imagen);
                     mSliderItems.add(item);
+                    controlador=1;
                 }
                 break;
             case 2:
@@ -800,6 +824,7 @@ public class DetallesMoto extends Fragment {
                     SliderItem item = new SliderItem();
                     item.setImageurl(imagen);
                     mSliderItems.add(item);
+                    controlador=2;
                 }
                 break;
             case 3:
@@ -807,6 +832,7 @@ public class DetallesMoto extends Fragment {
                     SliderItem item = new SliderItem();
                     item.setImageurl(imagen);
                     mSliderItems.add(item);
+                    controlador=3;
                 }
                 break;
             case 4:
@@ -814,6 +840,7 @@ public class DetallesMoto extends Fragment {
                     SliderItem item = new SliderItem();
                     item.setImageurl(imagen);
                     mSliderItems.add(item);
+                    controlador=4;
                 }
                 break;
             case 5:
@@ -821,6 +848,7 @@ public class DetallesMoto extends Fragment {
                     SliderItem item = new SliderItem();
                     item.setImageurl(imagen);
                     mSliderItems.add(item);
+                    controlador=5;
                 }
                 break;
             default:
@@ -828,13 +856,38 @@ public class DetallesMoto extends Fragment {
                     SliderItem item = new SliderItem();
                     item.setImageurl(imagen);
                     mSliderItems.add(item);
+                    controlador=6;
                 }
                 break;
         }
 
+        //vuelve mas pequeña la vista de las motos, hay que modificarla segun el color
+        if (nombre.equals("TVS SPORT 100 ELS") && (controlador == 1 || controlador == 2)) {
+            modificarTamanoVistaMotos();
+        }else {
+            tamanoAnteriorVistaMotos();
+        }
+
+
         instanceSlider();
     }
 
+    private void tamanoAnteriorVistaMotos(){
+        int anteriorHeight = (int) getResources().getDimension(R.dimen.anterior_height);
+        mSliderView.getLayoutParams().height = anteriorHeight;
+        mSliderView.requestLayout();
+        frameContenedor.getLayoutParams().height = anteriorHeight;
+        frameContenedor.requestLayout();
+        nestedScrollView.requestLayout();
+    }
+    private void modificarTamanoVistaMotos(){
+        int newHeight = (int) getResources().getDimension(R.dimen.new_height);
+        mSliderView.getLayoutParams().height = newHeight;
+        mSliderView.requestLayout();
+        frameContenedor.getLayoutParams().height = newHeight;
+        frameContenedor.requestLayout();
+        nestedScrollView.requestLayout();
+    }
     private void mostrarManuales(){
         if (lnlInformacionAdd1.getVisibility() == View.VISIBLE) {
             lnlInformacionAdd1.setVisibility(View.GONE);

@@ -11,97 +11,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp">
-
-            <ImageView
-                android:id="@+id/imagen1"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginLeft="50dp"
-                android:layout_marginTop="10dp"
-                android:background="@android:color/white"
-                android:src="@drawable/ic_menu_camera"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginLeft="12dp">
-
-                <ImageView
-                    android:id="@+id/imagen2"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_marginLeft="50dp"
-                    android:background="@android:color/white"
-                    android:layout_marginTop="10dp"
-                    android:src="@drawable/ic_menu_camera"/>
-            </LinearLayout>
-        </LinearLayout>
-
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp">
-
-            <ImageView
-                android:id="@+id/imagen3"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginLeft="50dp"
-                android:layout_marginTop="10dp"
-                android:background="@android:color/white"
-                android:src="@drawable/ic_menu_camera"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginLeft="12dp">
-
-                <ImageView
-                    android:id="@+id/imagen4"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_marginLeft="50dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@android:color/white"
-                    android:src="@drawable/ic_menu_camera"/>
-
-            </LinearLayout>
-        </LinearLayout>
-
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp">
-
-            <ImageView
-                android:id="@+id/imagen5"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginLeft="50dp"
-                android:background="@android:color/white"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/ic_menu_camera"/>
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="60dp"
             android:layout_marginLeft="5dp">
 
             <EditText
@@ -139,26 +54,6 @@
 
 
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="5dp">
-
-            <EditText
-                android:id="@+id/edtColor"
-                android:layout_width="190dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="5dp"
-                android:hint="Color de Moto"/>
-
-            <Spinner
-                android:id="@+id/spnCantidadColores"
-                android:layout_width="190dp"
-                android:layout_height="50dp"/>
-
-        </LinearLayout>
 
         <Button
             android:id="@+id/btnGuardar"
@@ -177,21 +72,15 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-            <Button
-                android:id="@+id/btnpasar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="35dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginRight="30dp"
-                android:text="agg colores"/>
+            android:layout_height="100dp"
+            android:orientation="horizontal"
+            android:gravity="center">
+
             <Button
                 android:id="@+id/btnPasar2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+
                 android:text="agg/mod imagenes"/>
         </LinearLayout>
 

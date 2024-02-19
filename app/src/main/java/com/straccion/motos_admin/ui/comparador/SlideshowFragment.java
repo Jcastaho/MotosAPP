@@ -29,8 +29,13 @@ import com.straccion.motos_admin.R;
 import com.straccion.motos_admin.databinding.FragmentSlideshowBinding;
 import com.straccion.motos_admin.providers.PostProvider;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class SlideshowFragment extends Fragment {
@@ -292,7 +297,15 @@ public class SlideshowFragment extends Fragment {
                                 }else {
                                     txtPesoValor1.setText(document.getString("pesoNeto"));
                                 }
-                                txtPrecioValor1.setText(document.getString("precio"));
+                                int precio = Integer.parseInt(document.get("precio").toString());
+                                DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+                                symbols.setGroupingSeparator('.');
+                                symbols.setDecimalSeparator(',');
+
+                                DecimalFormat formato = new DecimalFormat("#,###", symbols);
+
+                                String numeroFormato = formato.format(precio);
+                                txtPrecioValor1.setText("$" + numeroFormato);
                                 controlador_Imagenes1=1;
                             }
                             else if (contadorimgView == 2) {
@@ -329,7 +342,15 @@ public class SlideshowFragment extends Fragment {
                                 }else {
                                     txtPesoValor2.setText(document.getString("pesoNeto"));
                                 }
-                                txtPrecioValor2.setText(document.getString("precio"));
+                                int precio = Integer.parseInt(document.get("precio").toString());
+                                DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+                                symbols.setGroupingSeparator('.');
+                                symbols.setDecimalSeparator(',');
+
+                                DecimalFormat formato = new DecimalFormat("#,###", symbols);
+
+                                String numeroFormato = formato.format(precio);
+                                txtPrecioValor2.setText("$" + numeroFormato);
                                 controlador_Imagenes2=1;
                             }
                             else if (contadorimgView == 3) {
@@ -365,7 +386,15 @@ public class SlideshowFragment extends Fragment {
                                 }else {
                                     txtPesoValor3.setText(document.getString("pesoNeto"));
                                 }
-                                txtPrecioValor3.setText(document.getString("precio"));
+                                int precio = Integer.parseInt(document.get("precio").toString());
+                                DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+                                symbols.setGroupingSeparator('.');
+                                symbols.setDecimalSeparator(',');
+
+                                DecimalFormat formato = new DecimalFormat("#,###", symbols);
+
+                                String numeroFormato = formato.format(precio);
+                                txtPrecioValor3.setText("$" + numeroFormato);
                                 controlador_Imagenes3=1;
                             }
                             break;

@@ -20,14 +20,8 @@ public class PostProvider {
         mCollection = FirebaseFirestore.getInstance().collection("Motos");
 
     }
-    public Task<Void> save1(PostAuteco post){
-        return mCollection.document().set(post);
-    }
-    public Task<Void> save2(PostYamaha post){
-        return mCollection.document().set(post);
-    }
-    public Task<Void> save3(PostAKT post){
-        return mCollection.document().set(post);
+    public <T> Task<Void> save(T objeto) {
+        return mCollection.document().set(objeto);
     }
     public Task<Void> updatePost(String postId, Map<String, Object> updates) {
         return mCollection.document(postId).update(updates);

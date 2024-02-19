@@ -63,7 +63,7 @@ public class PostYamaha {
     private String descripcion;
     private String modelo;
     private boolean descuento;
-    private String nuevoValorDescuento;
+    private int nuevoValorDescuento;
     private String carpeta1;
     private String carpeta2;
     private String carpeta3;
@@ -80,7 +80,7 @@ public class PostYamaha {
 
     }
 
-    public PostYamaha(String id, int precio, String nombreMoto, String marcaMoto, int prioridad, ArrayList<String> imagenes, ArrayList<String> colores, ArrayList<String> imagenesColores1, ArrayList<String> imagenesColores2, ArrayList<String> imagenesColores3, ArrayList<String> imagenesColores4, ArrayList<String> imagenesColores5, ArrayList<String> imagenesColores6, String cilindraje, String peso, String potenciaMaxima, String torqueMaximo, String tipoMotor, String largoTotal, String anchoTotal, String alturaTotal, String alturaAsiento, String distanciaEntreEjes, String distanciaMinimaPiso, String tipoLubricacion, String bateria, String disposiciondeCilindros, String diametroPorCarrera, String relacionCompresion, String arranque, String sistemaAlimentacion, String capacidadCombustible, String encendido, String capacidadBateria, String sistemadeReduccionPrimaria, String relaciondeReduccionPrimaria, String sistemadeReduccionSecundaria, String relaciondeReduccionSecundaria, String tipoEmbrague, String tipoTransmision, String relacionTransmision1ra, String relacionTransmision2da, String relacionTransmision3ra, String relacionTransmision4ta, String relacionTransmision5ta, String relacionTransmision6ta, String relacionEngranajes, String tipoChasis, String inclinacion, String avance, String ruedaDelantera, String ruedaTrasera, String frenoDelantero, String frenoTrasero, String tipoSuspensionDelantera, String tipoSuspensionTrasera, String luzPrincipal, String descripcion, String modelo, boolean descuento, String nuevoValorDescuento, String carpeta1, String carpeta2, String carpeta3, ArrayList<String> manualesArchivos, ArrayList<String> nombresArchivos, ArrayList<String> caracteristicasTexto, ArrayList<String> caracteristicasImagenes, ArrayList<String> clasificacion, double calificacion, double vistas, double busquedas) {
+    public PostYamaha(String id, int precio, String nombreMoto, String marcaMoto, int prioridad, ArrayList<String> imagenes, ArrayList<String> colores, ArrayList<String> imagenesColores1, ArrayList<String> imagenesColores2, ArrayList<String> imagenesColores3, ArrayList<String> imagenesColores4, ArrayList<String> imagenesColores5, ArrayList<String> imagenesColores6, String cilindraje, String peso, String potenciaMaxima, String torqueMaximo, String tipoMotor, String largoTotal, String anchoTotal, String alturaTotal, String alturaAsiento, String distanciaEntreEjes, String distanciaMinimaPiso, String tipoLubricacion, String bateria, String disposiciondeCilindros, String diametroPorCarrera, String relacionCompresion, String arranque, String sistemaAlimentacion, String capacidadCombustible, String encendido, String capacidadBateria, String sistemadeReduccionPrimaria, String relaciondeReduccionPrimaria, String sistemadeReduccionSecundaria, String relaciondeReduccionSecundaria, String tipoEmbrague, String tipoTransmision, String relacionTransmision1ra, String relacionTransmision2da, String relacionTransmision3ra, String relacionTransmision4ta, String relacionTransmision5ta, String relacionTransmision6ta, String relacionEngranajes, String tipoChasis, String inclinacion, String avance, String ruedaDelantera, String ruedaTrasera, String frenoDelantero, String frenoTrasero, String tipoSuspensionDelantera, String tipoSuspensionTrasera, String luzPrincipal, String descripcion, String modelo, boolean descuento, int nuevoValorDescuento, String carpeta1, String carpeta2, String carpeta3, ArrayList<String> manualesArchivos, ArrayList<String> nombresArchivos, ArrayList<String> caracteristicasTexto, ArrayList<String> caracteristicasImagenes, ArrayList<String> clasificacion, double calificacion, double vistas, double busquedas) {
         this.id = id;
         this.precio = precio;
         this.nombreMoto = nombreMoto;
@@ -635,11 +635,11 @@ public class PostYamaha {
         this.descuento = descuento;
     }
 
-    public String getNuevoValorDescuento() {
+    public int getNuevoValorDescuento() {
         return nuevoValorDescuento;
     }
 
-    public void setNuevoValorDescuento(String nuevoValorDescuento) {
+    public void setNuevoValorDescuento(int nuevoValorDescuento) {
         this.nuevoValorDescuento = nuevoValorDescuento;
     }
 
