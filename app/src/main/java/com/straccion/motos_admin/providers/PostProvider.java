@@ -33,7 +33,13 @@ public class PostProvider {
         return mCollection.document(postId).update(updates);
     }
     public Query getAll(){
-        return mCollection.orderBy("nombreMoto", Query.Direction.DESCENDING);
+        return mCollection.whereEqualTo("visible", true).orderBy("prioridad", Query.Direction.DESCENDING);
+    }
+    public Query getAll2(){
+        return mCollection.whereEqualTo("visible", true);
+    }
+    public Query getAll3(){
+        return mCollection.whereEqualTo("visible", false);
     }
 
     public Query getAllVacias(){

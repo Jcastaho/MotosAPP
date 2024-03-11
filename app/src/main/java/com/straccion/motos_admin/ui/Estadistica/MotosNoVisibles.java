@@ -1,34 +1,32 @@
-package com.straccion.motos_admin.ui.inicio;
+package com.straccion.motos_admin.ui.Estadistica;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
-import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.straccion.motos_admin.R;
 import com.straccion.motos_admin.adapters.PostsAdapters;
 import com.straccion.motos_admin.models.PostAuteco;
 import com.straccion.motos_admin.providers.PostProvider;
-import com.straccion.motos_admin.ui.addmotos.GalleryFragment;
 
-public class HomeFragment extends Fragment implements MaterialSearchBar.OnSearchActionListener {
+
+public class MotosNoVisibles extends Fragment {
+
+
     View mview;
-
     RecyclerView mRecyclerView;
     PostProvider mpostProvider;
     PostsAdapters mPostsAdapters;
@@ -36,15 +34,8 @@ public class HomeFragment extends Fragment implements MaterialSearchBar.OnSearch
 
     int numberOfColumns = 0;
 
-    public HomeFragment() {
+    public MotosNoVisibles() {
         // Required empty public constructor
-    }
-
-    public static GalleryFragment newInstance(String param1, String param2) {
-        GalleryFragment fragment = new GalleryFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,16 +44,14 @@ public class HomeFragment extends Fragment implements MaterialSearchBar.OnSearch
         }
     }
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        mview = inflater.inflate(R.layout.fragment_motos_no_visibles, container, false);
 
-        mview = inflater.inflate(R.layout.fragment_home, container, false);
-
-        mRecyclerView = mview.findViewById(R.id.reciclerViewHome);
-        lnlProgressBar = mview.findViewById(R.id.lnlProgressBar);
-        MenuItem searchItem = mview.findViewById(R.id.action_search);
+        mRecyclerView = mview.findViewById(R.id.reciclerViewNoVisibles);
+        lnlProgressBar = mview.findViewById(R.id.lnlProgressBarNoVisible);
         lnlProgressBar.setVisibility(View.VISIBLE);
-
 
         mpostProvider = new PostProvider();
 
@@ -77,20 +66,22 @@ public class HomeFragment extends Fragment implements MaterialSearchBar.OnSearch
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), numberOfColumns);
         mRecyclerView.setLayoutManager(gridLayoutManager);
 
+
         return mview;
     }
+
 
     @Override
     public void onStart() {
         super.onStart();
         int tiempoMostrandoProgressBar = 1500;
-        Query query = mpostProvider.getAll();
+        Query query = mpostProvider.getAll3();
 
         FirestoreRecyclerOptions<PostAuteco> options = new FirestoreRecyclerOptions.Builder<PostAuteco>().setQuery(query, PostAuteco.class).build();
 
         NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
 
-        mPostsAdapters = new PostsAdapters(options, getContext(), navController, 0);
+        mPostsAdapters = new PostsAdapters(options, getContext(), navController, 1);
         mRecyclerView.setAdapter(mPostsAdapters);
         mPostsAdapters.startListening();
 
@@ -108,19 +99,5 @@ public class HomeFragment extends Fragment implements MaterialSearchBar.OnSearch
         super.onStop();
         mPostsAdapters.stopListening();
         lnlProgressBar.setVisibility(View.GONE);
-    }
-    @Override
-    public void onSearchStateChanged(boolean enabled) {
-
-    }
-
-    @Override
-    public void onSearchConfirmed(CharSequence text) {
-
-    }
-
-    @Override
-    public void onButtonClicked(int buttonCode) {
-
     }
 }

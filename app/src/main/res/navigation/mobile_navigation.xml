@@ -54,5 +54,18 @@
         android:id="@+id/nav_estadisticaFragment"
         android:name="com.straccion.motos_admin.ui.Estadistica.EstadisticaFragment"
         android:label="fragment_estadistica"
-        tools:layout="@layout/fragment_estadistica" />
+        tools:layout="@layout/fragment_estadistica" >
+        <action
+            android:id="@+id/action_nav_estadisticaFragment_to_motosNoVisibles"
+            app:destination="@id/motosNoVisibles" />
+    </fragment>
+    <fragment
+        android:id="@+id/motosNoVisibles"
+        android:name="com.straccion.motos_admin.ui.Estadistica.MotosNoVisibles"
+        android:label="fragment_motos_no_visibles"
+        tools:layout="@layout/fragment_motos_no_visibles" >
+        <action
+            android:id="@+id/action_motosNoVisibles_to_detallesMoto"
+            app:destination="@id/detallesMoto" />
+    </fragment>
 </navigation>

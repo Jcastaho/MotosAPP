@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.fragment.app.Fragment;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -25,6 +28,7 @@ import com.straccion.motos_admin.R;
 import com.straccion.motos_admin.providers.ImageProvider;
 import com.straccion.motos_admin.providers.PostProvider;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +40,7 @@ public class AggImagenesFragment extends Fragment {
     Button btnGuardar;
     Button btnURL;
     EditText edtURL;
+    EditText txtGalonAprox;
     Button btnActualizarPrecios;
     ProgressBar progressBar;
     AppCompatSpinner spnSinDatos;
@@ -52,6 +57,7 @@ public class AggImagenesFragment extends Fragment {
     String carpeta3;
     String dato ="";
     String marcaMoto ="";
+    int consumo =0;
 
     String id ="";
     List<String> nombreMotoSin = new ArrayList<>();
@@ -83,6 +89,7 @@ public class AggImagenesFragment extends Fragment {
         edtURL = mview.findViewById(R.id.edtURL);
         progressBar = mview.findViewById(R.id.progressBar);
         btnActualizarPrecios = mview.findViewById(R.id.btnActualizarPrecios);
+        txtGalonAprox = mview.findViewById(R.id.txtGalonAprox);
 
         mpostProvider = new PostProvider();
         mImageProvider = new ImageProvider();
@@ -121,13 +128,15 @@ public class AggImagenesFragment extends Fragment {
         btnURL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(seleccionMotoSin != "NINGUNA") {
+                consumo = Integer.parseInt(txtGalonAprox.getText().toString());
+                if(seleccionMotoSin != "NINGUNA" && consumo != 0) {
                     progressBar.setVisibility(View.VISIBLE);
                     btnURL.setVisibility(View.GONE);
                     llenarBasedatos();
                 }
             }
         });
+
         return mview;
     }
 
@@ -219,10 +228,8 @@ public class AggImagenesFragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                mWebScraping = new WebScraping(id, edtURL.getText().toString(), getContext(), seleccionMotoSin, carpeta1, carpeta2, carpeta3, progressBar, btnURL);
+                mWebScraping = new WebScraping(id, edtURL.getText().toString(), getContext(), seleccionMotoSin, carpeta1, carpeta2, carpeta3, progressBar, btnURL, consumo);
                 mWebScraping.llenarInfo();
-
-
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -231,4 +238,5 @@ public class AggImagenesFragment extends Fragment {
             }
         }).start();
     }
+
 }

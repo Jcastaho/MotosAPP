@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,10 +24,12 @@ public class PostsAdapters extends FirestoreRecyclerAdapter<PostAuteco, PostsAda
 
     Context contexto;
     NavController NavController;
-    public PostsAdapters(FirestoreRecyclerOptions<PostAuteco> options, Context context, NavController navController){
+    int HomeONoVisibles;
+    public PostsAdapters(FirestoreRecyclerOptions<PostAuteco> options, Context context, NavController navController, int homeONoVisibles){
         super(options);
         this.contexto = context;
         this.NavController = navController;
+        this.HomeONoVisibles = homeONoVisibles;
     }
 
     @Override
@@ -34,7 +37,11 @@ public class PostsAdapters extends FirestoreRecyclerAdapter<PostAuteco, PostsAda
 
         DocumentSnapshot document = getSnapshots().getSnapshot(position);
         String postId = document.getId();
-
+        if (HomeONoVisibles == 0){
+            holder.lnlFondo.setBackgroundResource(R.color.white);
+        }else {
+            holder.lnlFondo.setBackgroundResource(R.color.grisclaro);
+        }
         holder.txtMarca.setText(post.getMarcaMoto());
         holder.txtNombreMoto.setText(post.getNombreMoto());
         if (post.getImagenes() != null && !post.getImagenes().isEmpty()) {
@@ -45,7 +52,12 @@ public class PostsAdapters extends FirestoreRecyclerAdapter<PostAuteco, PostsAda
             public void onClick(View v) {
                 Bundle args = new Bundle();
                 args.putString("idDocument", postId);
-                NavController.navigate(R.id.action_nav_home_to_detallesMoto, args);
+                if (HomeONoVisibles == 0){
+                    NavController.navigate(R.id.action_nav_home_to_detallesMoto, args);
+                }else {
+                    NavController.navigate(R.id.action_motosNoVisibles_to_detallesMoto, args);
+                }
+
             }
         });
     }
@@ -61,6 +73,7 @@ public class PostsAdapters extends FirestoreRecyclerAdapter<PostAuteco, PostsAda
         TextView txtNombreMoto;
         TextView txtMarca;
         ImageView imgMoto;
+        LinearLayout lnlFondo;
         View ViewHolder;
 
 
@@ -69,6 +82,7 @@ public class PostsAdapters extends FirestoreRecyclerAdapter<PostAuteco, PostsAda
             txtNombreMoto = view.findViewById(R.id.txtNombreMoto);
             imgMoto = view.findViewById(R.id.imgMoto);
             txtMarca = view.findViewById(R.id.txtMarca);
+            lnlFondo = view.findViewById(R.id.lnlFondo);
             ViewHolder = view;
         }
 

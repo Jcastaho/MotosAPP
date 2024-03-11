@@ -24,7 +24,7 @@ public class PostYamaha {
     private String largoTotal;
     private String anchoTotal;
     private String alturaTotal;
-    private String alturaAsiento;
+    private String alturaSillin;
     private String distanciaEntreEjes;
     private String distanciaMinimaPiso;
     private String tipoLubricacion;
@@ -72,15 +72,16 @@ public class PostYamaha {
     private ArrayList<String> caracteristicasTexto;
     private ArrayList<String> caracteristicasImagenes;
     private ArrayList<String> clasificacion;
-    private double calificacion;
     private double vistas;
     private double busquedas;
+    private double velocidadMaxima;
+    private int consumoPorGalon;
+    private boolean visible;
 
     public PostYamaha(){
 
     }
-
-    public PostYamaha(String id, int precio, String nombreMoto, String marcaMoto, int prioridad, ArrayList<String> imagenes, ArrayList<String> colores, ArrayList<String> imagenesColores1, ArrayList<String> imagenesColores2, ArrayList<String> imagenesColores3, ArrayList<String> imagenesColores4, ArrayList<String> imagenesColores5, ArrayList<String> imagenesColores6, String cilindraje, String peso, String potenciaMaxima, String torqueMaximo, String tipoMotor, String largoTotal, String anchoTotal, String alturaTotal, String alturaAsiento, String distanciaEntreEjes, String distanciaMinimaPiso, String tipoLubricacion, String bateria, String disposiciondeCilindros, String diametroPorCarrera, String relacionCompresion, String arranque, String sistemaAlimentacion, String capacidadCombustible, String encendido, String capacidadBateria, String sistemadeReduccionPrimaria, String relaciondeReduccionPrimaria, String sistemadeReduccionSecundaria, String relaciondeReduccionSecundaria, String tipoEmbrague, String tipoTransmision, String relacionTransmision1ra, String relacionTransmision2da, String relacionTransmision3ra, String relacionTransmision4ta, String relacionTransmision5ta, String relacionTransmision6ta, String relacionEngranajes, String tipoChasis, String inclinacion, String avance, String ruedaDelantera, String ruedaTrasera, String frenoDelantero, String frenoTrasero, String tipoSuspensionDelantera, String tipoSuspensionTrasera, String luzPrincipal, String descripcion, String modelo, boolean descuento, int nuevoValorDescuento, String carpeta1, String carpeta2, String carpeta3, ArrayList<String> manualesArchivos, ArrayList<String> nombresArchivos, ArrayList<String> caracteristicasTexto, ArrayList<String> caracteristicasImagenes, ArrayList<String> clasificacion, double calificacion, double vistas, double busquedas) {
+    public PostYamaha(String id, int precio, String nombreMoto, String marcaMoto, int prioridad, ArrayList<String> imagenes, ArrayList<String> colores, ArrayList<String> imagenesColores1, ArrayList<String> imagenesColores2, ArrayList<String> imagenesColores3, ArrayList<String> imagenesColores4, ArrayList<String> imagenesColores5, ArrayList<String> imagenesColores6, String cilindraje, String peso, String potenciaMaxima, String torqueMaximo, String tipoMotor, String largoTotal, String anchoTotal, String alturaTotal, String alturaSillin, String distanciaEntreEjes, String distanciaMinimaPiso, String tipoLubricacion, String bateria, String disposiciondeCilindros, String diametroPorCarrera, String relacionCompresion, String arranque, String sistemaAlimentacion, String capacidadCombustible, String encendido, String capacidadBateria, String sistemadeReduccionPrimaria, String relaciondeReduccionPrimaria, String sistemadeReduccionSecundaria, String relaciondeReduccionSecundaria, String tipoEmbrague, String tipoTransmision, String relacionTransmision1ra, String relacionTransmision2da, String relacionTransmision3ra, String relacionTransmision4ta, String relacionTransmision5ta, String relacionTransmision6ta, String relacionEngranajes, String tipoChasis, String inclinacion, String avance, String ruedaDelantera, String ruedaTrasera, String frenoDelantero, String frenoTrasero, String tipoSuspensionDelantera, String tipoSuspensionTrasera, String luzPrincipal, String descripcion, String modelo, boolean descuento, int nuevoValorDescuento, String carpeta1, String carpeta2, String carpeta3, ArrayList<String> manualesArchivos, ArrayList<String> nombresArchivos, ArrayList<String> caracteristicasTexto, ArrayList<String> caracteristicasImagenes, ArrayList<String> clasificacion, double vistas, double busquedas, double velocidadMaxima, int consumoPorGalon, boolean visible) {
         this.id = id;
         this.precio = precio;
         this.nombreMoto = nombreMoto;
@@ -102,7 +103,7 @@ public class PostYamaha {
         this.largoTotal = largoTotal;
         this.anchoTotal = anchoTotal;
         this.alturaTotal = alturaTotal;
-        this.alturaAsiento = alturaAsiento;
+        this.alturaSillin = alturaSillin;
         this.distanciaEntreEjes = distanciaEntreEjes;
         this.distanciaMinimaPiso = distanciaMinimaPiso;
         this.tipoLubricacion = tipoLubricacion;
@@ -150,9 +151,11 @@ public class PostYamaha {
         this.caracteristicasTexto = caracteristicasTexto;
         this.caracteristicasImagenes = caracteristicasImagenes;
         this.clasificacion = clasificacion;
-        this.calificacion = calificacion;
         this.vistas = vistas;
         this.busquedas = busquedas;
+        this.velocidadMaxima = velocidadMaxima;
+        this.consumoPorGalon = consumoPorGalon;
+        this.visible = visible;
     }
 
     public String getId() {
@@ -323,12 +326,12 @@ public class PostYamaha {
         this.alturaTotal = alturaTotal;
     }
 
-    public String getAlturaAsiento() {
-        return alturaAsiento;
+    public String getAlturaSillin() {
+        return alturaSillin;
     }
 
-    public void setAlturaAsiento(String alturaAsiento) {
-        this.alturaAsiento = alturaAsiento;
+    public void setAlturaSillin(String alturaSillin) {
+        this.alturaSillin = alturaSillin;
     }
 
     public String getDistanciaEntreEjes() {
@@ -707,14 +710,6 @@ public class PostYamaha {
         this.clasificacion = clasificacion;
     }
 
-    public double getCalificacion() {
-        return calificacion;
-    }
-
-    public void setCalificacion(double calificacion) {
-        this.calificacion = calificacion;
-    }
-
     public double getVistas() {
         return vistas;
     }
@@ -729,5 +724,29 @@ public class PostYamaha {
 
     public void setBusquedas(double busquedas) {
         this.busquedas = busquedas;
+    }
+
+    public double getVelocidadMaxima() {
+        return velocidadMaxima;
+    }
+
+    public void setVelocidadMaxima(double velocidadMaxima) {
+        this.velocidadMaxima = velocidadMaxima;
+    }
+
+    public int getConsumoPorGalon() {
+        return consumoPorGalon;
+    }
+
+    public void setConsumoPorGalon(int consumoPorGalon) {
+        this.consumoPorGalon = consumoPorGalon;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 }

@@ -4,9 +4,13 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
@@ -32,19 +36,15 @@ public class EstadisticaFragment extends Fragment {
 
     PieChart barraCircularMasVisitas;
     PieChart barraCircularMenosVisitas;
+    Button btnMostrarNoVisibles;
     PostProvider mPostProvider;
+    MotosNoVisibles motosNoVisibles;
 
 
     public EstadisticaFragment() {
         // Required empty public constructor
     }
 
-    public static EstadisticaFragment newInstance(String param1, String param2) {
-        EstadisticaFragment fragment = new EstadisticaFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,8 +58,18 @@ public class EstadisticaFragment extends Fragment {
 
         barraCircularMasVisitas = mview.findViewById(R.id.barraCircularMasVisitas);
         barraCircularMenosVisitas = mview.findViewById(R.id.barraCircularMenosVisitas);
+        btnMostrarNoVisibles = mview.findViewById(R.id.btnMostrarNoVisibles);
 
         mPostProvider = new PostProvider();
+        motosNoVisibles = new MotosNoVisibles();
+
+        btnMostrarNoVisibles.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
+                navController.navigate(R.id.action_nav_estadisticaFragment_to_motosNoVisibles);
+            }
+        });
 
         recuperarDatos();
         return mview;
@@ -119,7 +129,7 @@ public class EstadisticaFragment extends Fragment {
     }
 
     private void recuperarDatos(){
-        Query query = mPostProvider.getAll();
+        Query query = mPostProvider.getAll2();
         query.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : task.getResult()) {

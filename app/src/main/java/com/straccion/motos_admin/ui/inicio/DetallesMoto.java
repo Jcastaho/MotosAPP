@@ -102,6 +102,7 @@ public class DetallesMoto extends Fragment {
     TextView txtArchivo4;
     TextView txtArchivo5;
     TextView txtArchivo6;
+    TextView nombreColor;
 
 
 
@@ -205,6 +206,7 @@ public class DetallesMoto extends Fragment {
         txtArchivo4 = mview.findViewById(R.id.txtArchivo4);
         txtArchivo5 = mview.findViewById(R.id.txtArchivo5);
         txtArchivo6 = mview.findViewById(R.id.txtArchivo6);
+        nombreColor = mview.findViewById(R.id.nombreColor);
 
         mPostProvider = new PostProvider();
         mImageProvider = new ImageProvider();
@@ -246,7 +248,6 @@ public class DetallesMoto extends Fragment {
                 imgMoto2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mPostProvider = new PostProvider();
                         dialog2.setContentView(R.layout.elegir_moto_comparar);
                         RecyclerView reciclerViewElegirMoto = dialog2.findViewById(R.id.reciclerViewElegirMoto);
                         LinearLayout lnlMostrarMotos = dialog2.findViewById(R.id.lnlMostrarMotos);
@@ -259,7 +260,7 @@ public class DetallesMoto extends Fragment {
                         reciclerViewElegirMoto.setLayoutManager(gridLayoutManager);
 
 
-                        Query query = mPostProvider.getAll();
+                        Query query = mPostProvider.getAll2();
 
                         FirestoreRecyclerOptions<PostAuteco> options = new FirestoreRecyclerOptions.Builder<PostAuteco>().setQuery(query, PostAuteco.class).build();
 
@@ -324,8 +325,12 @@ public class DetallesMoto extends Fragment {
                             @Override
                             public void run() {
                                 dialog.dismiss();
+                                Bundle args = new Bundle();
+                                args.putString("idDocument", idDocument);
+                                String idNew = mListaCompararAdapter.getPostIdSeleccionado();
+                                args.putString("idDocument2", idNew);
                                 NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
-                                navController.navigate(R.id.action_detallesMoto_to_nuevoCompararFragment);
+                                navController.navigate(R.id.action_detallesMoto_to_nuevoCompararFragment, args);
                             }
                         }, delayMillis);
 
@@ -631,6 +636,7 @@ public class DetallesMoto extends Fragment {
                     if (documentSnapshot.contains("colores")) {
                         colores = (List<String>) documentSnapshot.get("colores");
                         colores(colores);
+                        nombreColor.setText(colores.get(0));
                     }
                     if (documentSnapshot.contains("imagenesColores1")) {
                         imagenesColores1 = (List<String>) documentSnapshot.get("imagenesColores1");
@@ -705,46 +711,60 @@ public class DetallesMoto extends Fragment {
     }
     private void color(List<String> ArrayColores, int cont){
         elemento= ArrayColores.get(cont).toUpperCase();
+        Map<String, Integer> colorMap = new HashMap<>();
+        colorMap.put("ROJO", R.color.red);
+        colorMap.put("ROJA", R.color.red);
+        colorMap.put("NEGRO NEBULOSA - GRIS ROJO", R.color.rojoNegro);
+        colorMap.put("NEGRA - ROJA", R.color.rojoNegro);
+        colorMap.put("NEGRO - GRIS ROJO", R.color.rojoNegro);
+        colorMap.put("ROJO APACHE - GRIS NEGRO", R.color.rojoNegro);
+        colorMap.put("NEGRO NEBULOSA - ROJO GRIS PLATA", R.color.rojoNegro);
 
-        switch(elemento) {
-            case "ROJO":
-            case "ROJA":
-                colorCirculos = ContextCompat.getColor(getContext(), R.color.red);
-                break;
-            case "NEGRO":
-            case "NEGRA":
-            case "NEGRO NEBULOSA - GRIS DORADO":
-                colorCirculos = ContextCompat.getColor(getContext(), R.color.black);
-                break;
-            case "AMARILLO":
-            case "AMARILLA":
-                colorCirculos = ContextCompat.getColor(getContext(), R.color.amarillo);
-                break;
-            case "VERDE":
-                colorCirculos = ContextCompat.getColor(getContext(), R.color.verde);
-                break;
-            case "AZUL":
-                colorCirculos = ContextCompat.getColor(getContext(), R.color.azul);
-                break;
-            case "AZUL PETROLEO - GRIS DORADO":
-            case "AZUL PETRÓLEO - GRIS DORADO":
-                colorCirculos = ContextCompat.getColor(getContext(), R.color.azulPetroleo);
-                break;
-            case "BLANCO":
-            case "BLANCA":
-                colorCirculos = ContextCompat.getColor(getContext(), R.color.white);
-                break;
-            case "GRIS":
-            case "TOP FROST":
-                colorCirculos = ContextCompat.getColor(getContext(), R.color.grisOscuro);
-                break;
-            case "DORADO":
-            case "DORADA":
-                colorCirculos = ContextCompat.getColor(getContext(), R.color.dorado);
-                break;
-            default:
-                break;
-        }
+        colorMap.put("NEGRA", R.color.black);
+        colorMap.put("NEGRO", R.color.black);
+        colorMap.put("NEGRO NEBULOSA - GRIS DORADO", R.color.black);
+        colorMap.put("NEGRO NEBULOSA - VERDE", R.color.black);
+        colorMap.put("NEGRO NEBULOSA - DORADO", R.color.black);
+
+        colorMap.put("AMARILLA", R.color.amarillo);
+        colorMap.put("AMARILLO", R.color.amarillo);
+        colorMap.put("NEGRO - VERDE", R.color.amarillo);
+        colorMap.put("GRIS CARBONO - VERDE", R.color.amarillo);
+
+        colorMap.put("NEGRO NEBULOSA - CAMALEÓN", R.color.morado);
+
+        colorMap.put("AZUL PETROLEO - GRIS DORADO", R.color.azulPetroleo);
+        colorMap.put("AZUL PETRÓLEO - GRIS DORADO", R.color.azulPetroleo);
+        colorMap.put("AZUL MATE/NEGRO NEB - GRIS", R.color.azulPetroleo);
+        colorMap.put("AZUL PETRÓLEO - GRIS ROJO", R.color.azulPetroleo);
+        colorMap.put("NEGRA - AZUL", R.color.azulPetroleo);
+
+        colorMap.put("GRIS", R.color.grisOscuro);
+        colorMap.put("TOP FROST", R.color.grisOscuro);
+        colorMap.put("GRIS CARBONO - AZUL MIAMI BLUE", R.color.grisOscuro);
+        colorMap.put("TOP FROST/NEGRO NEB - GRIS", R.color.grisOscuro);
+        colorMap.put("GRIS CARBONO - NEGRO DORADO", R.color.grisOscuro);
+
+        colorMap.put("TOP FROST - GRIS METALIZADO", R.color.grisclaro);
+
+        colorMap.put("DORADO", R.color.dorado);
+        colorMap.put("DORADA", R.color.dorado);
+
+        colorMap.put("VERDE", R.color.verde);
+
+
+        colorMap.put("AZUL", R.color.azul);
+        colorMap.put("AZUL MATE - GRIS VERDE", R.color.azul);
+        colorMap.put("AZUL MATE - DORADO METALIZADO", R.color.azul);
+
+        colorMap.put("BLANCO", R.color.white);
+        colorMap.put("BLANCA", R.color.white);
+
+
+        Integer colorCirculo = colorMap.get(elemento);
+        colorCirculos = ContextCompat.getColor(getContext(), colorCirculo);
+
+
     }
     private void colores(List<String> ArrayColores){
         CardView cardView = mview.findViewById(R.id.crdColores);
@@ -809,6 +829,7 @@ public class DetallesMoto extends Fragment {
                     SliderItem item = new SliderItem();
                     item.setImageurl(imagen);
                     mSliderItems.add(item);
+                    nombreColor.setText(colores.get(0));
                 }
                 break;
             case 1:
@@ -817,6 +838,7 @@ public class DetallesMoto extends Fragment {
                     item.setImageurl(imagen);
                     mSliderItems.add(item);
                     controlador=1;
+                    nombreColor.setText(colores.get(1));
                 }
                 break;
             case 2:
@@ -825,6 +847,7 @@ public class DetallesMoto extends Fragment {
                     item.setImageurl(imagen);
                     mSliderItems.add(item);
                     controlador=2;
+                    nombreColor.setText(colores.get(2));
                 }
                 break;
             case 3:
@@ -833,6 +856,7 @@ public class DetallesMoto extends Fragment {
                     item.setImageurl(imagen);
                     mSliderItems.add(item);
                     controlador=3;
+                    nombreColor.setText(colores.get(3));
                 }
                 break;
             case 4:
@@ -841,6 +865,7 @@ public class DetallesMoto extends Fragment {
                     item.setImageurl(imagen);
                     mSliderItems.add(item);
                     controlador=4;
+                    nombreColor.setText(colores.get(4));
                 }
                 break;
             case 5:
@@ -849,6 +874,7 @@ public class DetallesMoto extends Fragment {
                     item.setImageurl(imagen);
                     mSliderItems.add(item);
                     controlador=5;
+                    nombreColor.setText(colores.get(5));
                 }
                 break;
             default:
@@ -857,6 +883,7 @@ public class DetallesMoto extends Fragment {
                     item.setImageurl(imagen);
                     mSliderItems.add(item);
                     controlador=6;
+                    nombreColor.setText(colores.get(6));
                 }
                 break;
         }

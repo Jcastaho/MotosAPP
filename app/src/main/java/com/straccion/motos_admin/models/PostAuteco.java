@@ -54,15 +54,16 @@ public class PostAuteco {
     private ArrayList<String> caracteristicasTexto;
     private ArrayList<String> caracteristicasImagenes;
     private ArrayList<String> clasificacion;
-    private double calificacion;
     private double vistas;
     private double busquedas;
+    private int consumoPorGalon;
+    private boolean visible;
 
     public PostAuteco(){
 
     }
 
-    public PostAuteco(String id, int precio, String nombreMoto, String marcaMoto, int prioridad, ArrayList<String> imagenes, ArrayList<String> colores, ArrayList<String> imagenesColores1, ArrayList<String> imagenesColores2, ArrayList<String> imagenesColores3, ArrayList<String> imagenesColores4, ArrayList<String> imagenesColores5, ArrayList<String> imagenesColores6, String cilindraje, String motor, String torqueMaximo, String potenciaMaxima, String relacionCompresion, String sistemaAlimentacion, String diametroCarrera, String refrigeracion, String combustible, String arranque, String transmision, String suspensionDelantera, String suspensionTrasera, String frenoDelantero, String frenoTrasero, String llantaDelantera, String llantaTrasera, String rines, String capacidadTanque, String sistemaEncendido, String largoTotal, String alturaTotal, String anchoTotal, String distanciaEntreEjes, String alturaSillin, String pesoNeto, String descripcion, String modelo, boolean descuento, int nuevoValorDescuento, String carpeta1, String carpeta2, String carpeta3, ArrayList<String> manualesArchivos, ArrayList<String> nombresArchivos, ArrayList<String> caracteristicasTexto, ArrayList<String> caracteristicasImagenes, ArrayList<String> clasificacion, double calificacion, double vistas, double busquedas) {
+    public PostAuteco(String id, int precio, String nombreMoto, String marcaMoto, int prioridad, ArrayList<String> imagenes, ArrayList<String> colores, ArrayList<String> imagenesColores1, ArrayList<String> imagenesColores2, ArrayList<String> imagenesColores3, ArrayList<String> imagenesColores4, ArrayList<String> imagenesColores5, ArrayList<String> imagenesColores6, String cilindraje, String motor, String torqueMaximo, String potenciaMaxima, String relacionCompresion, String sistemaAlimentacion, String diametroCarrera, String refrigeracion, String combustible, String arranque, String transmision, String suspensionDelantera, String suspensionTrasera, String frenoDelantero, String frenoTrasero, String llantaDelantera, String llantaTrasera, String rines, String capacidadTanque, String sistemaEncendido, String largoTotal, String alturaTotal, String anchoTotal, String distanciaEntreEjes, String alturaSillin, String pesoNeto, String descripcion, String modelo, boolean descuento, int nuevoValorDescuento, String carpeta1, String carpeta2, String carpeta3, ArrayList<String> manualesArchivos, ArrayList<String> nombresArchivos, ArrayList<String> caracteristicasTexto, ArrayList<String> caracteristicasImagenes, ArrayList<String> clasificacion, double vistas, double busquedas, int consumoPorGalon, boolean visible) {
         this.id = id;
         this.precio = precio;
         this.nombreMoto = nombreMoto;
@@ -114,9 +115,10 @@ public class PostAuteco {
         this.caracteristicasTexto = caracteristicasTexto;
         this.caracteristicasImagenes = caracteristicasImagenes;
         this.clasificacion = clasificacion;
-        this.calificacion = calificacion;
         this.vistas = vistas;
         this.busquedas = busquedas;
+        this.consumoPorGalon = consumoPorGalon;
+        this.visible = visible;
     }
 
     public String getId() {
@@ -527,14 +529,6 @@ public class PostAuteco {
         this.clasificacion = clasificacion;
     }
 
-    public double getCalificacion() {
-        return calificacion;
-    }
-
-    public void setCalificacion(double calificacion) {
-        this.calificacion = calificacion;
-    }
-
     public double getVistas() {
         return vistas;
     }
@@ -549,5 +543,21 @@ public class PostAuteco {
 
     public void setBusquedas(double busquedas) {
         this.busquedas = busquedas;
+    }
+
+    public int getConsumoPorGalon() {
+        return consumoPorGalon;
+    }
+
+    public void setConsumoPorGalon(int consumoPorGalon) {
+        this.consumoPorGalon = consumoPorGalon;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 }

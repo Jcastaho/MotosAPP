@@ -11,12 +11,17 @@
     <color name="grisclaro">#D2D2D2</color>
     <color name="grisFondo">#666666</color>
     <color name="amarillo">#FFEB3B</color>
+    <color name="morado">#65216D</color>
     <color name="red">#FF0000</color>
+    <color name="rojoNegro">#A60707</color>
+    <color name="redTransparente">#45FF0000</color>
     <color name="verde">#0C8F1D</color>
+    <color name="verdeTransparente">#1A0C8F1D</color>
     <color name="dorado">#bb8b06</color>
     <color name="azul">#062BB1</color>
     <color name="azulPetroleo">#30395B</color>
     <color name="azulClaro">#0B3AE2</color>
     <color name="transparent">#00000000</color>
     <color name="colorprimarys">#062BB1</color>
+
 </resources>

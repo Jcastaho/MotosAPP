@@ -94,7 +94,7 @@ public class SlideshowFragment extends Fragment {
         mpostProvider = new PostProvider();
 
         //se agrega una imagen vacia a la lista
-        imagenesList.add("https://firebasestorage.googleapis.com/v0/b/appmotos-fc479.appspot.com/o/vacio.jpg?alt=media&token=fce18573-39a5-45bc-907f-c426bb6f0bb2");
+        imagenesList.add("https://i.ibb.co/Xs4JwHd/imagen-Blanca.png");
         nombreImagenes.add("  VACIO");
         mostrarTextos(0);
 
@@ -208,7 +208,7 @@ public class SlideshowFragment extends Fragment {
 
     private void llenarListas(){
         final int[] sumar = {0};
-        Query query = mpostProvider.getAll();
+        Query query = mpostProvider.getAll2();
         query.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : task.getResult()) {
@@ -257,7 +257,7 @@ public class SlideshowFragment extends Fragment {
 
     private void mostrarDatos(int position, int contadorimgView){
         if (position > 0){
-            Query query = mpostProvider.getAll();
+            Query query = mpostProvider.getAll2();
             query.get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     int contador = 0;

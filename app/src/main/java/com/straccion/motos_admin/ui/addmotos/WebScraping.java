@@ -50,6 +50,7 @@ import javax.security.auth.callback.Callback;
 public class WebScraping {
     ProgressBar progressBar;
     Button btnURL;
+    int consumoGasolina;
     List<String> nombreMoto = new ArrayList<>();
     List<String> nombresMotos = new ArrayList<>();
     List<String> precioMoto = new ArrayList<>();
@@ -132,7 +133,7 @@ public class WebScraping {
         this.context = context;
     }
 
-    public WebScraping(String ID, String Url, Context context, String nombre, String carpeta1, String carpeta2, String carpeta3, ProgressBar progressBar, Button btnURL) {
+    public WebScraping(String ID, String Url, Context context, String nombre, String carpeta1, String carpeta2, String carpeta3, ProgressBar progressBar, Button btnURL, int consumo) {
         this.id = ID;
         this.url = Url;
         this.context = context;
@@ -142,27 +143,32 @@ public class WebScraping {
         this.carpeta3 = carpeta3;
         this.progressBar = progressBar;
         this.btnURL = btnURL;
+        this.consumoGasolina = consumo;
     }
 
     public void obtenerNombreyPreciosAutecoTVSTrabajo() {
 
         try {
-            String url = "https://www.auteco.com.co/motos-tvs-trabajo-y-transporte/";
-
-            doc = Jsoup.connect(url).get();
-
-            Elements nombresMotosElements = doc.select("h2.card-ref-title");
-            Elements precioMotosElements = doc.select("div.info-card > h2.card-ref-precio-tvs");
-            if (nombresMotosElements.size() >= 2) {
-                for (int i = 0; i < nombresMotosElements.size(); i++) {
-                    Element segundoElemento = nombresMotosElements.get(i);
-                    nombresMotos.add(segundoElemento.text());
+            List<String> url = new ArrayList<>();
+            url.add("https://www.auteco.com.co/motos-tvs-trabajo-y-transporte/");
+            url.add("https://www.auteco.com.co/motos-tvs-deportivas-apache/");
+            url.add("https://www.auteco.com.co/motos-tvs-scooters/");
+            url.add("https://www.auteco.com.co/motos-tvs-semiautomaticas/");
+            for (int i = 0; i <url.size(); i++) {
+                doc = Jsoup.connect(url.get(i)).get();
+                Elements nombresMotosElements = doc.select("h2.card-ref-title");
+                Elements precioMotosElements = doc.select("div.info-card > h2.card-ref-precio-tvs");
+                if (nombresMotosElements.size() >= 2) {
+                    for (int j = 0; j < nombresMotosElements.size(); j++) {
+                        Element segundoElemento = nombresMotosElements.get(j);
+                        nombresMotos.add(segundoElemento.text());
+                    }
                 }
-            }
-            if (precioMotosElements.size() >= 2) {
-                for (int i = 0; i < nombresMotosElements.size(); i++) {
-                    Element segundoElemento = precioMotosElements.get(i);
-                    precioMoto.add(segundoElemento.text().split("\\*")[0].trim());
+                if (precioMotosElements.size() >= 2) {
+                    for (int j = 0; j < nombresMotosElements.size(); j++) {
+                        Element segundoElemento = precioMotosElements.get(j);
+                        precioMoto.add(segundoElemento.text().split("\\*")[0].trim());
+                    }
                 }
             }
             guardarPreciosenFirebase();
@@ -237,7 +243,7 @@ public class WebScraping {
             //conexion
             Document doc = Jsoup.connect(url).get();
 
-            Elements DatosFichaTecnicaTVSSPORT100ELSSPEDICIONESPECIAL = doc.select("div.jet-table__cell-text");
+            Elements DatosFichaTecnicaMotos = doc.select("div.jet-table__cell-text");
             Elements descripcionMotos = doc.select("div.elementor-widget-container");
             Elements imagenesAdicionales = doc.select("a.e-gallery-item.elementor-gallery-item.elementor-animated-content");
             colorPrincipalDiv = doc.select("div.jet-listing-dynamic-repeater__item");
@@ -251,12 +257,12 @@ public class WebScraping {
 
             if (descripcionMotos.size() >= 2) {
                 Element modeloMoto = descripcionMotos.get(10);
-                Element description = descripcionMotos.get(15);
+                Element description = descripcionMotos.get(14);
                 modelo = modeloMoto.text();
                 descripcion = description.text();
-                if (descripcion.length() < 12){
+                if (descripcion.length() < 15){
                     Element modeloMotos= descripcionMotos.get(11);
-                    Element descriptions = descripcionMotos.get(16);
+                    Element descriptions = descripcionMotos.get(15);
                     modelo = modeloMotos.text();
                     descripcion = descriptions.text();
                 }
@@ -498,9 +504,9 @@ public class WebScraping {
                 }
             }
 
-            if (DatosFichaTecnicaTVSSPORT100ELSSPEDICIONESPECIAL.size() >= 2) {
+            if (DatosFichaTecnicaMotos.size() >= 2) {
                 for (int i = 2; i < 54; i++) {
-                    Element datos = DatosFichaTecnicaTVSSPORT100ELSSPEDICIONESPECIAL.get(i);
+                    Element datos = DatosFichaTecnicaMotos.get(i);
                     nombreMoto.add(datos.text());
                 }
             }
@@ -570,6 +576,8 @@ public class WebScraping {
             updates.put("pesoNeto", nombreMoto.get(51));
             updates.put("descripcion", descripcion);
             updates.put("modelo", modelo);
+            updates.put("consumoPorGalon", consumoGasolina);
+            updates.put("visible", true);
             mpostProvider.updatePost(id, updates).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
@@ -725,12 +733,16 @@ public class WebScraping {
                                                                                                                                                                                         }
                                                                                                                                                                                     }
                                                                                                                                                                                 });
+                                                                                                                                                                            }else{
+                                                                                                                                                                                guardarDatos2(url1, url2, url3, url4, url5, url6, url7, null);
                                                                                                                                                                             }
                                                                                                                                                                         }
                                                                                                                                                                     });
                                                                                                                                                                 }
                                                                                                                                                             }
                                                                                                                                                         });
+                                                                                                                                                    }else{
+                                                                                                                                                        guardarDatos2(url1, url2, url3, url4, url5, url6, null, null);
                                                                                                                                                     }
                                                                                                                                                 }
                                                                                                                                             });
@@ -738,36 +750,40 @@ public class WebScraping {
                                                                                                                                     }
                                                                                                                                 });
                                                                                                                             }
+                                                                                                                            else{
+                                                                                                                                guardarDatos2(url1, url2, url3, url4, url5, null, null, null);
+                                                                                                                            }
                                                                                                                         }
                                                                                                                     });
                                                                                                                 }
                                                                                                             }
                                                                                                         });
-                                                                                                    }else {
+                                                                                                    } else{
+                                                                                                        guardarDatos2(url1, url2, url3, url4, null, null, null, null);
                                                                                                     }
                                                                                                 }
                                                                                             });
                                                                                         }
                                                                                     }
                                                                                 });
-                                                                            }else {
-
+                                                                            } else{
+                                                                                guardarDatos2(url1, url2, url3, null, null, null, null, null);
                                                                             }
                                                                         }
                                                                     });
                                                                 }
                                                             }
                                                         });
-                                                    }else {
-
+                                                    }else{
+                                                        guardarDatos2(url1, url2, null, null, null, null, null, null);
                                                     }
                                                 }
                                             });
                                         }
                                     }
                                 });
-                            }else {
-
+                            }else{
+                                guardarDatos2(url1, null, null, null, null, null, null, null);
                             }
                         }
                     });

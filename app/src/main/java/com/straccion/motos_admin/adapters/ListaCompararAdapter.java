@@ -29,6 +29,7 @@ public class ListaCompararAdapter extends FirestoreRecyclerAdapter<PostAuteco, L
     ImageView imgMoto2;
     Dialog dialog2;
     TextView txtMoto2;
+    String postIdSeleccionado;
     public ListaCompararAdapter(FirestoreRecyclerOptions<PostAuteco> options, Context context,
                                 NavController navController, String idDocument, ImageView imgMoto2, Dialog dialog2, TextView txtMoto2){
         super(options);
@@ -45,6 +46,7 @@ public class ListaCompararAdapter extends FirestoreRecyclerAdapter<PostAuteco, L
         DocumentSnapshot document = getSnapshots().getSnapshot(position);
         String postId = document.getId();
 
+
         holder.txtNombreMoto.setText(post.getNombreMoto());
         if (post.getImagenes() != null && !post.getImagenes().isEmpty()) {
             Picasso.get().load(post.getImagenes().get(0)).into(holder.imgMoto);
@@ -54,6 +56,7 @@ public class ListaCompararAdapter extends FirestoreRecyclerAdapter<PostAuteco, L
             public void onClick(View v) {
                 String imagen2 = post.getImagenes().get(0);
                 dialog2.dismiss();
+                postIdSeleccionado = document.getId();
                 Picasso.get().load(imagen2).into(imgMoto2);
                 txtMoto2.setText(post.getNombreMoto());
                 txtMoto2.setVisibility(View.VISIBLE);
@@ -61,6 +64,9 @@ public class ListaCompararAdapter extends FirestoreRecyclerAdapter<PostAuteco, L
         });
     }
 
+    public String getPostIdSeleccionado() {
+        return postIdSeleccionado;
+    }
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
