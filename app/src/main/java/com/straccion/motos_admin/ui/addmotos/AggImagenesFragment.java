@@ -114,7 +114,7 @@ public class AggImagenesFragment extends Fragment {
                     @Override
                     public void run() {
                         WebScraping mWebScraping = new WebScraping(getContext());
-                        mWebScraping.obtenerNombreyPreciosAutecoTVSTrabajo();
+                        mWebScraping.direccionamientoxFabricantePrecios();
 
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
@@ -229,7 +229,7 @@ public class AggImagenesFragment extends Fragment {
             @Override
             public void run() {
                 mWebScraping = new WebScraping(id, edtURL.getText().toString(), getContext(), seleccionMotoSin, carpeta1, carpeta2, carpeta3, progressBar, btnURL, consumo);
-                mWebScraping.llenarInfo();
+                mWebScraping.direccionamientoxFabricante(carpeta1);
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

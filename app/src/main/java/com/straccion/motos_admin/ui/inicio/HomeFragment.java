@@ -1,5 +1,6 @@
 package com.straccion.motos_admin.ui.inicio;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,6 +26,8 @@ import com.straccion.motos_admin.adapters.PostsAdapters;
 import com.straccion.motos_admin.models.PostAuteco;
 import com.straccion.motos_admin.providers.PostProvider;
 import com.straccion.motos_admin.ui.addmotos.GalleryFragment;
+
+import java.io.File;
 
 public class HomeFragment extends Fragment implements MaterialSearchBar.OnSearchActionListener {
     View mview;
@@ -63,7 +66,7 @@ public class HomeFragment extends Fragment implements MaterialSearchBar.OnSearch
         MenuItem searchItem = mview.findViewById(R.id.action_search);
         lnlProgressBar.setVisibility(View.VISIBLE);
 
-
+        deleteCache();
         mpostProvider = new PostProvider();
 
         int orientation = getResources().getConfiguration().orientation;
@@ -122,5 +125,45 @@ public class HomeFragment extends Fragment implements MaterialSearchBar.OnSearch
     @Override
     public void onButtonClicked(int buttonCode) {
 
+    }
+    public void deleteCache() {
+        try {
+            long cacheSize = getCacheSize(getContext().getCacheDir());
+            long maxSizeBytes = 50 * 1024 * 1024; // 120 megabytes
+
+            if (cacheSize > maxSizeBytes) {
+                File cacheDir = getContext().getCacheDir();
+                if (cacheDir != null && cacheDir.isDirectory()) {
+                    deleteDir(cacheDir);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private long getCacheSize(File dir) {
+        long size = 0;
+        if (dir != null && dir.isDirectory()) {
+            File[] files = dir.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    size += file.length();
+                }
+            }
+        }
+        return size;
+    }
+
+    private boolean deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (String child : children) {
+                boolean success = deleteDir(new File(dir, child));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        return dir != null && dir.delete();
     }
 }

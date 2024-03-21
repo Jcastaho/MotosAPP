@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class PostYamaha {
     private String id;
     private int precio;
+    private int precio2;
     private String nombreMoto;
     private String marcaMoto;
     private int prioridad;
@@ -18,50 +19,50 @@ public class PostYamaha {
     private ArrayList<String>imagenesColores6;
     private String cilindraje;
     private String peso;
-    private String potenciaMaxima;
-    private String torqueMaximo;
-    private String tipoMotor;
-    private String largoTotal;
-    private String anchoTotal;
-    private String alturaTotal;
-    private String alturaSillin;
-    private String distanciaEntreEjes;
-    private String distanciaMinimaPiso;
-    private String tipoLubricacion;
+    private String potenciamaxima;
+    private String torquemaximo;
+    private String tipodemotor;
+    private String largototal;
+    private String anchototal;
+    private String alturatotal;
+    private String alturaalasiento;
+    private String distanciaentreejes;
+    private String distanciaminimadelpiso;
+    private String tipodelubricacion;
     private String bateria;
-    private String disposiciondeCilindros;
-    private String diametroPorCarrera;
-    private String relacionCompresion;
+    private String disposiciondeloscilindros;
+    private String diametroporcarrera;
+    private String relaciondecompresion;
     private String arranque;
-    private String sistemaAlimentacion;
-    private String capacidadCombustible;
+    private String sistemadealimentacion;
+    private String capacidaddecombustible;
     private String encendido;
-    private String capacidadBateria;
-    private String sistemadeReduccionPrimaria;
-    private String relaciondeReduccionPrimaria;
-    private String sistemadeReduccionSecundaria;
-    private String relaciondeReduccionSecundaria;
-    private String tipoEmbrague;
-    private String tipoTransmision;
-    private String relacionTransmision1ra;
-    private String relacionTransmision2da;
-    private String relacionTransmision3ra;
-    private String relacionTransmision4ta;
-    private String relacionTransmision5ta;
-    private String relacionTransmision6ta;
-    private String relacionEngranajes;
-    private String tipoChasis;
+    private String capacidadbateria;
+    private String sistemadereduccionprimaria;
+    private String relaciondereduccionprimaria;
+    private String sistemadereduccionsecundaria;
+    private String relaciondereduccionsecundaria;
+    private String tipodeembrague;
+    private String tipodetransmision;
+    private String relaciondetransmisionen1ra;
+    private String relaciondetransmisionen2da;
+    private String relaciondetransmisionen3ra;
+    private String relaciondetransmisionen4ta;
+    private String relaciondetransmisionen5ta;
+    private String relaciondetransmisionen6ta;
+    private String relaciondeengranajes;
+    private String tipodechasis;
     private String inclinacion;
     private String avance;
-    private String ruedaDelantera;
-    private String ruedaTrasera;
-    private String frenoDelantero;
-    private String frenoTrasero;
-    private String tipoSuspensionDelantera;
-    private String tipoSuspensionTrasera;
-    private String luzPrincipal;
-    private String descripcion;
+    private String ruedadelantera;
+    private String ruedatrasera;
+    private String frenodelantero;
+    private String frenotrasero;
+    private String tipodesuspensiondelantera;
+    private String tipodesuspensiontrasera;
+    private String luzprincipal;
     private String modelo;
+    private String modelo2;
     private boolean descuento;
     private int nuevoValorDescuento;
     private String carpeta1;
@@ -81,9 +82,11 @@ public class PostYamaha {
     public PostYamaha(){
 
     }
-    public PostYamaha(String id, int precio, String nombreMoto, String marcaMoto, int prioridad, ArrayList<String> imagenes, ArrayList<String> colores, ArrayList<String> imagenesColores1, ArrayList<String> imagenesColores2, ArrayList<String> imagenesColores3, ArrayList<String> imagenesColores4, ArrayList<String> imagenesColores5, ArrayList<String> imagenesColores6, String cilindraje, String peso, String potenciaMaxima, String torqueMaximo, String tipoMotor, String largoTotal, String anchoTotal, String alturaTotal, String alturaSillin, String distanciaEntreEjes, String distanciaMinimaPiso, String tipoLubricacion, String bateria, String disposiciondeCilindros, String diametroPorCarrera, String relacionCompresion, String arranque, String sistemaAlimentacion, String capacidadCombustible, String encendido, String capacidadBateria, String sistemadeReduccionPrimaria, String relaciondeReduccionPrimaria, String sistemadeReduccionSecundaria, String relaciondeReduccionSecundaria, String tipoEmbrague, String tipoTransmision, String relacionTransmision1ra, String relacionTransmision2da, String relacionTransmision3ra, String relacionTransmision4ta, String relacionTransmision5ta, String relacionTransmision6ta, String relacionEngranajes, String tipoChasis, String inclinacion, String avance, String ruedaDelantera, String ruedaTrasera, String frenoDelantero, String frenoTrasero, String tipoSuspensionDelantera, String tipoSuspensionTrasera, String luzPrincipal, String descripcion, String modelo, boolean descuento, int nuevoValorDescuento, String carpeta1, String carpeta2, String carpeta3, ArrayList<String> manualesArchivos, ArrayList<String> nombresArchivos, ArrayList<String> caracteristicasTexto, ArrayList<String> caracteristicasImagenes, ArrayList<String> clasificacion, double vistas, double busquedas, double velocidadMaxima, int consumoPorGalon, boolean visible) {
+
+    public PostYamaha(String id, int precio, int precio2, String nombreMoto, String marcaMoto, int prioridad, ArrayList<String> imagenes, ArrayList<String> colores, ArrayList<String> imagenesColores1, ArrayList<String> imagenesColores2, ArrayList<String> imagenesColores3, ArrayList<String> imagenesColores4, ArrayList<String> imagenesColores5, ArrayList<String> imagenesColores6, String cilindraje, String peso, String potenciamaxima, String torquemaximo, String tipodemotor, String largototal, String anchototal, String alturatotal, String alturaalasiento, String distanciaentreejes, String distanciaminimadelpiso, String tipodelubricacion, String bateria, String disposiciondeloscilindros, String diametroporcarrera, String relaciondecompresion, String arranque, String sistemadealimentacion, String capacidaddecombustible, String encendido, String capacidadbateria, String sistemadereduccionprimaria, String relaciondereduccionprimaria, String sistemadereduccionsecundaria, String relaciondereduccionsecundaria, String tipodeembrague, String tipodetransmision, String relaciondetransmisionen1ra, String relaciondetransmisionen2da, String relaciondetransmisionen3ra, String relaciondetransmisionen4ta, String relaciondetransmisionen5ta, String relaciondetransmisionen6ta, String relaciondeengranajes, String tipodechasis, String inclinacion, String avance, String ruedadelantera, String ruedatrasera, String frenodelantero, String frenotrasero, String tipodesuspensiondelantera, String tipodesuspensiontrasera, String luzprincipal, String modelo, String modelo2, boolean descuento, int nuevoValorDescuento, String carpeta1, String carpeta2, String carpeta3, ArrayList<String> manualesArchivos, ArrayList<String> nombresArchivos, ArrayList<String> caracteristicasTexto, ArrayList<String> caracteristicasImagenes, ArrayList<String> clasificacion, double vistas, double busquedas, double velocidadMaxima, int consumoPorGalon, boolean visible) {
         this.id = id;
         this.precio = precio;
+        this.precio2 = precio2;
         this.nombreMoto = nombreMoto;
         this.marcaMoto = marcaMoto;
         this.prioridad = prioridad;
@@ -97,50 +100,50 @@ public class PostYamaha {
         this.imagenesColores6 = imagenesColores6;
         this.cilindraje = cilindraje;
         this.peso = peso;
-        this.potenciaMaxima = potenciaMaxima;
-        this.torqueMaximo = torqueMaximo;
-        this.tipoMotor = tipoMotor;
-        this.largoTotal = largoTotal;
-        this.anchoTotal = anchoTotal;
-        this.alturaTotal = alturaTotal;
-        this.alturaSillin = alturaSillin;
-        this.distanciaEntreEjes = distanciaEntreEjes;
-        this.distanciaMinimaPiso = distanciaMinimaPiso;
-        this.tipoLubricacion = tipoLubricacion;
+        this.potenciamaxima = potenciamaxima;
+        this.torquemaximo = torquemaximo;
+        this.tipodemotor = tipodemotor;
+        this.largototal = largototal;
+        this.anchototal = anchototal;
+        this.alturatotal = alturatotal;
+        this.alturaalasiento = alturaalasiento;
+        this.distanciaentreejes = distanciaentreejes;
+        this.distanciaminimadelpiso = distanciaminimadelpiso;
+        this.tipodelubricacion = tipodelubricacion;
         this.bateria = bateria;
-        this.disposiciondeCilindros = disposiciondeCilindros;
-        this.diametroPorCarrera = diametroPorCarrera;
-        this.relacionCompresion = relacionCompresion;
+        this.disposiciondeloscilindros = disposiciondeloscilindros;
+        this.diametroporcarrera = diametroporcarrera;
+        this.relaciondecompresion = relaciondecompresion;
         this.arranque = arranque;
-        this.sistemaAlimentacion = sistemaAlimentacion;
-        this.capacidadCombustible = capacidadCombustible;
+        this.sistemadealimentacion = sistemadealimentacion;
+        this.capacidaddecombustible = capacidaddecombustible;
         this.encendido = encendido;
-        this.capacidadBateria = capacidadBateria;
-        this.sistemadeReduccionPrimaria = sistemadeReduccionPrimaria;
-        this.relaciondeReduccionPrimaria = relaciondeReduccionPrimaria;
-        this.sistemadeReduccionSecundaria = sistemadeReduccionSecundaria;
-        this.relaciondeReduccionSecundaria = relaciondeReduccionSecundaria;
-        this.tipoEmbrague = tipoEmbrague;
-        this.tipoTransmision = tipoTransmision;
-        this.relacionTransmision1ra = relacionTransmision1ra;
-        this.relacionTransmision2da = relacionTransmision2da;
-        this.relacionTransmision3ra = relacionTransmision3ra;
-        this.relacionTransmision4ta = relacionTransmision4ta;
-        this.relacionTransmision5ta = relacionTransmision5ta;
-        this.relacionTransmision6ta = relacionTransmision6ta;
-        this.relacionEngranajes = relacionEngranajes;
-        this.tipoChasis = tipoChasis;
+        this.capacidadbateria = capacidadbateria;
+        this.sistemadereduccionprimaria = sistemadereduccionprimaria;
+        this.relaciondereduccionprimaria = relaciondereduccionprimaria;
+        this.sistemadereduccionsecundaria = sistemadereduccionsecundaria;
+        this.relaciondereduccionsecundaria = relaciondereduccionsecundaria;
+        this.tipodeembrague = tipodeembrague;
+        this.tipodetransmision = tipodetransmision;
+        this.relaciondetransmisionen1ra = relaciondetransmisionen1ra;
+        this.relaciondetransmisionen2da = relaciondetransmisionen2da;
+        this.relaciondetransmisionen3ra = relaciondetransmisionen3ra;
+        this.relaciondetransmisionen4ta = relaciondetransmisionen4ta;
+        this.relaciondetransmisionen5ta = relaciondetransmisionen5ta;
+        this.relaciondetransmisionen6ta = relaciondetransmisionen6ta;
+        this.relaciondeengranajes = relaciondeengranajes;
+        this.tipodechasis = tipodechasis;
         this.inclinacion = inclinacion;
         this.avance = avance;
-        this.ruedaDelantera = ruedaDelantera;
-        this.ruedaTrasera = ruedaTrasera;
-        this.frenoDelantero = frenoDelantero;
-        this.frenoTrasero = frenoTrasero;
-        this.tipoSuspensionDelantera = tipoSuspensionDelantera;
-        this.tipoSuspensionTrasera = tipoSuspensionTrasera;
-        this.luzPrincipal = luzPrincipal;
-        this.descripcion = descripcion;
+        this.ruedadelantera = ruedadelantera;
+        this.ruedatrasera = ruedatrasera;
+        this.frenodelantero = frenodelantero;
+        this.frenotrasero = frenotrasero;
+        this.tipodesuspensiondelantera = tipodesuspensiondelantera;
+        this.tipodesuspensiontrasera = tipodesuspensiontrasera;
+        this.luzprincipal = luzprincipal;
         this.modelo = modelo;
+        this.modelo2 = modelo2;
         this.descuento = descuento;
         this.nuevoValorDescuento = nuevoValorDescuento;
         this.carpeta1 = carpeta1;
@@ -172,6 +175,14 @@ public class PostYamaha {
 
     public void setPrecio(int precio) {
         this.precio = precio;
+    }
+
+    public int getPrecio2() {
+        return precio2;
+    }
+
+    public void setPrecio2(int precio2) {
+        this.precio2 = precio2;
     }
 
     public String getNombreMoto() {
@@ -278,84 +289,84 @@ public class PostYamaha {
         this.peso = peso;
     }
 
-    public String getPotenciaMaxima() {
-        return potenciaMaxima;
+    public String getPotenciamaxima() {
+        return potenciamaxima;
     }
 
-    public void setPotenciaMaxima(String potenciaMaxima) {
-        this.potenciaMaxima = potenciaMaxima;
+    public void setPotenciamaxima(String potenciamaxima) {
+        this.potenciamaxima = potenciamaxima;
     }
 
-    public String getTorqueMaximo() {
-        return torqueMaximo;
+    public String getTorquemaximo() {
+        return torquemaximo;
     }
 
-    public void setTorqueMaximo(String torqueMaximo) {
-        this.torqueMaximo = torqueMaximo;
+    public void setTorquemaximo(String torquemaximo) {
+        this.torquemaximo = torquemaximo;
     }
 
-    public String getTipoMotor() {
-        return tipoMotor;
+    public String getTipodemotor() {
+        return tipodemotor;
     }
 
-    public void setTipoMotor(String tipoMotor) {
-        this.tipoMotor = tipoMotor;
+    public void setTipodemotor(String tipodemotor) {
+        this.tipodemotor = tipodemotor;
     }
 
-    public String getLargoTotal() {
-        return largoTotal;
+    public String getLargototal() {
+        return largototal;
     }
 
-    public void setLargoTotal(String largoTotal) {
-        this.largoTotal = largoTotal;
+    public void setLargototal(String largototal) {
+        this.largototal = largototal;
     }
 
-    public String getAnchoTotal() {
-        return anchoTotal;
+    public String getAnchototal() {
+        return anchototal;
     }
 
-    public void setAnchoTotal(String anchoTotal) {
-        this.anchoTotal = anchoTotal;
+    public void setAnchototal(String anchototal) {
+        this.anchototal = anchototal;
     }
 
-    public String getAlturaTotal() {
-        return alturaTotal;
+    public String getAlturatotal() {
+        return alturatotal;
     }
 
-    public void setAlturaTotal(String alturaTotal) {
-        this.alturaTotal = alturaTotal;
+    public void setAlturatotal(String alturatotal) {
+        this.alturatotal = alturatotal;
     }
 
-    public String getAlturaSillin() {
-        return alturaSillin;
+    public String getAlturaalasiento() {
+        return alturaalasiento;
     }
 
-    public void setAlturaSillin(String alturaSillin) {
-        this.alturaSillin = alturaSillin;
+    public void setAlturaalasiento(String alturaalasiento) {
+        this.alturaalasiento = alturaalasiento;
     }
 
-    public String getDistanciaEntreEjes() {
-        return distanciaEntreEjes;
+    public String getDistanciaentreejes() {
+        return distanciaentreejes;
     }
 
-    public void setDistanciaEntreEjes(String distanciaEntreEjes) {
-        this.distanciaEntreEjes = distanciaEntreEjes;
+    public void setDistanciaentreejes(String distanciaentreejes) {
+        this.distanciaentreejes = distanciaentreejes;
     }
 
-    public String getDistanciaMinimaPiso() {
-        return distanciaMinimaPiso;
+    public String getDistanciaminimadelpiso() {
+        return distanciaminimadelpiso;
     }
 
-    public void setDistanciaMinimaPiso(String distanciaMinimaPiso) {
-        this.distanciaMinimaPiso = distanciaMinimaPiso;
+    public void setDistanciaminimadelpiso(String distanciaminimadelpiso) {
+        this.distanciaminimadelpiso = distanciaminimadelpiso;
     }
 
-    public String getTipoLubricacion() {
-        return tipoLubricacion;
+    public String getTipodelubricacion() {
+        return tipodelubricacion;
     }
 
-    public void setTipoLubricacion(String tipoLubricacion) {
-        this.tipoLubricacion = tipoLubricacion;
+    public void setTipodelubricacion(String tipodelubricacion) {
+        this.tipodelubricacion = tipodelubricacion;
     }
 
     public String getBateria() {
@@ -366,28 +377,28 @@ public class PostYamaha {
         this.bateria = bateria;
     }
 
-    public String getDisposiciondeCilindros() {
-        return disposiciondeCilindros;
+    public String getDisposiciondeloscilindros() {
+        return disposiciondeloscilindros;
     }
 
-    public void setDisposiciondeCilindros(String disposiciondeCilindros) {
-        this.disposiciondeCilindros = disposiciondeCilindros;
+    public void setDisposiciondeloscilindros(String disposiciondeloscilindros) {
+        this.disposiciondeloscilindros = disposiciondeloscilindros;
     }
 
-    public String getDiametroPorCarrera() {
-        return diametroPorCarrera;
+    public String getDiametroporcarrera() {
+        return diametroporcarrera;
     }
 
-    public void setDiametroPorCarrera(String diametroPorCarrera) {
-        this.diametroPorCarrera = diametroPorCarrera;
+    public void setDiametroporcarrera(String diametroporcarrera) {
+        this.diametroporcarrera = diametroporcarrera;
     }
 
-    public String getRelacionCompresion() {
-        return relacionCompresion;
+    public String getRelaciondecompresion() {
+        return relaciondecompresion;
     }
 
-    public void setRelacionCompresion(String relacionCompresion) {
-        this.relacionCompresion = relacionCompresion;
+    public void setRelaciondecompresion(String relaciondecompresion) {
+        this.relaciondecompresion = relaciondecompresion;
     }
 
     public String getArranque() {
@@ -398,20 +409,20 @@ public class PostYamaha {
         this.arranque = arranque;
     }
 
-    public String getSistemaAlimentacion() {
-        return sistemaAlimentacion;
+    public String getSistemadealimentacion() {
+        return sistemadealimentacion;
     }
 
-    public void setSistemaAlimentacion(String sistemaAlimentacion) {
-        this.sistemaAlimentacion = sistemaAlimentacion;
+    public void setSistemadealimentacion(String sistemadealimentacion) {
+        this.sistemadealimentacion = sistemadealimentacion;
     }
 
-    public String getCapacidadCombustible() {
-        return capacidadCombustible;
+    public String getCapacidaddecombustible() {
+        return capacidaddecombustible;
     }
 
-    public void setCapacidadCombustible(String capacidadCombustible) {
-        this.capacidadCombustible = capacidadCombustible;
+    public void setCapacidaddecombustible(String capacidaddecombustible) {
+        this.capacidaddecombustible = capacidaddecombustible;
     }
 
     public String getEncendido() {
@@ -422,124 +433,124 @@ public class PostYamaha {
         this.encendido = encendido;
     }
 
-    public String getCapacidadBateria() {
-        return capacidadBateria;
+    public String getCapacidadbateria() {
+        return capacidadbateria;
     }
 
-    public void setCapacidadBateria(String capacidadBateria) {
-        this.capacidadBateria = capacidadBateria;
+    public void setCapacidadbateria(String capacidadbateria) {
+        this.capacidadbateria = capacidadbateria;
     }
 
-    public String getSistemadeReduccionPrimaria() {
-        return sistemadeReduccionPrimaria;
+    public String getSistemadereduccionprimaria() {
+        return sistemadereduccionprimaria;
     }
 
-    public void setSistemadeReduccionPrimaria(String sistemadeReduccionPrimaria) {
-        this.sistemadeReduccionPrimaria = sistemadeReduccionPrimaria;
+    public void setSistemadereduccionprimaria(String sistemadereduccionprimaria) {
+        this.sistemadereduccionprimaria = sistemadereduccionprimaria;
     }
 
-    public String getRelaciondeReduccionPrimaria() {
-        return relaciondeReduccionPrimaria;
+    public String getRelaciondereduccionprimaria() {
+        return relaciondereduccionprimaria;
     }
 
-    public void setRelaciondeReduccionPrimaria(String relaciondeReduccionPrimaria) {
-        this.relaciondeReduccionPrimaria = relaciondeReduccionPrimaria;
+    public void setRelaciondereduccionprimaria(String relaciondereduccionprimaria) {
+        this.relaciondereduccionprimaria = relaciondereduccionprimaria;
     }
 
-    public String getSistemadeReduccionSecundaria() {
-        return sistemadeReduccionSecundaria;
+    public String getSistemadereduccionsecundaria() {
+        return sistemadereduccionsecundaria;
     }
 
-    public void setSistemadeReduccionSecundaria(String sistemadeReduccionSecundaria) {
-        this.sistemadeReduccionSecundaria = sistemadeReduccionSecundaria;
+    public void setSistemadereduccionsecundaria(String sistemadereduccionsecundaria) {
+        this.sistemadereduccionsecundaria = sistemadereduccionsecundaria;
     }
 
-    public String getRelaciondeReduccionSecundaria() {
-        return relaciondeReduccionSecundaria;
+    public String getRelaciondereduccionsecundaria() {
+        return relaciondereduccionsecundaria;
     }
 
-    public void setRelaciondeReduccionSecundaria(String relaciondeReduccionSecundaria) {
-        this.relaciondeReduccionSecundaria = relaciondeReduccionSecundaria;
+    public void setRelaciondereduccionsecundaria(String relaciondereduccionsecundaria) {
+        this.relaciondereduccionsecundaria = relaciondereduccionsecundaria;
     }
 
-    public String getTipoEmbrague() {
-        return tipoEmbrague;
+    public String getTipodeembrague() {
+        return tipodeembrague;
     }
 
-    public void setTipoEmbrague(String tipoEmbrague) {
-        this.tipoEmbrague = tipoEmbrague;
+    public void setTipodeembrague(String tipodeembrague) {
+        this.tipodeembrague = tipodeembrague;
     }
 
-    public String getTipoTransmision() {
-        return tipoTransmision;
+    public String getTipodetransmision() {
+        return tipodetransmision;
     }
 
-    public void setTipoTransmision(String tipoTransmision) {
-        this.tipoTransmision = tipoTransmision;
+    public void setTipodetransmision(String tipodetransmision) {
+        this.tipodetransmision = tipodetransmision;
     }
 
-    public String getRelacionTransmision1ra() {
-        return relacionTransmision1ra;
+    public String getRelaciondetransmisionen1ra() {
+        return relaciondetransmisionen1ra;
     }
 
-    public void setRelacionTransmision1ra(String relacionTransmision1ra) {
-        this.relacionTransmision1ra = relacionTransmision1ra;
+    public void setRelaciondetransmisionen1ra(String relaciondetransmisionen1ra) {
+        this.relaciondetransmisionen1ra = relaciondetransmisionen1ra;
     }
 
-    public String getRelacionTransmision2da() {
-        return relacionTransmision2da;
+    public String getRelaciondetransmisionen2da() {
+        return relaciondetransmisionen2da;
     }
 
-    public void setRelacionTransmision2da(String relacionTransmision2da) {
-        this.relacionTransmision2da = relacionTransmision2da;
+    public void setRelaciondetransmisionen2da(String relaciondetransmisionen2da) {
+        this.relaciondetransmisionen2da = relaciondetransmisionen2da;
     }
 
-    public String getRelacionTransmision3ra() {
-        return relacionTransmision3ra;
+    public String getRelaciondetransmisionen3ra() {
+        return relaciondetransmisionen3ra;
     }
 
-    public void setRelacionTransmision3ra(String relacionTransmision3ra) {
-        this.relacionTransmision3ra = relacionTransmision3ra;
+    public void setRelaciondetransmisionen3ra(String relaciondetransmisionen3ra) {
+        this.relaciondetransmisionen3ra = relaciondetransmisionen3ra;
     }
 
-    public String getRelacionTransmision4ta() {
-        return relacionTransmision4ta;
+    public String getRelaciondetransmisionen4ta() {
+        return relaciondetransmisionen4ta;
     }
 
-    public void setRelacionTransmision4ta(String relacionTransmision4ta) {
-        this.relacionTransmision4ta = relacionTransmision4ta;
+    public void setRelaciondetransmisionen4ta(String relaciondetransmisionen4ta) {
+        this.relaciondetransmisionen4ta = relaciondetransmisionen4ta;
     }
 
-    public String getRelacionTransmision5ta() {
-        return relacionTransmision5ta;
+    public String getRelaciondetransmisionen5ta() {
+        return relaciondetransmisionen5ta;
     }
 
-    public void setRelacionTransmision5ta(String relacionTransmision5ta) {
-        this.relacionTransmision5ta = relacionTransmision5ta;
+    public void setRelaciondetransmisionen5ta(String relaciondetransmisionen5ta) {
+        this.relaciondetransmisionen5ta = relaciondetransmisionen5ta;
     }
 
-    public String getRelacionTransmision6ta() {
-        return relacionTransmision6ta;
+    public String getRelaciondetransmisionen6ta() {
+        return relaciondetransmisionen6ta;
     }
 
-    public void setRelacionTransmision6ta(String relacionTransmision6ta) {
-        this.relacionTransmision6ta = relacionTransmision6ta;
+    public void setRelaciondetransmisionen6ta(String relaciondetransmisionen6ta) {
+        this.relaciondetransmisionen6ta = relaciondetransmisionen6ta;
     }
 
-    public String getRelacionEngranajes() {
-        return relacionEngranajes;
+    public String getRelaciondeengranajes() {
+        return relaciondeengranajes;
     }
 
-    public void setRelacionEngranajes(String relacionEngranajes) {
-        this.relacionEngranajes = relacionEngranajes;
+    public void setRelaciondeengranajes(String relaciondeengranajes) {
+        this.relaciondeengranajes = relaciondeengranajes;
     }
 
-    public String getTipoChasis() {
-        return tipoChasis;
+    public String getTipodechasis() {
+        return tipodechasis;
     }
 
-    public void setTipoChasis(String tipoChasis) {
-        this.tipoChasis = tipoChasis;
+    public void setTipodechasis(String tipodechasis) {
+        this.tipodechasis = tipodechasis;
     }
 
     public String getInclinacion() {
@@ -558,68 +569,60 @@ public class PostYamaha {
         this.avance = avance;
     }
 
-    public String getRuedaDelantera() {
-        return ruedaDelantera;
+    public String getRuedadelantera() {
+        return ruedadelantera;
     }
 
-    public void setRuedaDelantera(String ruedaDelantera) {
-        this.ruedaDelantera = ruedaDelantera;
+    public void setRuedadelantera(String ruedadelantera) {
+        this.ruedadelantera = ruedadelantera;
     }
 
-    public String getRuedaTrasera() {
-        return ruedaTrasera;
+    public String getRuedatrasera() {
+        return ruedatrasera;
     }
 
-    public void setRuedaTrasera(String ruedaTrasera) {
-        this.ruedaTrasera = ruedaTrasera;
+    public void setRuedatrasera(String ruedatrasera) {
+        this.ruedatrasera = ruedatrasera;
     }
 
-    public String getFrenoDelantero() {
-        return frenoDelantero;
+    public String getFrenodelantero() {
+        return frenodelantero;
     }
 
-    public void setFrenoDelantero(String frenoDelantero) {
-        this.frenoDelantero = frenoDelantero;
+    public void setFrenodelantero(String frenodelantero) {
+        this.frenodelantero = frenodelantero;
     }
 
-    public String getFrenoTrasero() {
-        return frenoTrasero;
+    public String getFrenotrasero() {
+        return frenotrasero;
     }
 
-    public void setFrenoTrasero(String frenoTrasero) {
-        this.frenoTrasero = frenoTrasero;
+    public void setFrenotrasero(String frenotrasero) {
+        this.frenotrasero = frenotrasero;
     }
 
-    public String getTipoSuspensionDelantera() {
-        return tipoSuspensionDelantera;
+    public String getTipodesuspensiondelantera() {
+        return tipodesuspensiondelantera;
     }
 
-    public void setTipoSuspensionDelantera(String tipoSuspensionDelantera) {
-        this.tipoSuspensionDelantera = tipoSuspensionDelantera;
+    public void setTipodesuspensiondelantera(String tipodesuspensiondelantera) {
+        this.tipodesuspensiondelantera = tipodesuspensiondelantera;
     }
 
-    public String getTipoSuspensionTrasera() {
-        return tipoSuspensionTrasera;
+    public String getTipodesuspensiontrasera() {
+        return tipodesuspensiontrasera;
     }
 
-    public void setTipoSuspensionTrasera(String tipoSuspensionTrasera) {
-        this.tipoSuspensionTrasera = tipoSuspensionTrasera;
+    public void setTipodesuspensiontrasera(String tipodesuspensiontrasera) {
+        this.tipodesuspensiontrasera = tipodesuspensiontrasera;
     }
 
-    public String getLuzPrincipal() {
-        return luzPrincipal;
+    public String getLuzprincipal() {
+        return luzprincipal;
     }
 
-    public void setLuzPrincipal(String luzPrincipal) {
-        this.luzPrincipal = luzPrincipal;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setLuzprincipal(String luzprincipal) {
+        this.luzprincipal = luzprincipal;
     }
 
     public String getModelo() {
@@ -628,6 +631,14 @@ public class PostYamaha {
 
     public void setModelo(String modelo) {
         this.modelo = modelo;
+    }
+
+    public String getModelo2() {
+        return modelo2;
+    }
+
+    public void setModelo2(String modelo2) {
+        this.modelo2 = modelo2;
     }
 
     public boolean isDescuento() {

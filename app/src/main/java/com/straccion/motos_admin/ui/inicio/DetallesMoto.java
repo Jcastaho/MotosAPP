@@ -84,6 +84,7 @@ public class DetallesMoto extends Fragment {
     View mview;
     LinearLayout lnlMostrarManuales;
     LinearLayout lnlInformacionAdd1;
+    LinearLayout lnlTextoColores;
     FrameLayout frameContenedor;
     NestedScrollView nestedScrollView;
     AppBarLayout appbarLayout;
@@ -106,9 +107,13 @@ public class DetallesMoto extends Fragment {
 
 
 
+
     TextView txtModelo;
+    TextView txtModelo2;
     TextView txtNomMoto;
+    TextView txtFabricanteMoto;
     TextView txtDescripcionMoto;
+    TextView txtTituloDescripcionMoto;
     TextView txtPrecio;
     TextView txtprecioAnterior;
     LinearLayout lnlDescuento;
@@ -141,9 +146,12 @@ public class DetallesMoto extends Fragment {
 
     String idDocument = "";
     String nombre = "";
+    String fabricante = "";
     String modelo = "";
+    String modelo2 = "";
     String DescripcionMoto = "";
     int precio = 0;
+    int precio2 = 0;
     int nuevoValorDescuento = 0;
     boolean descuento;
     double numVisitas = 0;
@@ -183,14 +191,18 @@ public class DetallesMoto extends Fragment {
         frameContenedor = mview.findViewById(R.id.frameContenedor);
         viewImagenesAdd = mview.findViewById(R.id.viewImagenesAdd);
         txtModelo = mview.findViewById(R.id.txtModelo);
+        txtModelo2 = mview.findViewById(R.id.txtModelo2);
         txtNomMoto = mview.findViewById(R.id.txtNomMoto);
+        txtFabricanteMoto = mview.findViewById(R.id.txtFabricanteMoto);
         lnlDatos = mview.findViewById(R.id.lnlDatos);
         txtDescripcionMoto = mview.findViewById(R.id.txtDescripcionMoto);
+        txtTituloDescripcionMoto = mview.findViewById(R.id.txtTituloDescripcionMoto);
         txtPrecio = mview.findViewById(R.id.txtPrecio);
         txtprecioAnterior = mview.findViewById(R.id.txtprecioAnterior);
         lnlDescuento = mview.findViewById(R.id.lnlDescuento);
         lnlMostrarManuales = mview.findViewById(R.id.lnlMostrarManuales);
         lnlInformacionAdd1 = mview.findViewById(R.id.lnlInformacionAdd1);
+        lnlTextoColores = mview.findViewById(R.id.lnlTextoColores);
         fabComparar = mview.findViewById(R.id.fabComparar);
         txtExtendedComparar = mview.findViewById(R.id.txtExtendedComparar);
         imgExtendedFlecha = mview.findViewById(R.id.imgExtendedFlecha);
@@ -212,9 +224,44 @@ public class DetallesMoto extends Fragment {
         mImageProvider = new ImageProvider();
         getPost();
 
+        txtDescripcionMoto.setVisibility(View.VISIBLE);
+        txtTituloDescripcionMoto.setVisibility(View.VISIBLE);
+        txtModelo2.setVisibility(View.GONE);
+
         //Query  = mPostProvider.getAll();
         fichaTecnicaAdapters = new FichaTecnicaAdapters(getContext(), idDocument);
         fichaTecnicaAdapters.showData(lnlDatos);
+
+        txtModelo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (modelo2 != ""){
+                    DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+                    symbols.setGroupingSeparator('.');
+                    symbols.setDecimalSeparator(',');
+
+                    DecimalFormat formato = new DecimalFormat("#,###", symbols);
+                    String numeroFormato = formato.format(nuevoValorDescuento);
+                    txtPrecio.setText("$" + numeroFormato);
+                    txtModelo.setTextColor(Color.BLUE);
+                    txtModelo2.setTextColor(Color.BLACK);
+                }
+            }
+        });
+        txtModelo2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+                symbols.setGroupingSeparator('.');
+                symbols.setDecimalSeparator(',');
+
+                DecimalFormat formato = new DecimalFormat("#,###", symbols);
+                String numeroFormato = formato.format(precio2);
+                txtPrecio.setText("$" + numeroFormato);
+                txtModelo2.setTextColor(Color.BLUE);
+                txtModelo.setTextColor(Color.BLACK);
+            }
+        });
 
         fabComparar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -555,6 +602,11 @@ public class DetallesMoto extends Fragment {
         mSliderView.setAutoCycle(true);//se le dice si quiere cambiar automaticamente
         mSliderView.startAutoCycle();
 
+        //CASO ESPECIAL PARA EL TAMAÑO DE ESTA MOTO
+        if (nombre.equals("FZ25ABS")){
+            modificarTamanoVistaMotos2();
+        }
+
         //imagenes caractreristicas adicionales
         if (listaTextoCaracteristicas == null){
             mViewPagerAdapter = new ViewPagerAdapter(getContext(), viewPagerImagenes, viewImagenesAdd, null);
@@ -659,14 +711,27 @@ public class DetallesMoto extends Fragment {
                     if (documentSnapshot.contains("nombreMoto")) {
                         nombre = documentSnapshot.get("nombreMoto").toString();
                     }
+                    if (documentSnapshot.contains("carpeta1")) {
+                        fabricante = documentSnapshot.get("carpeta1").toString();
+                    }
                     if (documentSnapshot.contains("modelo")) {
                         modelo = documentSnapshot.get("modelo").toString();
+                    }
+                    if (documentSnapshot.contains("modelo2")) {
+                        Object modelo2Objeto = documentSnapshot.get("modelo2");
+                        if (modelo2Objeto != null && !modelo2Objeto.toString().isEmpty()) {
+                            modelo2 = modelo2Objeto.toString();
+                        }
+                        //modelo2 = documentSnapshot.get("modelo2").toString();
                     }
                     if (documentSnapshot.contains("descripcion")) {
                         DescripcionMoto = documentSnapshot.get("descripcion").toString();
                     }
                     if (documentSnapshot.contains("precio")) {
                         precio = Integer.parseInt(documentSnapshot.get("precio").toString());
+                    }
+                    if (documentSnapshot.contains("precio2")) {
+                        precio2 = Integer.parseInt(documentSnapshot.get("precio2").toString());
                     }
                     if (documentSnapshot.contains("nuevoValorDescuento")) {
                         nuevoValorDescuento = Integer.parseInt(documentSnapshot.get("nuevoValorDescuento").toString());
@@ -687,7 +752,17 @@ public class DetallesMoto extends Fragment {
                     actualizarVistas();
                 }
                 txtModelo.setText(modelo);
+                txtFabricanteMoto.setText(fabricante);
+                if (modelo2 != ""){
+                    txtModelo2.setVisibility(View.VISIBLE);
+                    txtModelo2.setText(modelo2);
+                    txtModelo.setTextColor(Color.BLUE);
+                }
                 txtNomMoto.setText(nombre);
+                if (DescripcionMoto.isEmpty()){
+                    txtDescripcionMoto.setVisibility(View.GONE);
+                    txtTituloDescripcionMoto.setVisibility(View.GONE);
+                }
                 txtDescripcionMoto.setText(DescripcionMoto);
                 //muestra el seperador de puntos en el precio
 
@@ -711,58 +786,68 @@ public class DetallesMoto extends Fragment {
     }
     private void color(List<String> ArrayColores, int cont){
         elemento= ArrayColores.get(cont).toUpperCase();
-        Map<String, Integer> colorMap = new HashMap<>();
-        colorMap.put("ROJO", R.color.red);
-        colorMap.put("ROJA", R.color.red);
-        colorMap.put("NEGRO NEBULOSA - GRIS ROJO", R.color.rojoNegro);
-        colorMap.put("NEGRA - ROJA", R.color.rojoNegro);
-        colorMap.put("NEGRO - GRIS ROJO", R.color.rojoNegro);
-        colorMap.put("ROJO APACHE - GRIS NEGRO", R.color.rojoNegro);
-        colorMap.put("NEGRO NEBULOSA - ROJO GRIS PLATA", R.color.rojoNegro);
+        if (elemento.startsWith("#")){
+            colorCirculos = Color.parseColor(elemento);
+            lnlTextoColores.setVisibility(View.GONE);
+        }else {
+            Map<String, Integer> colorMap = new HashMap<>();
+            colorMap.put("ROJO", R.color.red);
+            colorMap.put("ROJA", R.color.red);
+            colorMap.put("NEGRO NEBULOSA - GRIS ROJO", R.color.rojoNegro);
+            colorMap.put("NEGRA - ROJA", R.color.rojoNegro);
+            colorMap.put("NEGRO - GRIS ROJO", R.color.rojoNegro);
+            colorMap.put("ROJO APACHE - GRIS NEGRO", R.color.rojoNegro);
+            colorMap.put("NEGRO NEBULOSA - ROJO GRIS PLATA", R.color.rojoNegro);
 
-        colorMap.put("NEGRA", R.color.black);
-        colorMap.put("NEGRO", R.color.black);
-        colorMap.put("NEGRO NEBULOSA - GRIS DORADO", R.color.black);
-        colorMap.put("NEGRO NEBULOSA - VERDE", R.color.black);
-        colorMap.put("NEGRO NEBULOSA - DORADO", R.color.black);
+            colorMap.put("NEGRA", R.color.black);
+            colorMap.put("NEGRO", R.color.black);
+            colorMap.put("NEGRO NEBULOSA - GRIS DORADO", R.color.black);
+            colorMap.put("NEGRO NEBULOSA", R.color.black);
+            colorMap.put("NEGRO NEBULOSA - VERDE", R.color.black);
+            colorMap.put("NEGRO NEBULOSA - DORADO", R.color.black);
 
-        colorMap.put("AMARILLA", R.color.amarillo);
-        colorMap.put("AMARILLO", R.color.amarillo);
-        colorMap.put("NEGRO - VERDE", R.color.amarillo);
-        colorMap.put("GRIS CARBONO - VERDE", R.color.amarillo);
+            colorMap.put("AMARILLA", R.color.amarillo);
+            colorMap.put("AMARILLO", R.color.amarillo);
+            colorMap.put("NEGRO - VERDE", R.color.amarilloVerde);
+            colorMap.put("GRIS CARBONO - VERDE", R.color.amarillo);
 
-        colorMap.put("NEGRO NEBULOSA - CAMALEÓN", R.color.morado);
+            colorMap.put("NEGRO NEBULOSA - CAMALEÓN", R.color.morado);
 
-        colorMap.put("AZUL PETROLEO - GRIS DORADO", R.color.azulPetroleo);
-        colorMap.put("AZUL PETRÓLEO - GRIS DORADO", R.color.azulPetroleo);
-        colorMap.put("AZUL MATE/NEGRO NEB - GRIS", R.color.azulPetroleo);
-        colorMap.put("AZUL PETRÓLEO - GRIS ROJO", R.color.azulPetroleo);
-        colorMap.put("NEGRA - AZUL", R.color.azulPetroleo);
+            colorMap.put("AZUL PETROLEO - GRIS DORADO", R.color.azulPetroleo);
+            colorMap.put("AZUL PETRÓLEO - GRIS DORADO", R.color.azulPetroleo);
+            colorMap.put("AZUL MATE/NEGRO NEB - GRIS", R.color.azulPetroleo);
+            colorMap.put("AZUL PETRÓLEO - GRIS ROJO", R.color.azulPetroleo);
+            colorMap.put("NEGRA - AZUL", R.color.azulPetroleo);
 
-        colorMap.put("GRIS", R.color.grisOscuro);
-        colorMap.put("TOP FROST", R.color.grisOscuro);
-        colorMap.put("GRIS CARBONO - AZUL MIAMI BLUE", R.color.grisOscuro);
-        colorMap.put("TOP FROST/NEGRO NEB - GRIS", R.color.grisOscuro);
-        colorMap.put("GRIS CARBONO - NEGRO DORADO", R.color.grisOscuro);
+            colorMap.put("GRIS", R.color.grisOscuro);
+            colorMap.put("TOP FROST", R.color.grisOscuro);
+            colorMap.put("GRIS CARBONO - AZUL MIAMI BLUE", R.color.grisOscuro);
+            colorMap.put("GRIS CARBONO", R.color.grisOscuro);
+            colorMap.put("TOP FROST/NEGRO NEB - GRIS", R.color.grisOscuro);
+            colorMap.put("GRIS CARBONO - NEGRO DORADO", R.color.grisOscuro);
 
-        colorMap.put("TOP FROST - GRIS METALIZADO", R.color.grisclaro);
+            colorMap.put("TOP FROST - GRIS METALIZADO", R.color.grisclaro);
 
-        colorMap.put("DORADO", R.color.dorado);
-        colorMap.put("DORADA", R.color.dorado);
+            colorMap.put("DORADO", R.color.dorado);
+            colorMap.put("DORADA", R.color.dorado);
 
-        colorMap.put("VERDE", R.color.verde);
-
-
-        colorMap.put("AZUL", R.color.azul);
-        colorMap.put("AZUL MATE - GRIS VERDE", R.color.azul);
-        colorMap.put("AZUL MATE - DORADO METALIZADO", R.color.azul);
-
-        colorMap.put("BLANCO", R.color.white);
-        colorMap.put("BLANCA", R.color.white);
+            colorMap.put("VERDE", R.color.verde);
 
 
-        Integer colorCirculo = colorMap.get(elemento);
-        colorCirculos = ContextCompat.getColor(getContext(), colorCirculo);
+            colorMap.put("AZUL", R.color.azul);
+            colorMap.put("AZUL MATE - GRIS VERDE", R.color.azul);
+            colorMap.put("AZUL MATE - DORADO METALIZADO", R.color.azul);
+            colorMap.put("AZUL ARLEQUÍN", R.color.azul);
+
+            colorMap.put("BLANCO", R.color.white);
+            colorMap.put("BLANCA", R.color.white);
+            lnlTextoColores.setVisibility(View.VISIBLE);
+
+            Integer colorCirculo = colorMap.get(elemento);
+            colorCirculos = ContextCompat.getColor(getContext(), colorCirculo);
+        }
+
+
 
 
     }
@@ -891,6 +976,8 @@ public class DetallesMoto extends Fragment {
         //vuelve mas pequeña la vista de las motos, hay que modificarla segun el color
         if (nombre.equals("TVS SPORT 100 ELS") && (controlador == 1 || controlador == 2)) {
             modificarTamanoVistaMotos();
+        } else if (nombre.equals("FZ25ABS") && (controlador == 0 || controlador == 1 || controlador == 2)) {
+            modificarTamanoVistaMotos2();
         }else {
             tamanoAnteriorVistaMotos();
         }
@@ -909,6 +996,14 @@ public class DetallesMoto extends Fragment {
     }
     private void modificarTamanoVistaMotos(){
         int newHeight = (int) getResources().getDimension(R.dimen.new_height);
+        mSliderView.getLayoutParams().height = newHeight;
+        mSliderView.requestLayout();
+        frameContenedor.getLayoutParams().height = newHeight;
+        frameContenedor.requestLayout();
+        nestedScrollView.requestLayout();
+    }
+    private void modificarTamanoVistaMotos2(){
+        int newHeight = (int) getResources().getDimension(R.dimen.new_height2);
         mSliderView.getLayoutParams().height = newHeight;
         mSliderView.requestLayout();
         frameContenedor.getLayoutParams().height = newHeight;
