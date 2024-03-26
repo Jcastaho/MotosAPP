@@ -2,6 +2,7 @@ package com.straccion.motos_admin.providers;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -10,6 +11,7 @@ import com.straccion.motos_admin.models.PostAKT;
 import com.straccion.motos_admin.models.PostAuteco;
 import com.straccion.motos_admin.models.PostYamaha;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -54,6 +56,13 @@ public class PostProvider {
                 .whereEqualTo("clasificacion", clasificacion);
     }
 
+    public Task<List<DocumentSnapshot>> getPostsByIds(List<String> ids) {
+        List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
+        for (String id : ids) {
+            tasks.add(mCollection.document(id).get());
+        }
+        return Tasks.whenAllSuccess(tasks);
+    }
     public Task<DocumentSnapshot> getPostById(String id){
         return mCollection.document(id).get();
     }

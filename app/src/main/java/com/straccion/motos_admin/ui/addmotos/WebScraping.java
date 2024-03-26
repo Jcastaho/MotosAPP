@@ -116,8 +116,8 @@ public class WebScraping {
     PostProvider mpostProvider = new PostProvider();
     ImageProvider mImageProvider = new ImageProvider();
 
-    int precioAnterior = 0;
-    int precioAnterior2 = 0;
+    List<Integer> precioAnterior = new ArrayList<>();
+    List<Integer> precioAnterior2 = new ArrayList<>();
 
     Elements colorPrincipalDiv;
     Elements liElements;
@@ -273,6 +273,7 @@ public class WebScraping {
 
 
     private void guardarPreciosenFirebase() {
+        int[] sumador = {0};
         for (int i = 0; i < nombresMotos.size() ; i++) {
             Query query1 = mpostProvider.buscarPorNombreMoto(nombresMotos.get(i));
             query1.get().addOnCompleteListener(task -> {
@@ -284,37 +285,74 @@ public class WebScraping {
                             public void onSuccess(DocumentSnapshot documentSnapshot) {
                                 if (documentSnapshot.exists()){
                                     if (documentSnapshot.contains("precio")) {
-                                        precioAnterior = Integer.parseInt(documentSnapshot.get("precio").toString());
+                                        precioAnterior.add(Integer.parseInt(documentSnapshot.get("precio").toString()));
                                     }
                                     if (documentSnapshot.contains("precio2")) {
-                                        precioAnterior2 = Integer.parseInt(documentSnapshot.get("precio2").toString());
+                                        precioAnterior2.add(Integer.parseInt(documentSnapshot.get("precio2").toString()));
                                     }
                                 }
+                                descuentos(sumador[0]);
+                                sumador[0] = sumador[0]+1;
                             }
                         });
 
                     }
-                } else {
+
                 }
+
             });
-            Map<String, Object> nuevoPrecio = new HashMap<>();
-            int precio = Integer.parseInt(precioMoto.get(i).replaceAll("\\D", ""));
-            if (i != 0){
-                if (nombresMotos.get(i).equals(nombresMotos.get(i-1))){
-                    if (precioAnterior2 != precio){
-                        nuevoPrecio.put("precio2", precio);
+        }
+    }
+
+    private void descuentos( int i){
+        Map<String, Object> nuevoPrecio = new HashMap<>();
+        int precio = Integer.parseInt(precioMoto.get(i).replaceAll("\\D", ""));
+        if (i != 0){
+            if (nombresMotos.get(i).equals(nombresMotos.get(i-1))){
+                if (precioAnterior2.get(i) != precio){
+                    nuevoPrecio.put("precio2", precio);
+                }
+            }else {
+                if (precioAnterior.get(i) != precio) {
+                    if (precioAnterior.get(i) > precio) {
+                        nuevoPrecio.put("precio", precio);
+                        nuevoPrecio.put("nuevoValorDescuento", precio);
+                        nuevoPrecio.put("descuento", false);
+                    } else {
+                        nuevoPrecio.put("nuevoValorDescuento", precio);
+                        nuevoPrecio.put("descuento", true);
                     }
-                }else {
-                    if (precioAnterior != precio) {
-                        if (precioAnterior < precio) {
-                            nuevoPrecio.put("precio", precio);
-                            nuevoPrecio.put("nuevoValorDescuento", precio);
-                            nuevoPrecio.put("descuento", false);
-                        } else {
-                            nuevoPrecio.put("nuevoValorDescuento", precio);
-                            nuevoPrecio.put("descuento", true);
+                }
+            }
+            Query query = mpostProvider.buscarPorNombreMoto(nombresMotos.get(i));
+            query.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        id = document.getId();
+                        if (!id.isEmpty()){
+                            mpostProvider.updatePost2(id, nuevoPrecio).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()){
+                                        Toast.makeText(context, "melo", Toast.LENGTH_LONG).show();
+                                    }else {
+                                        Toast.makeText(context, "Hubo un error al almacenar la imagen", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
                         }
                     }
+                }
+            });
+        }else{
+            if (precioAnterior.get(i) != precio){
+                if (precioAnterior.get(i) > precio){
+                    nuevoPrecio.put("precio", precio);
+                    nuevoPrecio.put("nuevoValorDescuento", precio);
+                    nuevoPrecio.put("descuento", false);
+                }else {
+                    nuevoPrecio.put("nuevoValorDescuento", precio);
+                    nuevoPrecio.put("descuento", true);
                 }
                 Query query = mpostProvider.buscarPorNombreMoto(nombresMotos.get(i));
                 query.get().addOnCompleteListener(task -> {
@@ -336,40 +374,11 @@ public class WebScraping {
                         }
                     }
                 });
-            }else{
-                if (precioAnterior != precio){
-                    if (precioAnterior < precio){
-                        nuevoPrecio.put("precio", precio);
-                        nuevoPrecio.put("nuevoValorDescuento", precio);
-                        nuevoPrecio.put("descuento", false);
-                    }else {
-                        nuevoPrecio.put("nuevoValorDescuento", precio);
-                        nuevoPrecio.put("descuento", true);
-                    }
-                    Query query = mpostProvider.buscarPorNombreMoto(nombresMotos.get(i));
-                    query.get().addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                id = document.getId();
-                                if (!id.isEmpty()){
-                                    mpostProvider.updatePost2(id, nuevoPrecio).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()){
-                                                Toast.makeText(context, "melo", Toast.LENGTH_LONG).show();
-                                            }else {
-                                                Toast.makeText(context, "Hubo un error al almacenar la imagen", Toast.LENGTH_LONG).show();
-                                            }
-                                        }
-                                    });
-                                }
-                            }
-                        }
-                    });
 
-                }
             }
         }
+
+
     }
 
     //endregion

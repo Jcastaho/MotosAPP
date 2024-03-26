@@ -8,11 +8,14 @@ import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -21,6 +24,8 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.squareup.picasso.Picasso;
@@ -46,27 +51,104 @@ public class SlideshowFragment extends Fragment {
     NestedScrollView nscImagenfondo;
     int imagenFondo1 = R.drawable.fondosuperior;
     int imagenFondo2 = R.drawable.compararmotos;
-    int controlador_Imagenes1=0;
-    int controlador_Imagenes2=0;
-    int controlador_Imagenes3=0;
+    int controlador_Imagenes1 = 0;
+    int controlador_Imagenes2 = 0;
+    int controlador_Imagenes3 = 0;
+    String marcaMoto = "";
 
     ImageView imgComprarMoto1;
     ImageView imgComprarMoto2;
     ImageView imgComprarMoto3;
 
-    TextView txtCilindrajeMoto1; TextView txtMotorMoto1; TextView txtTorqueMoto1; TextView txtAlimentacionMoto1; TextView txtRefrigeracionValor1; TextView txtTransmisionMoto1; TextView txtSuspensionDelanValor1; TextView txtSuspensionTrasValor1; TextView txtFrenoDelanValor1; TextView txtFrenoTrasMoto1; TextView txtTanqueMoto1; TextView txtPesoMoto1; TextView txtPrecioValor1;
-    TextView txtCilindrajevalor1; TextView txtMotorvalor1; TextView txtTorqueValor1; TextView txtAlimentacionValor1; TextView txtRefrigeracionMoto1; TextView txtTransmisionValor1; TextView txtSuspensionDelanMoto1; TextView txtSuspensionTrasMoto1; TextView txtFrenoDelanMoto1; TextView txtFrenoTrasValor1; TextView txtTanqueValor1; TextView txtPesoValor1; TextView txtPrecioMoto1;
+    TextView txtCilindrajeMoto1;
+    TextView txtMotorMoto1;
+    TextView txtTorqueMoto1;
+    TextView txtAlimentacionMoto1;
+    TextView txtRefrigeracionValor1;
+    TextView txtTransmisionMoto1;
+    TextView txtSuspensionDelanValor1;
+    TextView txtSuspensionTrasValor1;
+    TextView txtFrenoDelanValor1;
+    TextView txtFrenoTrasMoto1;
+    TextView txtTanqueMoto1;
+    TextView txtPesoMoto1;
+    TextView txtPrecioValor1;
+    TextView txtCilindrajevalor1;
+    TextView txtMotorvalor1;
+    TextView txtTorqueValor1;
+    TextView txtAlimentacionValor1;
+    TextView txtRefrigeracionMoto1;
+    TextView txtTransmisionValor1;
+    TextView txtSuspensionDelanMoto1;
+    TextView txtSuspensionTrasMoto1;
+    TextView txtFrenoDelanMoto1;
+    TextView txtFrenoTrasValor1;
+    TextView txtTanqueValor1;
+    TextView txtPesoValor1;
+    TextView txtPrecioMoto1;
 
-    TextView txtCilindrajeMoto2; TextView txtMotorMoto2; TextView txtTorqueMoto2; TextView txtAlimentacionMoto2; TextView txtRefrigeracionValor2; TextView txtTransmisionMoto2; TextView txtSuspensionDelanValor2; TextView txtSuspensionTrasValor2; TextView txtFrenoDelanValor2; TextView txtFrenoTrasMoto2; TextView txtTanqueMoto2; TextView txtPesoMoto2; TextView txtPrecioValor2;
-    TextView txtCilindrajevalor2; TextView txtMotorvalor2; TextView txtTorqueValor2; TextView txtAlimentacionValor2; TextView txtRefrigeracionMoto2; TextView txtTransmisionValor2; TextView txtSuspensionDelanMoto2; TextView txtSuspensionTrasMoto2; TextView txtFrenoDelanMoto2; TextView txtFrenoTrasValor2; TextView txtTanqueValor2; TextView txtPesoValor2; TextView txtPrecioMoto2;
+    TextView txtCilindrajeMoto2;
+    TextView txtMotorMoto2;
+    TextView txtTorqueMoto2;
+    TextView txtAlimentacionMoto2;
+    TextView txtRefrigeracionValor2;
+    TextView txtTransmisionMoto2;
+    TextView txtSuspensionDelanValor2;
+    TextView txtSuspensionTrasValor2;
+    TextView txtFrenoDelanValor2;
+    TextView txtFrenoTrasMoto2;
+    TextView txtTanqueMoto2;
+    TextView txtPesoMoto2;
+    TextView txtPrecioValor2;
+    TextView txtCilindrajevalor2;
+    TextView txtMotorvalor2;
+    TextView txtTorqueValor2;
+    TextView txtAlimentacionValor2;
+    TextView txtRefrigeracionMoto2;
+    TextView txtTransmisionValor2;
+    TextView txtSuspensionDelanMoto2;
+    TextView txtSuspensionTrasMoto2;
+    TextView txtFrenoDelanMoto2;
+    TextView txtFrenoTrasValor2;
+    TextView txtTanqueValor2;
+    TextView txtPesoValor2;
+    TextView txtPrecioMoto2;
 
-    TextView txtCilindrajeMoto3; TextView txtMotorMoto3; TextView txtTorqueMoto3; TextView txtAlimentacionMoto3; TextView txtRefrigeracionValor3; TextView txtTransmisionMoto3; TextView txtSuspensionDelanValor3; TextView txtSuspensionTrasValor3; TextView txtFrenoDelanValor3; TextView txtFrenoTrasMoto3; TextView txtTanqueMoto3; TextView txtPesoMoto3; TextView txtPrecioValor3;
-    TextView txtCilindrajevalor3; TextView txtMotorvalor3; TextView txtTorqueValor3; TextView txtAlimentacionValor3; TextView txtRefrigeracionMoto3; TextView txtTransmisionValor3; TextView txtSuspensionDelanMoto3; TextView txtSuspensionTrasMoto3; TextView txtFrenoDelanMoto3; TextView txtFrenoTrasValor3; TextView txtTanqueValor3; TextView txtPesoValor3; TextView txtPrecioMoto3;
+    TextView txtCilindrajeMoto3;
+    TextView txtMotorMoto3;
+    TextView txtTorqueMoto3;
+    TextView txtAlimentacionMoto3;
+    TextView txtRefrigeracionValor3;
+    TextView txtTransmisionMoto3;
+    TextView txtSuspensionDelanValor3;
+    TextView txtSuspensionTrasValor3;
+    TextView txtFrenoDelanValor3;
+    TextView txtFrenoTrasMoto3;
+    TextView txtTanqueMoto3;
+    TextView txtPesoMoto3;
+    TextView txtPrecioValor3;
+    TextView txtCilindrajevalor3;
+    TextView txtMotorvalor3;
+    TextView txtTorqueValor3;
+    TextView txtAlimentacionValor3;
+    TextView txtRefrigeracionMoto3;
+    TextView txtTransmisionValor3;
+    TextView txtSuspensionDelanMoto3;
+    TextView txtSuspensionTrasMoto3;
+    TextView txtFrenoDelanMoto3;
+    TextView txtFrenoTrasValor3;
+    TextView txtTanqueValor3;
+    TextView txtPesoValor3;
+    TextView txtPrecioMoto3;
     PostProvider mpostProvider;
     private FragmentSlideshowBinding binding;
     List<String> imagenesList = new ArrayList<>();
     List<String> nombreImagenes = new ArrayList<>();
+    List<String> listaMarcas = new ArrayList<>();
+    List<String> idDocumento = new ArrayList<>();
     List<List<String>> listasDocumentos = new ArrayList<>();
+    List<List<String>> listasAuteco = new ArrayList<>();
+    List<List<String>> listasYamaha = new ArrayList<>();
 
     QueryDocumentSnapshot documentoMoto = null;
 
@@ -82,23 +164,93 @@ public class SlideshowFragment extends Fragment {
         cdlImagenfondo = mview.findViewById(R.id.cdlImagenfondo);
         nscImagenfondo = mview.findViewById(R.id.nscImagenfondo);
 
-        txtCilindrajeMoto1 = mview.findViewById(R.id.txtCilindrajeMoto1); txtMotorMoto1 = mview.findViewById(R.id.txtMotorMoto1);  txtTorqueMoto1 = mview.findViewById(R.id.txtTorqueMoto1);  txtAlimentacionMoto1 = mview.findViewById(R.id.txtAlimentacionMoto1);  txtRefrigeracionValor1 = mview.findViewById(R.id.txtRefrigeracionValor1);  txtTransmisionMoto1 = mview.findViewById(R.id.txtTransmisionMoto1);  txtSuspensionDelanValor1 = mview.findViewById(R.id.txtSuspensionDelanValor1);  txtSuspensionTrasValor1 = mview.findViewById(R.id.txtSuspensionTrasValor1);  txtFrenoDelanValor1 = mview.findViewById(R.id.txtFrenoDelanValor1);  txtFrenoTrasMoto1 = mview.findViewById(R.id.txtFrenoTrasMoto1);  txtTanqueMoto1 = mview.findViewById(R.id.txtTanqueMoto1);  txtPesoMoto1 = mview.findViewById(R.id.txtPesoMoto1); txtPrecioValor1 = mview.findViewById(R.id.txtPrecioValor1);
-        txtCilindrajevalor1 = mview.findViewById(R.id.txtCilindrajevalor1);  txtMotorvalor1 = mview.findViewById(R.id.txtMotorvalor1);  txtTorqueValor1 = mview.findViewById(R.id.txtTorqueValor1);  txtAlimentacionValor1 = mview.findViewById(R.id.txtAlimentacionValor1);  txtRefrigeracionMoto1 = mview.findViewById(R.id.txtRefrigeracionMoto1);  txtTransmisionValor1 = mview.findViewById(R.id.txtTransmisionValor1);  txtSuspensionDelanMoto1 = mview.findViewById(R.id.txtSuspensionDelanMoto1);  txtSuspensionTrasMoto1 = mview.findViewById(R.id.txtSuspensionTrasMoto1);  txtFrenoDelanMoto1 = mview.findViewById(R.id.txtFrenoDelanMoto1);  txtFrenoTrasValor1 = mview.findViewById(R.id.txtFrenoTrasValor1);  txtTanqueValor1 = mview.findViewById(R.id.txtTanqueValor1);  txtPesoValor1 = mview.findViewById(R.id.txtPesoValor1); txtPrecioValor2 = mview.findViewById(R.id.txtPrecioValor2);
+        txtCilindrajeMoto1 = mview.findViewById(R.id.txtCilindrajeMoto1);
+        txtMotorMoto1 = mview.findViewById(R.id.txtMotorMoto1);
+        txtTorqueMoto1 = mview.findViewById(R.id.txtTorqueMoto1);
+        txtAlimentacionMoto1 = mview.findViewById(R.id.txtAlimentacionMoto1);
+        txtRefrigeracionValor1 = mview.findViewById(R.id.txtRefrigeracionValor1);
+        txtTransmisionMoto1 = mview.findViewById(R.id.txtTransmisionMoto1);
+        txtSuspensionDelanValor1 = mview.findViewById(R.id.txtSuspensionDelanValor1);
+        txtSuspensionTrasValor1 = mview.findViewById(R.id.txtSuspensionTrasValor1);
+        txtFrenoDelanValor1 = mview.findViewById(R.id.txtFrenoDelanValor1);
+        txtFrenoTrasMoto1 = mview.findViewById(R.id.txtFrenoTrasMoto1);
+        txtTanqueMoto1 = mview.findViewById(R.id.txtTanqueMoto1);
+        txtPesoMoto1 = mview.findViewById(R.id.txtPesoMoto1);
+        txtPrecioValor1 = mview.findViewById(R.id.txtPrecioValor1);
+        txtCilindrajevalor1 = mview.findViewById(R.id.txtCilindrajevalor1);
+        txtMotorvalor1 = mview.findViewById(R.id.txtMotorvalor1);
+        txtTorqueValor1 = mview.findViewById(R.id.txtTorqueValor1);
+        txtAlimentacionValor1 = mview.findViewById(R.id.txtAlimentacionValor1);
+        txtRefrigeracionMoto1 = mview.findViewById(R.id.txtRefrigeracionMoto1);
+        txtTransmisionValor1 = mview.findViewById(R.id.txtTransmisionValor1);
+        txtSuspensionDelanMoto1 = mview.findViewById(R.id.txtSuspensionDelanMoto1);
+        txtSuspensionTrasMoto1 = mview.findViewById(R.id.txtSuspensionTrasMoto1);
+        txtFrenoDelanMoto1 = mview.findViewById(R.id.txtFrenoDelanMoto1);
+        txtFrenoTrasValor1 = mview.findViewById(R.id.txtFrenoTrasValor1);
+        txtTanqueValor1 = mview.findViewById(R.id.txtTanqueValor1);
+        txtPesoValor1 = mview.findViewById(R.id.txtPesoValor1);
+        txtPrecioValor2 = mview.findViewById(R.id.txtPrecioValor2);
 
-        txtCilindrajeMoto2= mview.findViewById(R.id.txtCilindrajeMoto2);  txtMotorMoto2 = mview.findViewById(R.id.txtMotorMoto2);  txtTorqueMoto2 = mview.findViewById(R.id.txtTorqueMoto2);  txtAlimentacionMoto2 = mview.findViewById(R.id.txtAlimentacionMoto2);  txtRefrigeracionValor2 = mview.findViewById(R.id.txtRefrigeracionValor2);  txtTransmisionMoto2 = mview.findViewById(R.id.txtTransmisionMoto2);  txtSuspensionDelanValor2 = mview.findViewById(R.id.txtSuspensionDelanValor2);  txtSuspensionTrasValor2 = mview.findViewById(R.id.txtSuspensionTrasValor2);  txtFrenoDelanValor2 = mview.findViewById(R.id.txtFrenoDelanValor2);  txtFrenoTrasMoto2 = mview.findViewById(R.id.txtFrenoTrasMoto2);  txtTanqueMoto2 = mview.findViewById(R.id.txtTanqueMoto2);  txtPesoMoto2 = mview.findViewById(R.id.txtPesoMoto2); txtPrecioValor3 = mview.findViewById(R.id.txtPrecioValor3);
-        txtCilindrajevalor2= mview.findViewById(R.id.txtCilindrajevalor2);  txtMotorvalor2 = mview.findViewById(R.id.txtMotorvalor2);  txtTorqueValor2 = mview.findViewById(R.id.txtTorqueValor2);  txtAlimentacionValor2 = mview.findViewById(R.id.txtAlimentacionValor2);  txtRefrigeracionMoto2 = mview.findViewById(R.id.txtRefrigeracionMoto2);  txtTransmisionValor2 = mview.findViewById(R.id.txtTransmisionValor2);  txtSuspensionDelanMoto2 = mview.findViewById(R.id.txtSuspensionDelanMoto2);  txtSuspensionTrasMoto2 = mview.findViewById(R.id.txtSuspensionTrasMoto2);  txtFrenoDelanMoto2 = mview.findViewById(R.id.txtFrenoDelanMoto2);  txtFrenoTrasValor2 = mview.findViewById(R.id.txtFrenoTrasValor2);  txtTanqueValor2 = mview.findViewById(R.id.txtTanqueValor2);  txtPesoValor2 = mview.findViewById(R.id.txtPesoValor2); txtPrecioMoto1 = mview.findViewById(R.id.txtPrecioMoto1);
+        txtCilindrajeMoto2 = mview.findViewById(R.id.txtCilindrajeMoto2);
+        txtMotorMoto2 = mview.findViewById(R.id.txtMotorMoto2);
+        txtTorqueMoto2 = mview.findViewById(R.id.txtTorqueMoto2);
+        txtAlimentacionMoto2 = mview.findViewById(R.id.txtAlimentacionMoto2);
+        txtRefrigeracionValor2 = mview.findViewById(R.id.txtRefrigeracionValor2);
+        txtTransmisionMoto2 = mview.findViewById(R.id.txtTransmisionMoto2);
+        txtSuspensionDelanValor2 = mview.findViewById(R.id.txtSuspensionDelanValor2);
+        txtSuspensionTrasValor2 = mview.findViewById(R.id.txtSuspensionTrasValor2);
+        txtFrenoDelanValor2 = mview.findViewById(R.id.txtFrenoDelanValor2);
+        txtFrenoTrasMoto2 = mview.findViewById(R.id.txtFrenoTrasMoto2);
+        txtTanqueMoto2 = mview.findViewById(R.id.txtTanqueMoto2);
+        txtPesoMoto2 = mview.findViewById(R.id.txtPesoMoto2);
+        txtPrecioValor3 = mview.findViewById(R.id.txtPrecioValor3);
+        txtCilindrajevalor2 = mview.findViewById(R.id.txtCilindrajevalor2);
+        txtMotorvalor2 = mview.findViewById(R.id.txtMotorvalor2);
+        txtTorqueValor2 = mview.findViewById(R.id.txtTorqueValor2);
+        txtAlimentacionValor2 = mview.findViewById(R.id.txtAlimentacionValor2);
+        txtRefrigeracionMoto2 = mview.findViewById(R.id.txtRefrigeracionMoto2);
+        txtTransmisionValor2 = mview.findViewById(R.id.txtTransmisionValor2);
+        txtSuspensionDelanMoto2 = mview.findViewById(R.id.txtSuspensionDelanMoto2);
+        txtSuspensionTrasMoto2 = mview.findViewById(R.id.txtSuspensionTrasMoto2);
+        txtFrenoDelanMoto2 = mview.findViewById(R.id.txtFrenoDelanMoto2);
+        txtFrenoTrasValor2 = mview.findViewById(R.id.txtFrenoTrasValor2);
+        txtTanqueValor2 = mview.findViewById(R.id.txtTanqueValor2);
+        txtPesoValor2 = mview.findViewById(R.id.txtPesoValor2);
+        txtPrecioMoto1 = mview.findViewById(R.id.txtPrecioMoto1);
 
-        txtCilindrajeMoto3= mview.findViewById(R.id.txtCilindrajeMoto3);  txtMotorMoto3 = mview.findViewById(R.id.txtMotorMoto3);  txtTorqueMoto3 = mview.findViewById(R.id.txtTorqueMoto3);  txtAlimentacionMoto3 = mview.findViewById(R.id.txtAlimentacionMoto3);  txtRefrigeracionValor3 = mview.findViewById(R.id.txtRefrigeracionValor3);  txtTransmisionMoto3 = mview.findViewById(R.id.txtTransmisionMoto3);  txtSuspensionDelanValor3 = mview.findViewById(R.id.txtSuspensionDelanValor3);  txtSuspensionTrasValor3 = mview.findViewById(R.id.txtSuspensionTrasValor3);  txtFrenoDelanValor3 = mview.findViewById(R.id.txtFrenoDelanValor3);  txtFrenoTrasMoto3 = mview.findViewById(R.id.txtFrenoTrasMoto3);  txtTanqueMoto3 = mview.findViewById(R.id.txtTanqueMoto3);  txtPesoMoto3 = mview.findViewById(R.id.txtPesoMoto3); txtPrecioMoto2 = mview.findViewById(R.id.txtPrecioMoto2);
-        txtCilindrajevalor3= mview.findViewById(R.id.txtCilindrajevalor3);  txtMotorvalor3 = mview.findViewById(R.id.txtMotorvalor3);  txtTorqueValor3 = mview.findViewById(R.id.txtTorqueValor3);  txtAlimentacionValor3 = mview.findViewById(R.id.txtAlimentacionValor3);  txtRefrigeracionMoto3 = mview.findViewById(R.id.txtRefrigeracionMoto3);  txtTransmisionValor3 = mview.findViewById(R.id.txtTransmisionValor3);  txtSuspensionDelanMoto3 = mview.findViewById(R.id.txtSuspensionDelanMoto3);  txtSuspensionTrasMoto3 = mview.findViewById(R.id.txtSuspensionTrasMoto3);  txtFrenoDelanMoto3 = mview.findViewById(R.id.txtFrenoDelanMoto3);  txtFrenoTrasValor3 = mview.findViewById(R.id.txtFrenoTrasValor3);  txtTanqueValor3 = mview.findViewById(R.id.txtTanqueValor3);  txtPesoValor3 = mview.findViewById(R.id.txtPesoValor3); txtPrecioMoto3 = mview.findViewById(R.id.txtPrecioMoto3);
+        txtCilindrajeMoto3 = mview.findViewById(R.id.txtCilindrajeMoto3);
+        txtMotorMoto3 = mview.findViewById(R.id.txtMotorMoto3);
+        txtTorqueMoto3 = mview.findViewById(R.id.txtTorqueMoto3);
+        txtAlimentacionMoto3 = mview.findViewById(R.id.txtAlimentacionMoto3);
+        txtRefrigeracionValor3 = mview.findViewById(R.id.txtRefrigeracionValor3);
+        txtTransmisionMoto3 = mview.findViewById(R.id.txtTransmisionMoto3);
+        txtSuspensionDelanValor3 = mview.findViewById(R.id.txtSuspensionDelanValor3);
+        txtSuspensionTrasValor3 = mview.findViewById(R.id.txtSuspensionTrasValor3);
+        txtFrenoDelanValor3 = mview.findViewById(R.id.txtFrenoDelanValor3);
+        txtFrenoTrasMoto3 = mview.findViewById(R.id.txtFrenoTrasMoto3);
+        txtTanqueMoto3 = mview.findViewById(R.id.txtTanqueMoto3);
+        txtPesoMoto3 = mview.findViewById(R.id.txtPesoMoto3);
+        txtPrecioMoto2 = mview.findViewById(R.id.txtPrecioMoto2);
+        txtCilindrajevalor3 = mview.findViewById(R.id.txtCilindrajevalor3);
+        txtMotorvalor3 = mview.findViewById(R.id.txtMotorvalor3);
+        txtTorqueValor3 = mview.findViewById(R.id.txtTorqueValor3);
+        txtAlimentacionValor3 = mview.findViewById(R.id.txtAlimentacionValor3);
+        txtRefrigeracionMoto3 = mview.findViewById(R.id.txtRefrigeracionMoto3);
+        txtTransmisionValor3 = mview.findViewById(R.id.txtTransmisionValor3);
+        txtSuspensionDelanMoto3 = mview.findViewById(R.id.txtSuspensionDelanMoto3);
+        txtSuspensionTrasMoto3 = mview.findViewById(R.id.txtSuspensionTrasMoto3);
+        txtFrenoDelanMoto3 = mview.findViewById(R.id.txtFrenoDelanMoto3);
+        txtFrenoTrasValor3 = mview.findViewById(R.id.txtFrenoTrasValor3);
+        txtTanqueValor3 = mview.findViewById(R.id.txtTanqueValor3);
+        txtPesoValor3 = mview.findViewById(R.id.txtPesoValor3);
+        txtPrecioMoto3 = mview.findViewById(R.id.txtPrecioMoto3);
 
         mpostProvider = new PostProvider();
-
+        llenarListas();
         //se agrega una imagen vacia a la lista
         imagenesList.add("https://i.ibb.co/Xs4JwHd/imagen-Blanca.png");
         nombreImagenes.add("  VACIO");
         mostrarTextos(0);
-
-        llenarListas();
 
         imgComprarMoto1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,16 +272,14 @@ public class SlideshowFragment extends Fragment {
         });
 
 
-
         return mview;
     }
 
-    private void cargarMotos(View view, int contadorImgView){
+    private void cargarMotos(View view, int contadorImgView) {
         PopupMenu popupMenu = new PopupMenu(getContext(), view);
         final int[] index = {0};
         for (String imagePath : imagenesList) {
-
-            Picasso.get().load(imagePath).resize(250,250).into(new Target() {
+            Picasso.get().load(imagePath).resize(250, 250).into(new Target() {
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
 
@@ -169,12 +319,12 @@ public class SlideshowFragment extends Fragment {
             public boolean onMenuItemClick(MenuItem item) {
                 String selectedMoto = item.getTitle().toString();
                 int position = -1;
-                if (!selectedMoto.equals("   VACIO")){
-
-
+                String id = "";
+                if (!selectedMoto.equals("   VACIO")) {
                     for (int i = 0; i < nombreImagenes.size(); i++) {
                         if (selectedMoto.contains(nombreImagenes.get(i))) {
                             position = i;
+                            id = idDocumento.get(i-1);
                             break;
                         }
                     }
@@ -183,21 +333,21 @@ public class SlideshowFragment extends Fragment {
                         if (contadorImgView == 1) {
                             Picasso.get().load(imagePath).into(imgComprarMoto1);
                             mostrarTextos(1);
-                            mostrarDatos(position, contadorImgView);
+                            mostrarDatos(position, contadorImgView, id);
                         } else if (contadorImgView == 2) {
                             Picasso.get().load(imagePath).into(imgComprarMoto2);
                             mostrarTextos(2);
-                            mostrarDatos(position, contadorImgView);
-                        }else if (contadorImgView == 3){
+                            mostrarDatos(position, contadorImgView, id);
+                        } else if (contadorImgView == 3) {
                             Picasso.get().load(imagePath).into(imgComprarMoto3);
                             mostrarTextos(3);
-                            mostrarDatos(position, contadorImgView);
+                            mostrarDatos(position, contadorImgView, id);
                         }
                     } else {
 
                     }
-                }else {
-                    mostrarDatos(position, contadorImgView);
+                } else {
+                    mostrarDatos(position, contadorImgView, "");
                 }
 
                 return true;
@@ -206,7 +356,7 @@ public class SlideshowFragment extends Fragment {
         popupMenu.show();
     }
 
-    private void llenarListas(){
+    private void llenarListas() {
         final int[] sumar = {0};
         Query query = mpostProvider.getAll2();
         query.get().addOnCompleteListener(task -> {
@@ -220,202 +370,306 @@ public class SlideshowFragment extends Fragment {
                     if (datos != null && !datos.isEmpty()) {
                         nombreImagenes.add(datos);
                     }
-                    datos = document.get("marcaMoto").toString();
-                    List<String> datosDocumentos = new ArrayList<>();
-                    if (datos != null && datos.equals("AUTECO")) {
-                        for (Map.Entry<String, Object> entry : document.getData().entrySet()) {
-                            String key = entry.getKey();
-                            Object value = entry.getValue();
-                            String stringValue = String.valueOf(value);
-                            datosDocumentos.add(stringValue);
-                        }
-                    }
-                    else if (datos != null && datos.equals("YAMAHA")) {
-
-                        for (Map.Entry<String, Object> entry : document.getData().entrySet()) {
-                            String key = entry.getKey();
-                            Object value = entry.getValue();
-                            String stringValue = String.valueOf(value);
-                            datosDocumentos.add(stringValue);
-                        }
-                    }
-                    else if (datos != null && datos.equals("AKT")) {
-                        for (Map.Entry<String, Object> entry : document.getData().entrySet()) {
-                            String key = entry.getKey();
-                            Object value = entry.getValue();
-                            String stringValue = String.valueOf(value);
-                            datosDocumentos.add(stringValue);
-                        }
-                    }
-                    listasDocumentos.add(datosDocumentos);
+                    idDocumento.add(document.getId());
                     sumar[0]++;
                 }
-            } else {
             }
         });
     }
 
-    private void mostrarDatos(int position, int contadorimgView){
-        if (position > 0){
-            Query query = mpostProvider.getAll2();
-            query.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    int contador = 0;
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        if (contador == position-1) {
-                            if (contadorimgView == 1) {
-                                txtCilindrajevalor1.setText(document.getString("cilindraje"));
-                                if (document.getString("motor") == null){
-                                    txtMotorvalor1.setText(document.getString("tipoMotor"));
-                                }else {
-                                    txtMotorvalor1.setText(document.getString("motor"));
-                                }
-                                txtTorqueValor1.setText(document.getString("torqueMaximo"));
-                                txtAlimentacionValor1.setText(document.getString("sistemaAlimentacion"));
-                                txtRefrigeracionValor1.setText(document.getString("refrigeracion"));
-                                if (document.getString("transmision") == null){
-                                    txtTransmisionValor1.setText(document.getString("tipoTransmision"));
-                                }else {
-                                    txtTransmisionValor1.setText(document.getString("transmision"));
-                                }
-                                if (document.getString("suspensionDelantera") == null){
-                                    txtSuspensionDelanValor1.setText(document.getString("tipoSuspensionDelantera"));
-                                }else {
-                                    txtSuspensionDelanValor1.setText(document.getString("suspensionDelantera"));
-                                }
-                                if (document.getString("suspensionTrasera") == null){
-                                    txtSuspensionTrasValor1.setText(document.getString("tipoSuspensionTrasera"));
-                                }else {
-                                    txtSuspensionTrasValor1.setText(document.getString("suspensionTrasera"));
-                                }
-
-                                txtFrenoDelanValor1.setText(document.getString("frenoDelantero"));
-                                txtFrenoTrasValor1.setText(document.getString("frenoTrasero"));
-                                txtTanqueValor1.setText(document.getString("capacidadTanque"));
-                                if (document.getString("pesoNeto") == null){
-                                    txtPesoValor1.setText(document.getString("peso"));
-                                }else {
-                                    txtPesoValor1.setText(document.getString("pesoNeto"));
-                                }
-                                int precio = Integer.parseInt(document.get("precio").toString());
-                                DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
-                                symbols.setGroupingSeparator('.');
-                                symbols.setDecimalSeparator(',');
-
-                                DecimalFormat formato = new DecimalFormat("#,###", symbols);
-
-                                String numeroFormato = formato.format(precio);
-                                txtPrecioValor1.setText("$" + numeroFormato);
-                                controlador_Imagenes1=1;
-                            }
-                            else if (contadorimgView == 2) {
-                                txtCilindrajevalor2.setText(document.getString("cilindraje"));
-                                if (document.getString("motor") == null){
-                                    txtMotorvalor2.setText(document.getString("tipoMotor"));
-                                }else {
-                                    txtMotorvalor2.setText(document.getString("motor"));
-                                }
-                                txtTorqueValor2.setText(document.getString("torqueMaximo"));
-                                txtAlimentacionValor2.setText(document.getString("sistemaAlimentacion"));
-                                txtRefrigeracionValor2.setText(document.getString("refrigeracion"));
-                                if (document.getString("transmision") == null){
-                                    txtTransmisionValor2.setText(document.getString("tipoTransmision"));
-                                }else {
-                                    txtTransmisionValor2.setText(document.getString("transmision"));
-                                }
-                                if (document.getString("suspensionDelantera") == null){
-                                    txtSuspensionDelanValor2.setText(document.getString("tipoSuspensionDelantera"));
-                                }else {
-                                    txtSuspensionDelanValor2.setText(document.getString("suspensionDelantera"));
-                                }
-                                if (document.getString("suspensionTrasera") == null){
-                                    txtSuspensionTrasValor2.setText(document.getString("tipoSuspensionTrasera"));
-                                }else {
-                                    txtSuspensionTrasValor2.setText(document.getString("suspensionTrasera"));
-                                }
-
-                                txtFrenoDelanValor2.setText(document.getString("frenoDelantero"));
-                                txtFrenoTrasValor2.setText(document.getString("frenoTrasero"));
-                                txtTanqueValor2.setText(document.getString("capacidadTanque"));
-                                if (document.getString("pesoNeto") == null){
-                                    txtPesoValor2.setText(document.getString("peso"));
-                                }else {
-                                    txtPesoValor2.setText(document.getString("pesoNeto"));
-                                }
-                                int precio = Integer.parseInt(document.get("precio").toString());
-                                DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
-                                symbols.setGroupingSeparator('.');
-                                symbols.setDecimalSeparator(',');
-
-                                DecimalFormat formato = new DecimalFormat("#,###", symbols);
-
-                                String numeroFormato = formato.format(precio);
-                                txtPrecioValor2.setText("$" + numeroFormato);
-                                controlador_Imagenes2=1;
-                            }
-                            else if (contadorimgView == 3) {
-                                txtCilindrajevalor3.setText(document.getString("cilindraje"));
-                                if (document.getString("motor") == null){
-                                    txtMotorvalor3.setText(document.getString("tipoMotor"));
-                                }else {
-                                    txtMotorvalor3.setText(document.getString("motor"));
-                                }
-                                txtTorqueValor3.setText(document.getString("torqueMaximo"));
-                                txtAlimentacionValor3.setText(document.getString("sistemaAlimentacion"));
-                                txtRefrigeracionValor3.setText(document.getString("refrigeracion"));
-                                if (document.getString("transmision") == null){
-                                    txtTransmisionValor3.setText(document.getString("tipoTransmision"));
-                                }else {
-                                    txtTransmisionValor3.setText(document.getString("transmision"));
-                                }
-                                if (document.getString("suspensionDelantera") == null){
-                                    txtSuspensionDelanValor3.setText(document.getString("tipoSuspensionDelantera"));
-                                }else {
-                                    txtSuspensionDelanValor3.setText(document.getString("suspensionDelantera"));
-                                }
-                                if (document.getString("suspensionTrasera") == null){
-                                    txtSuspensionTrasValor3.setText(document.getString("tipoSuspensionTrasera"));
-                                }else {
-                                    txtSuspensionTrasValor3.setText(document.getString("suspensionTrasera"));
-                                }
-                                txtFrenoDelanValor3.setText(document.getString("frenoDelantero"));
-                                txtFrenoTrasValor3.setText(document.getString("frenoTrasero"));
-                                txtTanqueValor3.setText(document.getString("capacidadTanque"));
-                                if (document.getString("pesoNeto") == null){
-                                    txtPesoValor3.setText(document.getString("peso"));
-                                }else {
-                                    txtPesoValor3.setText(document.getString("pesoNeto"));
-                                }
-                                int precio = Integer.parseInt(document.get("precio").toString());
-                                DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
-                                symbols.setGroupingSeparator('.');
-                                symbols.setDecimalSeparator(',');
-
-                                DecimalFormat formato = new DecimalFormat("#,###", symbols);
-
-                                String numeroFormato = formato.format(precio);
-                                txtPrecioValor3.setText("$" + numeroFormato);
-                                controlador_Imagenes3=1;
-                            }
-                            break;
+    private void mostrarDatos(int position, int contadorimgView, String id) {
+        if (position > 0) {
+            mpostProvider.getPostById(id).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if (documentSnapshot.exists()) {
+                        if (documentSnapshot.contains("marcaMoto")) {
+                            marcaMoto = documentSnapshot.get("marcaMoto").toString();
                         }
-                        contador++;
+                        switch (marcaMoto) {
+                            case "AUTECO":
+                                if (documentSnapshot.contains("cilindraje")) {
+                                    if (contadorimgView == 1){
+                                        txtCilindrajevalor1.setText(documentSnapshot.getString("cilindraje"));
+                                        controlador_Imagenes1 = 1;
+                                    } else if (contadorimgView == 2) {
+                                        txtCilindrajevalor2.setText(documentSnapshot.getString("cilindraje"));
+                                        controlador_Imagenes2 = 1;
+                                    }else if (contadorimgView == 3) {
+                                        txtCilindrajevalor3.setText(documentSnapshot.getString("cilindraje"));
+                                        controlador_Imagenes3= 1;
+                                    }
+
+                                }
+                                if (documentSnapshot.contains("motor")) {
+                                    if (contadorimgView == 1){
+                                        txtMotorvalor1.setText(documentSnapshot.getString("motor"));
+                                    } else if (contadorimgView == 2) {
+                                        txtMotorvalor2.setText(documentSnapshot.getString("motor"));
+                                    }else if (contadorimgView == 3) {
+                                        txtMotorvalor3.setText(documentSnapshot.getString("motor"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("torqueMaximo")) {
+                                    if (contadorimgView == 1){
+                                        txtTorqueValor1.setText(documentSnapshot.getString("torqueMaximo"));
+                                    } else if (contadorimgView == 2) {
+                                        txtTorqueValor2.setText(documentSnapshot.getString("torqueMaximo"));
+                                    }else if (contadorimgView == 3) {
+                                        txtTorqueValor3.setText(documentSnapshot.getString("torqueMaximo"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("sistemaAlimentacion")) {
+                                    if (contadorimgView == 1){
+                                        txtAlimentacionValor1.setText(documentSnapshot.getString("sistemaAlimentacion"));
+                                    } else if (contadorimgView == 2) {
+                                        txtAlimentacionValor2.setText(documentSnapshot.getString("sistemaAlimentacion"));
+                                    }else if (contadorimgView == 3) {
+                                        txtAlimentacionValor3.setText(documentSnapshot.getString("sistemaAlimentacion"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("refrigeracion")) {
+                                    if (contadorimgView == 1){
+                                        txtRefrigeracionValor1.setText(documentSnapshot.getString("refrigeracion"));
+                                        txtRefrigeracionMoto1.setVisibility(View.VISIBLE);
+                                        txtRefrigeracionValor1.setVisibility(View.VISIBLE);
+                                    } else if (contadorimgView == 2) {
+                                        txtRefrigeracionValor2.setText(documentSnapshot.getString("refrigeracion"));
+                                        txtRefrigeracionMoto2.setVisibility(View.VISIBLE);
+                                        txtRefrigeracionValor2.setVisibility(View.VISIBLE);
+                                    }else if (contadorimgView == 3) {
+                                        txtRefrigeracionMoto3.setVisibility(View.VISIBLE);
+                                        txtRefrigeracionValor3.setVisibility(View.VISIBLE);
+                                        txtRefrigeracionValor3.setText(documentSnapshot.getString("refrigeracion"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("transmision")) {
+                                    if (contadorimgView == 1){
+                                        txtTransmisionValor1.setText(documentSnapshot.getString("transmision"));
+                                    } else if (contadorimgView == 2) {
+                                        txtTransmisionValor2.setText(documentSnapshot.getString("transmision"));
+                                    }else if (contadorimgView == 3) {
+                                        txtTransmisionValor3.setText(documentSnapshot.getString("transmision"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("suspensionDelantera")) {
+                                    if (contadorimgView == 1){
+                                        txtSuspensionDelanValor1.setText(documentSnapshot.getString("suspensionDelantera"));
+                                    } else if (contadorimgView == 2) {
+                                        txtSuspensionDelanValor2.setText(documentSnapshot.getString("suspensionDelantera"));
+                                    }else if (contadorimgView == 3) {
+                                        txtSuspensionDelanValor3.setText(documentSnapshot.getString("suspensionDelantera"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("suspensionTrasera")) {
+                                    if (contadorimgView == 1){
+                                        txtSuspensionTrasValor1.setText(documentSnapshot.getString("suspensionTrasera"));
+                                    } else if (contadorimgView == 2) {
+                                        txtSuspensionTrasValor2.setText(documentSnapshot.getString("suspensionTrasera"));
+                                    }else if (contadorimgView == 3) {
+                                        txtSuspensionTrasValor3.setText(documentSnapshot.getString("suspensionTrasera"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("frenoDelantero")) {
+                                    if (contadorimgView == 1){
+                                        txtFrenoDelanValor1.setText(documentSnapshot.getString("frenoDelantero"));
+                                    } else if (contadorimgView == 2) {
+                                        txtFrenoDelanValor1.setText(documentSnapshot.getString("frenoDelantero"));
+                                    }else if (contadorimgView == 3) {
+                                        txtFrenoDelanValor1.setText(documentSnapshot.getString("frenoDelantero"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("frenoTrasero")) {
+                                    if (contadorimgView == 1){
+                                        txtFrenoTrasValor1.setText(documentSnapshot.getString("frenoTrasero"));
+                                    } else if (contadorimgView == 2) {
+                                        txtFrenoTrasValor2.setText(documentSnapshot.getString("frenoTrasero"));
+                                    }else if (contadorimgView == 3) {
+                                        txtFrenoTrasValor3.setText(documentSnapshot.getString("frenoTrasero"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("capacidadTanque")) {
+                                    if (contadorimgView == 1){
+                                        txtTanqueValor1.setText(documentSnapshot.getString("capacidadTanque"));
+                                    } else if (contadorimgView == 2) {
+                                        txtTanqueValor2.setText(documentSnapshot.getString("capacidadTanque"));
+                                    }else if (contadorimgView == 3) {
+                                        txtTanqueValor3.setText(documentSnapshot.getString("capacidadTanque"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("pesoNeto")) {
+                                    if (contadorimgView == 1){
+                                        txtPesoValor1.setText(documentSnapshot.getString("pesoNeto"));
+                                    } else if (contadorimgView == 2) {
+                                        txtPesoValor2.setText(documentSnapshot.getString("pesoNeto"));
+                                    }else if (contadorimgView == 3) {
+                                        txtPesoValor3.setText(documentSnapshot.getString("pesoNeto"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("nuevoValorDescuento")) {
+                                    int precio = Integer.parseInt(documentSnapshot.get("nuevoValorDescuento").toString());
+                                    DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+                                    symbols.setGroupingSeparator('.');
+                                    symbols.setDecimalSeparator(',');
+                                    DecimalFormat formato = new DecimalFormat("#,###", symbols);
+                                    String numeroFormato = formato.format(precio);
+                                    if (contadorimgView == 1){
+                                        txtPrecioValor1.setText("$" + numeroFormato);
+                                    } else if (contadorimgView == 2) {
+                                        txtPrecioValor2.setText("$" + numeroFormato);
+                                    }else if (contadorimgView == 3) {
+                                        txtPrecioValor3.setText("$" + numeroFormato);
+                                    }
+                                }
+                                break;
+                            case "YAMAHA":
+                                if (documentSnapshot.contains("cilindraje")) {
+                                    String dato = documentSnapshot.getString("cilindraje");
+                                    if (contadorimgView == 1){
+                                        txtCilindrajevalor1.setText(dato);
+                                        controlador_Imagenes1= 1;
+                                    } else if (contadorimgView == 2) {
+                                        txtCilindrajevalor2.setText(dato);
+                                        controlador_Imagenes2= 1;
+                                    }else if (contadorimgView == 3) {
+                                        txtCilindrajevalor3.setText(dato);
+                                        controlador_Imagenes3= 1;
+                                    }
+                                }
+                                if (documentSnapshot.contains("tipodemotor")) {
+                                    if (contadorimgView == 1){
+                                        txtMotorvalor1.setText(documentSnapshot.getString("tipodemotor"));
+                                    } else if (contadorimgView == 2) {
+                                        txtMotorvalor2.setText(documentSnapshot.getString("tipodemotor"));
+                                    }else if (contadorimgView == 3) {
+                                        txtMotorvalor3.setText(documentSnapshot.getString("tipodemotor"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("torquemaximo")) {
+                                    if (contadorimgView == 1){
+                                        txtTorqueValor1.setText(documentSnapshot.getString("torquemaximo"));
+                                    } else if (contadorimgView == 2) {
+                                        txtTorqueValor2.setText(documentSnapshot.getString("torquemaximo"));
+                                    }else if (contadorimgView == 3) {
+                                        txtTorqueValor3.setText(documentSnapshot.getString("torquemaximo"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("sistemadealimentacion")) {
+                                    if (contadorimgView == 1){
+                                        txtAlimentacionValor1.setText(documentSnapshot.getString("sistemadealimentacion"));
+                                    } else if (contadorimgView == 2) {
+                                        txtAlimentacionValor2.setText(documentSnapshot.getString("sistemadealimentacion"));
+                                    }else if (contadorimgView == 3) {
+                                        txtAlimentacionValor3.setText(documentSnapshot.getString("sistemadealimentacion"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("tipodetransmision")) {
+                                    if (contadorimgView == 1){
+                                        txtTransmisionValor1.setText(documentSnapshot.getString("tipodetransmision"));
+                                    } else if (contadorimgView == 2) {
+                                        txtTransmisionValor2.setText(documentSnapshot.getString("tipodetransmision"));
+                                    }else if (contadorimgView == 3) {
+                                        txtTransmisionValor3.setText(documentSnapshot.getString("tipodetransmision"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("tipodesuspensiondelantera")) {
+                                    if (contadorimgView == 1){
+                                        txtSuspensionDelanValor1.setText(documentSnapshot.getString("tipodesuspensiondelantera"));
+                                    } else if (contadorimgView == 2) {
+                                        txtSuspensionDelanValor2.setText(documentSnapshot.getString("tipodesuspensiondelantera"));
+                                    }else if (contadorimgView == 3) {
+                                        txtSuspensionDelanValor3.setText(documentSnapshot.getString("tipodesuspensiondelantera"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("tipodesuspensiontrasera")) {
+                                    if (contadorimgView == 1){
+                                        txtSuspensionTrasValor1.setText(documentSnapshot.getString("tipodesuspensiontrasera"));
+                                    } else if (contadorimgView == 2) {
+                                        txtSuspensionTrasValor2.setText(documentSnapshot.getString("tipodesuspensiontrasera"));
+                                    }else if (contadorimgView == 3) {
+                                        txtSuspensionTrasValor3.setText(documentSnapshot.getString("tipodesuspensiontrasera"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("frenodelantero")) {
+                                    if (contadorimgView == 1){
+                                        txtFrenoDelanValor1.setText(documentSnapshot.getString("frenodelantero"));
+                                    } else if (contadorimgView == 2) {
+                                        txtFrenoDelanValor2.setText(documentSnapshot.getString("frenodelantero"));
+                                    }else if (contadorimgView == 3) {
+                                        txtFrenoDelanValor3.setText(documentSnapshot.getString("frenodelantero"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("frenotrasero")) {
+                                    if (contadorimgView == 1){
+                                        txtFrenoTrasValor1.setText(documentSnapshot.getString("frenotrasero"));
+                                    } else if (contadorimgView == 2) {
+                                        txtFrenoTrasValor2.setText(documentSnapshot.getString("frenotrasero"));
+                                    }else if (contadorimgView == 3) {
+                                        txtFrenoTrasValor3.setText(documentSnapshot.getString("frenotrasero"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("capacidaddecombustible")) {
+                                    if (contadorimgView == 1){
+                                        txtTanqueValor1.setText(documentSnapshot.getString("capacidaddecombustible"));
+                                    } else if (contadorimgView == 2) {
+                                        txtTanqueValor2.setText(documentSnapshot.getString("capacidaddecombustible"));
+                                    }else if (contadorimgView == 3) {
+                                        txtTanqueValor3.setText(documentSnapshot.getString("capacidaddecombustible"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("peso")) {
+                                    if (contadorimgView == 1){
+                                        txtPesoValor1.setText(documentSnapshot.getString("peso"));
+                                    } else if (contadorimgView == 2) {
+                                        txtPesoValor2.setText(documentSnapshot.getString("peso"));
+                                    }else if (contadorimgView == 3) {
+                                        txtPesoValor3.setText(documentSnapshot.getString("peso"));
+                                    }
+                                }
+                                if (!documentSnapshot.contains("refrigeracion")) {
+                                    if (contadorimgView == 1){
+                                        txtRefrigeracionMoto1.setVisibility(View.GONE);
+                                        txtRefrigeracionValor1.setVisibility(View.GONE);
+                                    } else if (contadorimgView == 2) {
+                                        txtRefrigeracionMoto2.setVisibility(View.GONE);
+                                        txtRefrigeracionValor2.setVisibility(View.GONE);
+                                    }else if (contadorimgView == 3) {
+                                        txtRefrigeracionMoto3.setVisibility(View.GONE);
+                                        txtRefrigeracionValor3.setVisibility(View.GONE);
+                                    }
+                                }
+                                if (documentSnapshot.contains("nuevoValorDescuento")) {
+                                    int precio = Integer.parseInt(documentSnapshot.get("nuevoValorDescuento").toString());
+                                    DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+                                    symbols.setGroupingSeparator('.');
+                                    symbols.setDecimalSeparator(',');
+                                    DecimalFormat formato = new DecimalFormat("#,###", symbols);
+                                    String numeroFormato = formato.format(precio);
+                                    if (contadorimgView == 1){
+                                        txtPrecioValor1.setText("$" + numeroFormato);
+                                    } else if (contadorimgView == 2) {
+                                        txtPrecioValor2.setText("$" + numeroFormato);
+                                    }else if (contadorimgView == 3) {
+                                        txtPrecioValor3.setText("$" + numeroFormato);
+                                    }
+                                }
+                                break;
+                        }
                     }
-                } else {
                 }
             });
-        }else{
-            if (contadorimgView == 1){
+        } else {
+            if (contadorimgView == 1) {
                 imgComprarMoto1.setImageResource(R.drawable.ic_sumar_sinfondo);
                 controlador_Imagenes1 = 0;
                 limpiarTextos(contadorimgView);
-            } else if (contadorimgView == 2){
+            } else if (contadorimgView == 2) {
                 imgComprarMoto2.setImageResource(R.drawable.ic_sumar_sinfondo);
-                controlador_Imagenes2= 0;
+                controlador_Imagenes2 = 0;
                 limpiarTextos(contadorimgView);
-            } else if (contadorimgView == 3){
+            } else if (contadorimgView == 3) {
                 imgComprarMoto3.setImageResource(R.drawable.ic_sumar_sinfondo);
-                controlador_Imagenes3= 0;
+                controlador_Imagenes3 = 0;
                 limpiarTextos(contadorimgView);
             }
 
@@ -423,9 +677,9 @@ public class SlideshowFragment extends Fragment {
                 mostrarTextos(0);
             }
         }
-
     }
-    private void limpiarTextos(int controlador){
+
+    private void limpiarTextos(int controlador) {
         if (controlador == 1) {
             txtCilindrajevalor1.setText("");
             txtCilindrajeMoto1.setVisibility(View.GONE);
@@ -454,7 +708,7 @@ public class SlideshowFragment extends Fragment {
             txtPesoValor1.setVisibility(View.GONE);
             txtPrecioMoto1.setVisibility(View.GONE);
             txtPrecioValor1.setVisibility(View.GONE);
-        }else if (controlador == 2) {
+        } else if (controlador == 2) {
             txtCilindrajevalor2.setText("");
             txtCilindrajeMoto2.setVisibility(View.GONE);
             txtCilindrajevalor2.setVisibility(View.GONE);
@@ -483,7 +737,7 @@ public class SlideshowFragment extends Fragment {
             txtPrecioMoto2.setVisibility(View.GONE);
             txtPrecioValor2.setVisibility(View.GONE);
 
-        }else if (controlador == 3) {
+        } else if (controlador == 3) {
             txtCilindrajevalor3.setText("");
             txtCilindrajeMoto3.setVisibility(View.GONE);
             txtCilindrajevalor3.setVisibility(View.GONE);
@@ -513,7 +767,8 @@ public class SlideshowFragment extends Fragment {
             txtPrecioValor3.setVisibility(View.GONE);
         }
     }
-    private void mostrarTextos(int controlador){
+
+    private void mostrarTextos(int controlador) {
         cdlImagenfondo.setBackgroundColor(Color.WHITE);
         nscImagenfondo.setBackgroundColor(Color.WHITE);
         viewRaya1.setVisibility(View.VISIBLE);
@@ -601,7 +856,7 @@ public class SlideshowFragment extends Fragment {
             txtPrecioValor1.setVisibility(View.GONE);
             txtPrecioValor2.setVisibility(View.GONE);
             txtPrecioValor3.setVisibility(View.GONE);
-        }else if (controlador == 1) {
+        } else if (controlador == 1) {
             txtCilindrajeMoto1.setVisibility(View.VISIBLE);
             txtCilindrajevalor1.setVisibility(View.VISIBLE);
             txtMotorMoto1.setVisibility(View.VISIBLE);
@@ -628,7 +883,7 @@ public class SlideshowFragment extends Fragment {
             txtPesoValor1.setVisibility(View.VISIBLE);
             txtPrecioMoto1.setVisibility(View.VISIBLE);
             txtPrecioValor1.setVisibility(View.VISIBLE);
-        }else if (controlador == 2) {
+        } else if (controlador == 2) {
             txtCilindrajeMoto2.setVisibility(View.VISIBLE);
             txtCilindrajevalor2.setVisibility(View.VISIBLE);
             txtMotorMoto2.setVisibility(View.VISIBLE);
@@ -655,7 +910,7 @@ public class SlideshowFragment extends Fragment {
             txtPesoValor2.setVisibility(View.VISIBLE);
             txtPrecioMoto2.setVisibility(View.VISIBLE);
             txtPrecioValor2.setVisibility(View.VISIBLE);
-        }else if (controlador == 3) {
+        } else if (controlador == 3) {
             txtCilindrajeMoto3.setVisibility(View.VISIBLE);
             txtCilindrajevalor3.setVisibility(View.VISIBLE);
             txtMotorMoto3.setVisibility(View.VISIBLE);
