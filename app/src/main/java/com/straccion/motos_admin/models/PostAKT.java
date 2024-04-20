@@ -54,13 +54,15 @@ public class PostAKT {
     private double vistas;
     private double busquedas;
     private int consumoPorGalon;
+    private double velocidadMaxima;
     private boolean visible;
+
 
     public PostAKT() {
 
     }
 
-    public PostAKT(String id, int precio, String nombreMoto, String marcaMoto, int prioridad, ArrayList<String> imagenes, ArrayList<String> colores, ArrayList<String> imagenesColores1, ArrayList<String> imagenesColores2, ArrayList<String> imagenesColores3, ArrayList<String> imagenesColores4, ArrayList<String> imagenesColores5, ArrayList<String> imagenesColores6, String motor, String cilindraje, String potencia, String torqueMaximo, String capacidadTanque, String compresion, String arranque, String suspensionDelantera, String suspensionTrasera, String frenoDelantero, String frenoTrasero, String largoTotal, String alturaSillin, String anchoTotal, String encendido, String distanciaEntreEjes, String distanciaMotorAlPiso, String llantaDelantera, String llantaTrasera, String pesoSeco, String cajaVelocidades, String garantia, String revisionesGratis, String descripcion, String modelo, boolean descuento, int nuevoValorDescuento, String carpeta1, String carpeta2, String carpeta3, ArrayList<String> manualesArchivos, ArrayList<String> nombresArchivos, ArrayList<String> caracteristicasTexto, ArrayList<String> caracteristicasImagenes, ArrayList<String> clasificacion, double vistas, double busquedas, int consumoPorGalon, boolean visible) {
+    public PostAKT(String id, int precio, String nombreMoto, String marcaMoto, int prioridad, ArrayList<String> imagenes, ArrayList<String> colores, ArrayList<String> imagenesColores1, ArrayList<String> imagenesColores2, ArrayList<String> imagenesColores3, ArrayList<String> imagenesColores4, ArrayList<String> imagenesColores5, ArrayList<String> imagenesColores6, String motor, String cilindraje, String potencia, String torqueMaximo, String capacidadTanque, String compresion, String arranque, String suspensionDelantera, String suspensionTrasera, String frenoDelantero, String frenoTrasero, String largoTotal, String alturaSillin, String anchoTotal, String encendido, String distanciaEntreEjes, String distanciaMotorAlPiso, String llantaDelantera, String llantaTrasera, String pesoSeco, String cajaVelocidades, String garantia, String revisionesGratis, String descripcion, String modelo, boolean descuento, int nuevoValorDescuento, String carpeta1, String carpeta2, String carpeta3, ArrayList<String> manualesArchivos, ArrayList<String> nombresArchivos, ArrayList<String> caracteristicasTexto, ArrayList<String> caracteristicasImagenes, ArrayList<String> clasificacion, double vistas, double busquedas, int consumoPorGalon, double velocidadMaxima, boolean visible) {
         this.id = id;
         this.precio = precio;
         this.nombreMoto = nombreMoto;
@@ -112,6 +114,7 @@ public class PostAKT {
         this.vistas = vistas;
         this.busquedas = busquedas;
         this.consumoPorGalon = consumoPorGalon;
+        this.velocidadMaxima = velocidadMaxima;
         this.visible = visible;
     }
 
@@ -521,6 +524,14 @@ public class PostAKT {
 
     public void setConsumoPorGalon(int consumoPorGalon) {
         this.consumoPorGalon = consumoPorGalon;
+    }
+
+    public double getVelocidadMaxima() {
+        return velocidadMaxima;
+    }
+
+    public void setVelocidadMaxima(double velocidadMaxima) {
+        this.velocidadMaxima = velocidadMaxima;
     }
 
     public boolean isVisible() {

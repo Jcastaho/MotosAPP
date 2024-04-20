@@ -42,6 +42,7 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment:2.7.6")
     implementation("androidx.navigation:navigation-ui:2.7.6")
     implementation("com.google.android.gms:play-services-auth:20.6.0")
+    implementation("com.firebaseui:firebase-ui-firestore:8.0.2")
 
     implementation ("com.makeramen:roundedimageview:2.3.0")
     implementation ("de.hdodenhof:circleimageview:3.1.0")
@@ -62,7 +63,7 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-auth:22.3.0")
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
-    implementation ("com.firebaseui:firebase-ui-firestore:8.0.2")
+    implementation("com.firebaseui:firebase-ui-firestore:8.0.2")
     implementation ("com.google.firebase:firebase-storage")
 
 

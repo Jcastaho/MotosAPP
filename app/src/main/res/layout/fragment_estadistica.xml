@@ -16,7 +16,8 @@
             android:id="@+id/btnMostrarNoVisibles"
             android:layout_width="125dp"
             android:layout_height="60dp"
-            android:text="Motos no visibles"/>
+            android:text="Motos no visibles"
+            android:visibility="gone"/>
 
         <TextView
             android:layout_width="wrap_content"

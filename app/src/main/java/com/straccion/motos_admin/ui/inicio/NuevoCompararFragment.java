@@ -55,11 +55,12 @@ import java.util.regex.Pattern;
 public class NuevoCompararFragment extends Fragment {
     View mview;
     LinearLayout lnlcontenedorInfo;
-    ProgressBar progressBar1, progressBar2, progressBar3, progressBar4, progressBar5, progressBar6, progressBar7, progressBar8;
+    ProgressBar progressBar1, progressBar2, progressBar3, progressBar4, progressBar5, progressBar6, progressBar7,
+            progressBar8, progressBar9, progressBar10;
     Button btnMotoNombre1, btnMotoNombre2;
     TextView txtPreguntaTitulo, txtNombreMoto1, txtNombreMoto2, txtPotencia1, txtPotencia2, txtTorque1, txtTorque2, txtPeso1, txtPeso2,
             txtABS1, txtABS2, txtOption1, txtOption2, txtConsumoXGalon1, txtConsumoXGalon2, txtPrecio1, txtPrecio2, txtEncendido1,
-            txtEncendido2, txtFrenos1, txtFrenos2, txtCilindraje1, txtCilindraje2,
+            txtEncendido2, txtFrenos1, txtFrenos2, txtCilindraje1, txtCilindraje2, txtVelMaxima1, txtVelMaxima2,
             txtFI1, txtFI2, txtOption3, txtOption4, txtOption5, txtOption6, txtOption7, txtOption8, txtOption9, txtOption10,
             txtOption11, txtOption12, txtOption13, txtOption14;
     ImageView imgMoto1, imgMoto2;
@@ -111,8 +112,8 @@ public class NuevoCompararFragment extends Fragment {
     double peso2 = 0;
     int consumoPorGalon1 = 0;
     int consumoPorGalon2 = 0;
-    double velocidadMaxima1 = 0;
-    double velocidadMaxima2 = 0;
+    int velocidadMaxima1 = 0;
+    int velocidadMaxima2 = 0;
     double valor1 = 0;
     double valor2 = 0;
     int datoMaximo =0;
@@ -157,6 +158,8 @@ public class NuevoCompararFragment extends Fragment {
         progressBar6 = mview.findViewById(R.id.progressBar6);
         progressBar7 = mview.findViewById(R.id.progressBar7);
         progressBar8 = mview.findViewById(R.id.progressBar8);
+        progressBar9 = mview.findViewById(R.id.progressBar9);
+        progressBar10 = mview.findViewById(R.id.progressBar10);
         btnMotoNombre1 = mview.findViewById(R.id.btnMotoNombre1);
         btnMotoNombre2 = mview.findViewById(R.id.btnMotoNombre2);
         imgMoto1 = mview.findViewById(R.id.imgMoto1);
@@ -182,6 +185,8 @@ public class NuevoCompararFragment extends Fragment {
         txtEncendido2 = mview.findViewById(R.id.txtEncendido2);
         txtCilindraje1 = mview.findViewById(R.id.txtCilindraje1);
         txtCilindraje2 = mview.findViewById(R.id.txtCilindraje2);
+        txtVelMaxima1 = mview.findViewById(R.id.txtVelMaxima1);
+        txtVelMaxima2 = mview.findViewById(R.id.txtVelMaxima2);
         txtConsumoXGalon1 = mview.findViewById(R.id.txtConsumoXGalon1);
         txtConsumoXGalon2 = mview.findViewById(R.id.txtConsumoXGalon2);
         lnlcontenedorInfo = mview.findViewById(R.id.lnlcontenedorInfo);
@@ -317,9 +322,11 @@ public class NuevoCompararFragment extends Fragment {
                                 if (documentSnapshot.contains("consumoPorGalon")) {
                                     consumoPorGalon1 = Integer.parseInt(documentSnapshot.get("consumoPorGalon").toString());
                                 }
-//                        if (documentSnapshot.contains("velocidadMaxima")) {
-//                            velocidadMaxima1 = Double.parseDouble(documentSnapshot.get("velocidadMaxima").toString());
-//                        }
+                                if (documentSnapshot.contains("velocidadMaxima")) {
+                                    double dato = Double.parseDouble(documentSnapshot.get("velocidadMaxima").toString());
+                                    velocidadMaxima1 = (int) dato;
+                                    txtVelMaxima1.setText(velocidadMaxima1 + " KM/H");
+                                }
                                 if (documentSnapshot.contains("imagenes")) {
                                     listaImagenes = (List<String>) documentSnapshot.get("imagenes");
                                     String imagen = listaImagenes.get(0);
@@ -418,9 +425,11 @@ public class NuevoCompararFragment extends Fragment {
                                     consumoPorGalon1 = Integer.parseInt(documentSnapshot.get("consumoPorGalon").toString());
 
                                 }
-//                        if (documentSnapshot.contains("velocidadMaxima")) {
-//                            velocidadMaxima1 = Double.parseDouble(documentSnapshot.get("velocidadMaxima").toString());
-//                        }
+                                if (documentSnapshot.contains("velocidadMaxima")) {
+                                    double dato = Double.parseDouble(documentSnapshot.get("velocidadMaxima").toString());
+                                    velocidadMaxima1 = (int) dato;
+                                    txtVelMaxima1.setText(velocidadMaxima1 + " KM/H");
+                                }
                                 if (documentSnapshot.contains("imagenes")) {
                                     listaImagenes = (List<String>) documentSnapshot.get("imagenes");
                                     String imagen = listaImagenes.get(0);
@@ -511,9 +520,11 @@ public class NuevoCompararFragment extends Fragment {
                                 if (documentSnapshot.contains("consumoPorGalon")) {
                                     consumoPorGalon2 = Integer.parseInt(documentSnapshot.get("consumoPorGalon").toString());
                                 }
-//                                if (documentSnapshot.contains("velocidadMaxima")) {
-//                                    velocidadMaxima2 = Double.parseDouble(documentSnapshot.get("velocidadMaxima").toString());
-//                                }
+                                if (documentSnapshot.contains("velocidadMaxima")) {
+                                    double dato = Double.parseDouble(documentSnapshot.get("velocidadMaxima").toString());
+                                    velocidadMaxima2 = (int) dato;
+                                    txtVelMaxima2.setText(velocidadMaxima2 + " KM/H");
+                                }
                                 if (documentSnapshot.contains("imagenes")) {
                                     listaImagenes = (List<String>) documentSnapshot.get("imagenes");
                                     String imagen = listaImagenes.get(0);
@@ -609,9 +620,11 @@ public class NuevoCompararFragment extends Fragment {
                                 if (documentSnapshot.contains("consumoPorGalon")) {
                                     consumoPorGalon2 = Integer.parseInt(documentSnapshot.get("consumoPorGalon").toString());
                                 }
-//                                if (documentSnapshot.contains("velocidadMaxima")) {
-//                                    velocidadMaxima2 = Double.parseDouble(documentSnapshot.get("velocidadMaxima").toString());
-//                                }
+                                if (documentSnapshot.contains("velocidadMaxima")) {
+                                    double dato = Double.parseDouble(documentSnapshot.get("velocidadMaxima").toString());
+                                    velocidadMaxima2 = (int) dato;
+                                    txtVelMaxima2.setText(velocidadMaxima2 + " KM/H");
+                                }
                                 if (documentSnapshot.contains("imagenes")) {
                                     listaImagenes = (List<String>) documentSnapshot.get("imagenes");
                                     String imagen = listaImagenes.get(0);
@@ -708,6 +721,25 @@ public class NuevoCompararFragment extends Fragment {
             @Override
             public void onGlobalLayout() {
                 startProgressAnimation(progressBar8, cilindrajeValor2, datoMaximo+randomInt);
+            }
+        });
+        progressBar9.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (velocidadMaxima1 > velocidadMaxima2){
+                    datoMaximo = velocidadMaxima1;
+                }else {
+                    datoMaximo = velocidadMaxima2;
+                }
+                //el +1 es para evitar error en caso de que traiga valor 0
+                randomInt = random.nextInt(datoMaximo+1);
+                startProgressAnimation(progressBar9, velocidadMaxima1, datoMaximo+randomInt);
+            }
+        });
+        progressBar10.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                startProgressAnimation(progressBar10, velocidadMaxima2, datoMaximo+randomInt);
             }
         });
     }
@@ -845,7 +877,7 @@ public class NuevoCompararFragment extends Fragment {
             }else {
                 txtOption4.setVisibility(View.GONE);
             }
-            if (consumoPorGalon1 < consumoPorGalon2){
+            if (consumoPorGalon1 > consumoPorGalon2){
                 txtOption5.setText("✔  Tiene un menor consumo de gasolina con un promedio de " + consumoPorGalon1 + "KM por galon");
             }else {
                 txtOption5.setVisibility(View.GONE);
@@ -954,7 +986,7 @@ public class NuevoCompararFragment extends Fragment {
             }else {
                 txtOption4.setVisibility(View.GONE);
             }
-            if (consumoPorGalon1 > consumoPorGalon2){
+            if (consumoPorGalon2 > consumoPorGalon1){
                 txtOption5.setText("✔  Tiene un menor consumo de gasolina con un promedio de " + consumoPorGalon2 + "KM por galon");
             }else {
                 txtOption5.setVisibility(View.GONE);

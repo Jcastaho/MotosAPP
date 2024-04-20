@@ -602,8 +602,23 @@ public class DetallesMoto extends Fragment {
         mSliderView.setAutoCycle(true);//se le dice si quiere cambiar automaticamente
         mSliderView.startAutoCycle();
 
-        //CASO ESPECIAL PARA EL TAMAÑO DE ESTA MOTO
+        //CASO ESPECIAL PARA EL TAMAÑO DE ESTAS MOTOS
         if (nombre.equals("FZ25ABS")){
+            modificarTamanoVistaMotos2();
+        }
+        if (nombre.equals("SZRR")){
+            modificarTamanoVistaMotos2();
+        }
+        if (nombre.equals("YCZ")){
+            modificarTamanoVistaMotos2();
+        }
+        if (nombre.equals("XTZ150")){
+            modificarTamanoVistaMotos2();
+        }
+        if (nombre.equals("XTZ125")){
+            modificarTamanoVistaMotos2();
+        }
+        if (nombre.equals("XTZ 250")){
             modificarTamanoVistaMotos2();
         }
 
@@ -798,11 +813,13 @@ public class DetallesMoto extends Fragment {
             colorMap.put("NEGRO - GRIS ROJO", R.color.rojoNegro);
             colorMap.put("ROJO APACHE - GRIS NEGRO", R.color.rojoNegro);
             colorMap.put("NEGRO NEBULOSA - ROJO GRIS PLATA", R.color.rojoNegro);
+            colorMap.put("AZUL PETROLEO - ROJO", R.color.rojoNegro);
 
             colorMap.put("NEGRA", R.color.black);
             colorMap.put("NEGRO", R.color.black);
             colorMap.put("NEGRO NEBULOSA - GRIS DORADO", R.color.black);
             colorMap.put("NEGRO NEBULOSA", R.color.black);
+            colorMap.put("NEGRO NEBULOSA - ROJO", R.color.black);
             colorMap.put("NEGRO NEBULOSA - VERDE", R.color.black);
             colorMap.put("NEGRO NEBULOSA - DORADO", R.color.black);
 
@@ -821,6 +838,7 @@ public class DetallesMoto extends Fragment {
 
             colorMap.put("GRIS", R.color.grisOscuro);
             colorMap.put("TOP FROST", R.color.grisOscuro);
+            colorMap.put("TOP FROST - ROJO", R.color.grisOscuro);
             colorMap.put("GRIS CARBONO - AZUL MIAMI BLUE", R.color.grisOscuro);
             colorMap.put("GRIS CARBONO", R.color.grisOscuro);
             colorMap.put("TOP FROST/NEGRO NEB - GRIS", R.color.grisOscuro);
@@ -830,14 +848,19 @@ public class DetallesMoto extends Fragment {
 
             colorMap.put("DORADO", R.color.dorado);
             colorMap.put("DORADA", R.color.dorado);
+            colorMap.put("NEGRA MATE - DORADO", R.color.dorado);
 
             colorMap.put("VERDE", R.color.verde);
+            colorMap.put("AZUL METALICO - GRIS VERDE", R.color.verde);
+            colorMap.put("NEGRO MATE VERDE NEON", R.color.verde);
 
 
             colorMap.put("AZUL", R.color.azul);
+            colorMap.put("NEGRO MATE AZUL MATE", R.color.azul);
             colorMap.put("AZUL MATE - GRIS VERDE", R.color.azul);
             colorMap.put("AZUL MATE - DORADO METALIZADO", R.color.azul);
             colorMap.put("AZUL ARLEQUÍN", R.color.azul);
+            colorMap.put("GRIS CARBONO - AZUL", R.color.azul);
 
             colorMap.put("BLANCO", R.color.white);
             colorMap.put("BLANCA", R.color.white);

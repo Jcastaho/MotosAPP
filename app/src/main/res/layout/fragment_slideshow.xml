@@ -110,7 +110,7 @@
                     <View
                         android:id="@+id/viewRaya1"
                         android:layout_width="3dp"
-                        android:layout_height="1240dp"
+                        android:layout_height="1230dp"
                         android:background="@color/black"
                         app:layout_anchor="@id/appbar"
                         android:layout_gravity="center"
@@ -397,7 +397,7 @@
                             android:gravity="center"
                             android:maxLines="3"
                             android:layout_gravity="center"
-                            android:layout_marginBottom="30dp"
+                            android:layout_marginBottom="15dp"
                             android:layout_marginRight="10dp"
                             android:visibility="gone"/>
 
@@ -683,7 +683,7 @@
                             android:gravity="center"
                             android:maxLines="3"
                             android:layout_gravity="center"
-                            android:layout_marginBottom="30dp"
+                            android:layout_marginBottom="15dp"
                             android:layout_marginRight="6dp"
                             android:visibility="gone"/>
                     </LinearLayout>
@@ -968,7 +968,7 @@
                             android:gravity="center"
                             android:maxLines="3"
                             android:layout_gravity="center"
-                            android:layout_marginBottom="30dp"
+                            android:layout_marginBottom="15dp"
                             android:layout_marginRight="10dp"
                             android:visibility="gone"/>
                     </LinearLayout>
@@ -976,8 +976,7 @@
             </FrameLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="200dp">
+                android:layout_height="match_parent">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -987,10 +986,5 @@
                     android:text=""/>
             </LinearLayout>
         </LinearLayout>
-
-
     </androidx.core.widget.NestedScrollView>
-
-
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

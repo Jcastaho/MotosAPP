@@ -95,6 +95,7 @@
         android:id="@+id/contenedorRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="5dp"
         android:visibility="gone"
         android:orientation="vertical">
 
@@ -107,18 +108,19 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <TextView
+                        android:id="@+id/txtTitulo1"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="Motos para la Ciudad"
-                        android:textSize="25dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="10dp"
+                        android:textSize="20dp"
+                        android:text="MOTOS RECOMENDADAS"
+                        android:textColor="@color/black"
+                        android:gravity="center"
+                        android:layout_gravity="center"
                         android:textStyle="italic"/>
 
                     <LinearLayout
@@ -126,9 +128,11 @@
                         android:layout_height="match_parent"
                         android:gravity="right">
                         <Button
+                            android:id="@+id/btnVerMas1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="ver mas"
+                            android:gravity="center"
                             android:backgroundTint="@color/transparent"
                             android:textColor="@color/black"
                             android:layout_gravity="right"
@@ -136,7 +140,7 @@
                     </LinearLayout>
                 </LinearLayout>
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/reciclerViewMiMoto"
+                    android:id="@+id/reciclerViewMiMoto1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="visible"
@@ -147,10 +151,13 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <TextView
+                        android:id="@+id/txtTitulo2"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="Motos para terrenos inestables"
-                        android:textSize="19dp"
+                        android:textSize="20dp"
+                        android:textColor="@color/black"
+                        android:gravity="center"
+                        android:layout_gravity="center"
                         android:textStyle="italic"/>
 
                     <LinearLayout
@@ -158,18 +165,57 @@
                         android:layout_height="match_parent"
                         android:gravity="right">
                         <Button
+                            android:id="@+id/btnVerMas2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="ver mas"
                             android:backgroundTint="@color/transparent"
                             android:textColor="@color/black"
                             android:layout_gravity="right"
+                            android:gravity="center"
                             android:layout_marginRight="10dp"/>
                     </LinearLayout>
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/reciclerViewMiMotos"
+                    android:id="@+id/reciclerViewMiMoto2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/txtTitulo3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="17dp"
+                        android:textColor="@color/black"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:textStyle="italic"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="right">
+                        <Button
+                            android:id="@+id/btnVerMas3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ver mas"
+                            android:backgroundTint="@color/transparent"
+                            android:textColor="@color/black"
+                            android:layout_gravity="right"
+                            android:gravity="center"
+                            android:layout_marginRight="10dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/reciclerViewMiMoto3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="visible"

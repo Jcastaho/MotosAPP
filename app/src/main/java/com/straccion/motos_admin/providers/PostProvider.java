@@ -1,26 +1,34 @@
 package com.straccion.motos_admin.providers;
 
+import android.util.Log;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.straccion.motos_admin.models.PostAKT;
 import com.straccion.motos_admin.models.PostAuteco;
 import com.straccion.motos_admin.models.PostYamaha;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class PostProvider {
     CollectionReference mCollection;
 
     public PostProvider(){
         mCollection = FirebaseFirestore.getInstance().collection("Motos");
-
     }
     public <T> Task<Void> save(T objeto) {
         return mCollection.document().set(objeto);
@@ -43,19 +51,12 @@ public class PostProvider {
     public Query getAll3(){
         return mCollection.whereEqualTo("visible", false);
     }
-
     public Query getAllVacias(){
         return mCollection.whereEqualTo("cilindraje", null);
     }
     public Query buscarPorNombreMoto(String nombre){
         return mCollection.whereEqualTo("nombreMoto", nombre);
     }
-    public Query filtroMasivo(int precioMin, int precioMax, String clasificacion){
-        return mCollection.whereGreaterThanOrEqualTo("precio", precioMin)
-                .whereLessThanOrEqualTo("precio", precioMax)
-                .whereEqualTo("clasificacion", clasificacion);
-    }
-
     public Task<List<DocumentSnapshot>> getPostsByIds(List<String> ids) {
         List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
         for (String id : ids) {
@@ -65,6 +66,19 @@ public class PostProvider {
     }
     public Task<DocumentSnapshot> getPostById(String id){
         return mCollection.document(id).get();
+    }
+
+    public Task<Void> updateMasive1(String postId, Map<String, Object> updates) {
+        return mCollection.document(postId).update(updates);
+    }
+    public Task<Void> updateMasive2(String postId, Map<String, Object> updates) {
+        return mCollection.document(postId).update(updates);
+    }
+    public Task<Void> updateMasive3(String postId, Map<String, Object> updates) {
+        return mCollection.document(postId).update(updates);
+    }
+    public Task<Void> updateMasive4(String postId, Map<String, Object> updates) {
+        return mCollection.document(postId).update(updates);
     }
 
 }

@@ -78,7 +78,6 @@ public class WebScraping {
     List<File> files8 = new ArrayList<>();
 
 
-
     String id = "";
     String url = "";
     String modelo = "";
@@ -126,21 +125,22 @@ public class WebScraping {
     Elements color;
     Document doc = null;
 
-    String urlColor1="";
-    String urlColor2="";
-    String urlColor3="";
-    String urlColor4="";
-    String urlColor5="";
-    String urlColor6="";
-    String urlColor7="";
-    String urlColor8="";
+    String urlColor1 = "";
+    String urlColor2 = "";
+    String urlColor3 = "";
+    String urlColor4 = "";
+    String urlColor5 = "";
+    String urlColor6 = "";
+    String urlColor7 = "";
+    String urlColor8 = "";
 
     //endregion
 
     //region CONSTRUCTORES
-    public WebScraping(Context context){
+    public WebScraping(Context context) {
         this.context = context;
     }
+
     public WebScraping(String ID, String Url, Context context, String nombre, String carpeta1, String carpeta2, String carpeta3, ProgressBar progressBar, Button btnURL, int consumo) {
         this.id = ID;
         this.url = Url;
@@ -165,24 +165,23 @@ public class WebScraping {
             url.add("https://www.auteco.com.co/motos-tvs-deportivas-apache/");
             url.add("https://www.auteco.com.co/motos-tvs-scooters/");
             url.add("https://www.auteco.com.co/motos-tvs-semiautomaticas/");
-            for (int i = 0; i <url.size(); i++) {
+            for (int i = 0; i < url.size(); i++) {
                 doc = Jsoup.connect(url.get(i)).get();
                 Elements nombresMotosElements = doc.select("h2.card-ref-title");
                 Elements precioMotosElements = doc.select("div.info-card > h2.card-ref-precio-tvs");
-                if (nombresMotosElements.size() >= 2) {
+                if (!nombresMotosElements.isEmpty()) {
                     for (int j = 0; j < nombresMotosElements.size(); j++) {
                         Element segundoElemento = nombresMotosElements.get(j);
                         nombresMotos.add(segundoElemento.text());
                     }
                 }
-                if (precioMotosElements.size() >= 2) {
+                if (!precioMotosElements.isEmpty()) {
                     for (int j = 0; j < nombresMotosElements.size(); j++) {
                         Element segundoElemento = precioMotosElements.get(j);
                         precioMoto.add(segundoElemento.text().split("\\*")[0].trim());
                     }
                 }
             }
-            guardarPreciosenFirebase();
         } catch (IOException e) {
             Log.e("MainActivity", "Error al obtener el nombre de la moto: " + e.getMessage());
         }
@@ -224,7 +223,7 @@ public class WebScraping {
             url.add("https://www.incolmotos-yamaha.com.co/vehiculo/fz15v3/25294/");
             url.add("https://www.incolmotos-yamaha.com.co/vehiculo/fz15d/2158/");
 
-            for (int i = 0; i <url.size(); i++) {
+            for (int i = 0; i < url.size(); i++) {
                 doc = Jsoup.connect(url.get(i)).get();
                 Element nombresMotosElements = doc.select("li.modelo h1").first();
                 Element precioMotosElements = doc.select("div.box-introduction strong").first();
@@ -247,7 +246,7 @@ public class WebScraping {
                             // Obtener la URL del enlace
                             String urlNew = nextSibling.attr("href");
                             try {
-                                if (urlNew != null){
+                                if (urlNew != null) {
                                     precioMotosElements = null;
                                     doc = Jsoup.connect(urlNew).get();
                                     precioMotosElements = doc.select("div.box-introduction strong").first();
@@ -256,7 +255,7 @@ public class WebScraping {
                                         precioMoto.add(precioMotosElements.text().split("\\*")[0].trim());
                                     }
                                 }
-                            }catch (Exception e){
+                            } catch (Exception e) {
 
                             }
                         }
@@ -271,113 +270,131 @@ public class WebScraping {
     }
 
 
-
     private void guardarPreciosenFirebase() {
-        int[] sumador = {0};
-        for (int i = 0; i < nombresMotos.size() ; i++) {
-            Query query1 = mpostProvider.buscarPorNombreMoto(nombresMotos.get(i));
-            query1.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        id = document.getId();
-                        mpostProvider.getPostById(id).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                            @Override
-                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                if (documentSnapshot.exists()){
-                                    if (documentSnapshot.contains("precio")) {
-                                        precioAnterior.add(Integer.parseInt(documentSnapshot.get("precio").toString()));
-                                    }
-                                    if (documentSnapshot.contains("precio2")) {
-                                        precioAnterior2.add(Integer.parseInt(documentSnapshot.get("precio2").toString()));
-                                    }
+        mpostProvider.getAll2().addSnapshotListener((querySnapshot, error) -> {
+            if (error != null) {
+                // Manejar el error
+                return;
+            }
+
+            if (querySnapshot != null) {
+                // Iterar sobre cada documento obtenido de la base de datos
+                for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                    Map<String, Object> DescuentosAActualizar1 = new HashMap<>();
+                    Map<String, Object> ValorDesAActualizar2 = new HashMap<>();
+                    Map<String, Object> PrecioAActualizar3 = new HashMap<>();
+                    Map<String, Object> Precio2AActualizar4 = new HashMap<>();
+                    // Obtener el nombre y precio de la moto del documento
+                    String idMoto = document.getId();
+                    String nombreMoto = document.getString("nombreMoto");
+                    double nuevoValorDescuento = document.getDouble("nuevoValorDescuento");
+                    double precio = document.getDouble("precio");
+                    double precio2 = 0;
+                    if (document.contains("precio2")) {
+                        precio2 = document.getDouble("precio2"); // para los que tienen dos modelos diferentes
+                    }
+                    boolean descuento = document.getBoolean("descuento");
+
+                    // Buscar el índice correspondiente en la lista nombresMotos
+                    List<Integer> indices = new ArrayList<>();
+                    String nombreBuscado = nombreMoto.replace(" ", "").replace("-", "");//elinmino espacios
+                    for (int i = 0; i < nombresMotos.size(); i++) {
+                        String nombreLista = nombresMotos.get(i).replace(" ", "").toUpperCase();//elinmino espacios
+                        nombreLista = nombreLista.replace("-", "");
+                        if (nombreLista.contains(nombreBuscado)) {
+                            indices.add(i);
+                        }
+                    }
+
+                    // Verificar si el nombre de la moto existe en la lista nombresMotos
+                    if (!indices.isEmpty()) {
+                        // Obtener el precio almacenado en la lista precioMoto
+                        int precioConvertido = 0;
+                        int precioConvertido2 = 0;
+
+                        if (indices.size() == 2){
+                            precioConvertido = Integer.parseInt(precioMoto.get(indices.get(0)).replaceAll("\\D", ""));
+                            precioConvertido2 = Integer.parseInt(precioMoto.get(indices.get(1)).replaceAll("\\D", ""));
+                            int mayor = Math.max(precioConvertido2, precioConvertido);
+                            int menor = Math.min(precioConvertido2, precioConvertido);
+                            precioConvertido = mayor;
+                            precioConvertido2 = menor;
+                        }else {
+                            precioConvertido = Integer.parseInt(precioMoto.get(indices.get(0)).replaceAll("\\D", ""));
+                        }
+
+
+                        // Comparar los precios
+
+                        if (nuevoValorDescuento != precioConvertido) {
+                            if (nuevoValorDescuento > precioConvertido) {
+                                DescuentosAActualizar1.put("descuento", true);
+                                ValorDesAActualizar2.put("nuevoValorDescuento", precioConvertido);
+                                PrecioAActualizar3.put("precio", (int) nuevoValorDescuento);
+                                if (precio == 0) {
+                                    PrecioAActualizar3.put("precio", precioConvertido);
                                 }
-                                descuentos(sumador[0]);
-                                sumador[0] = sumador[0]+1;
+                            } else {
+                                if (descuento) {
+                                    DescuentosAActualizar1.put("descuento", false);
+                                }
+                                if (nuevoValorDescuento == 0) {
+                                    ValorDesAActualizar2.put("nuevoValorDescuento", precioConvertido);
+                                }
+                                if (precio == 0) {
+                                    PrecioAActualizar3.put("precio", precioConvertido);
+                                } else {
+                                    ValorDesAActualizar2.put("nuevoValorDescuento", precioConvertido);
+                                    PrecioAActualizar3.put("precio", (int) precioConvertido);
+                                }
+                            }
+                        }
+
+                        //precio 2
+                        if (precioConvertido2 != 0) {
+                            if (precio2 != precioConvertido2){
+                                Precio2AActualizar4.put("precio2", precioConvertido2);
+                            }
+                        }
+                    }
+
+
+                    if (!ValorDesAActualizar2.isEmpty()) {
+                        mpostProvider.updateMasive1(idMoto, ValorDesAActualizar2).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+
                             }
                         });
-
                     }
+                    if (!DescuentosAActualizar1.isEmpty()) {
+                        mpostProvider.updateMasive2(idMoto, DescuentosAActualizar1).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
 
-                }
-
-            });
-        }
-    }
-
-    private void descuentos( int i){
-        Map<String, Object> nuevoPrecio = new HashMap<>();
-        int precio = Integer.parseInt(precioMoto.get(i).replaceAll("\\D", ""));
-        if (i != 0){
-            if (nombresMotos.get(i).equals(nombresMotos.get(i-1))){
-                if (precioAnterior2.get(i) != precio){
-                    nuevoPrecio.put("precio2", precio);
-                }
-            }else {
-                if (precioAnterior.get(i) != precio) {
-                    if (precioAnterior.get(i) > precio) {
-                        nuevoPrecio.put("precio", precio);
-                        nuevoPrecio.put("nuevoValorDescuento", precio);
-                        nuevoPrecio.put("descuento", false);
-                    } else {
-                        nuevoPrecio.put("nuevoValorDescuento", precio);
-                        nuevoPrecio.put("descuento", true);
-                    }
-                }
-            }
-            Query query = mpostProvider.buscarPorNombreMoto(nombresMotos.get(i));
-            query.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        id = document.getId();
-                        if (!id.isEmpty()){
-                            mpostProvider.updatePost2(id, nuevoPrecio).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()){
-                                        Toast.makeText(context, "melo", Toast.LENGTH_LONG).show();
-                                    }else {
-                                        Toast.makeText(context, "Hubo un error al almacenar la imagen", Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                            });
-                        }
-                    }
-                }
-            });
-        }else{
-            if (precioAnterior.get(i) != precio){
-                if (precioAnterior.get(i) > precio){
-                    nuevoPrecio.put("precio", precio);
-                    nuevoPrecio.put("nuevoValorDescuento", precio);
-                    nuevoPrecio.put("descuento", false);
-                }else {
-                    nuevoPrecio.put("nuevoValorDescuento", precio);
-                    nuevoPrecio.put("descuento", true);
-                }
-                Query query = mpostProvider.buscarPorNombreMoto(nombresMotos.get(i));
-                query.get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            id = document.getId();
-                            if (!id.isEmpty()){
-                                mpostProvider.updatePost2(id, nuevoPrecio).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()){
-                                            Toast.makeText(context, "melo", Toast.LENGTH_LONG).show();
-                                        }else {
-                                            Toast.makeText(context, "Hubo un error al almacenar la imagen", Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                });
                             }
-                        }
+                        });
                     }
-                });
+                    if (!PrecioAActualizar3.isEmpty()) {
+                        mpostProvider.updateMasive3(idMoto, PrecioAActualizar3).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
 
+                            }
+                        });
+                    }
+                    if (!Precio2AActualizar4.isEmpty()) {
+                        mpostProvider.updateMasive4(idMoto, Precio2AActualizar4).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+
+                            }
+                        });
+                    }
+
+                };
             }
-        }
-
+        });
 
     }
 
@@ -385,13 +402,13 @@ public class WebScraping {
 
     //region DIRECCIONADOR POR FABRICANTE
 
-    public void direccionamientoxFabricantePrecios(){
+    public void direccionamientoxFabricantePrecios() {
         PreciosAutecoTVS();
         PreciosYamaha();
     }
 
-    public void direccionamientoxFabricante(String fabricante){
-        if (fabricante.equals("AUTECO")){
+    public void direccionamientoxFabricante(String fabricante) {
+        if (fabricante.equals("AUTECO")) {
             llenarInfoAuteco();
         } else if (fabricante.equals("YAMAHA")) {
             llenarInfoYamaha();
@@ -425,11 +442,11 @@ public class WebScraping {
                 Element description = descripcionMotos.get(14);
                 modelo = modeloMoto.text();
                 descripcion = description.text();
-                if (descripcion.length() < 15){
+                if (descripcion.length() < 15) {
                     Element descriptions = descripcionMotos.get(15);
                     descripcion = descriptions.text();
                 }
-                if (!modelo.contains("Modelo")){
+                if (!modelo.contains("Modelo")) {
                     modelo = "";
                 }
             }
@@ -455,14 +472,14 @@ public class WebScraping {
                         for (Element imgElement : imgElements) {
                             if (contador == 0) {
                                 imagenesColorPrincipal.add(imgElement.attr("src"));
-                                try{
+                                try {
                                     //convierto las url a imagenes
                                     FutureTarget<File> futureTarget = Glide.with(context)
                                             .asFile()
                                             .load(imagenesColorPrincipal.get(con))
                                             .submit();
 
-                                    if (con == 0){
+                                    if (con == 0) {
                                         imagen1 = futureTarget.get();
                                     } else if (con == 1) {
                                         imagen2 = futureTarget.get();
@@ -482,17 +499,17 @@ public class WebScraping {
                                 } catch (InterruptedException | ExecutionException e) {
                                     e.printStackTrace();
                                 }
-                                con=con+1;
+                                con = con + 1;
 
-                            } else if (contador == 1){
+                            } else if (contador == 1) {
                                 imagenesColores1.add(imgElement.attr("src"));
-                                try{
+                                try {
                                     FutureTarget<File> futureTarget = Glide.with(context)
                                             .asFile()
                                             .load(imagenesColores1.get(con))
                                             .submit();
 
-                                    if (con == 0){
+                                    if (con == 0) {
                                         files1.add(futureTarget.get());
                                     } else if (con == 1) {
                                         files1.add(futureTarget.get());
@@ -512,16 +529,16 @@ public class WebScraping {
                                 } catch (InterruptedException | ExecutionException e) {
                                     e.printStackTrace();
                                 }
-                                con=con+1;
-                            } else if (contador == 2){
+                                con = con + 1;
+                            } else if (contador == 2) {
                                 imagenesColores2.add(imgElement.attr("src"));
-                                try{
+                                try {
                                     FutureTarget<File> futureTarget = Glide.with(context)
                                             .asFile()
                                             .load(imagenesColores2.get(con))
                                             .submit();
 
-                                    if (con == 0){
+                                    if (con == 0) {
                                         files2.add(futureTarget.get());
                                     } else if (con == 1) {
                                         files2.add(futureTarget.get());
@@ -541,16 +558,16 @@ public class WebScraping {
                                 } catch (InterruptedException | ExecutionException e) {
                                     e.printStackTrace();
                                 }
-                                con=con+1;
-                            } else if (contador == 3){
+                                con = con + 1;
+                            } else if (contador == 3) {
                                 imagenesColores3.add(imgElement.attr("src"));
-                                try{
+                                try {
                                     FutureTarget<File> futureTarget = Glide.with(context)
                                             .asFile()
                                             .load(imagenesColores3.get(con))
                                             .submit();
 
-                                    if (con == 0){
+                                    if (con == 0) {
                                         files3.add(futureTarget.get());
                                     } else if (con == 1) {
                                         files3.add(futureTarget.get());
@@ -570,16 +587,16 @@ public class WebScraping {
                                 } catch (InterruptedException | ExecutionException e) {
                                     e.printStackTrace();
                                 }
-                                con=con+1;
-                            } else if (contador == 4){
+                                con = con + 1;
+                            } else if (contador == 4) {
                                 imagenesColores4.add(imgElement.attr("src"));
-                                try{
+                                try {
                                     FutureTarget<File> futureTarget = Glide.with(context)
                                             .asFile()
                                             .load(imagenesColores4.get(con))
                                             .submit();
 
-                                    if (con == 0){
+                                    if (con == 0) {
                                         files4.add(futureTarget.get());
                                     } else if (con == 1) {
                                         files4.add(futureTarget.get());
@@ -599,16 +616,16 @@ public class WebScraping {
                                 } catch (InterruptedException | ExecutionException e) {
                                     e.printStackTrace();
                                 }
-                                con=con+1;
-                            } else if (contador == 5){
+                                con = con + 1;
+                            } else if (contador == 5) {
                                 imagenesColores5.add(imgElement.attr("src"));
-                                try{
+                                try {
                                     FutureTarget<File> futureTarget = Glide.with(context)
                                             .asFile()
                                             .load(imagenesColores5.get(con))
                                             .submit();
 
-                                    if (con == 0){
+                                    if (con == 0) {
                                         files5.add(futureTarget.get());
                                     } else if (con == 1) {
                                         files5.add(futureTarget.get());
@@ -628,16 +645,16 @@ public class WebScraping {
                                 } catch (InterruptedException | ExecutionException e) {
                                     e.printStackTrace();
                                 }
-                                con=con+1;
-                            } else if (contador == 6){
+                                con = con + 1;
+                            } else if (contador == 6) {
                                 imagenesColores6.add(imgElement.attr("src"));
-                                try{
+                                try {
                                     FutureTarget<File> futureTarget = Glide.with(context)
                                             .asFile()
                                             .load(imagenesColores6.get(con))
                                             .submit();
 
-                                    if (con == 0){
+                                    if (con == 0) {
                                         files6.add(futureTarget.get());
                                     } else if (con == 1) {
                                         files6.add(futureTarget.get());
@@ -657,16 +674,16 @@ public class WebScraping {
                                 } catch (InterruptedException | ExecutionException e) {
                                     e.printStackTrace();
                                 }
-                                con=con+1;
+                                con = con + 1;
                             }
                         }
                     }
-                    con=0;
+                    con = 0;
                     imagenesColorPrincipal.clear();
-                    if (contador == 0){
+                    if (contador == 0) {
                         guardarImagenesPrincipales(imagen1, imagen2, imagen3, imagen4, imagen5, imagen6, imagen7, imagen8);
                     }
-                    contador=contador+1;
+                    contador = contador + 1;
                 }
             }
 
@@ -682,14 +699,14 @@ public class WebScraping {
                     recuperarImagenes.add(imagen.attr("href"));
                 }
                 for (int i = 0; i < imagenesAdicionales.size(); i++) {
-                    try{
+                    try {
                         //convierto las url a imagenes
                         FutureTarget<File> futureTarget = Glide.with(context)
                                 .asFile()
                                 .load(recuperarImagenes.get(i))
                                 .submit();
 
-                        if (i == 0){
+                        if (i == 0) {
                             ImagenesAdd.add(futureTarget.get());
                         } else if (i == 1) {
                             ImagenesAdd.add(futureTarget.get());
@@ -754,8 +771,11 @@ public class WebScraping {
         }
     }
 
-    private void guardarPDF(String dato){
+    private void guardarPDF(String dato) {
 
+        if (dato.startsWith("/wp")) {
+            dato = "https://www.auteco.com.co" + dato;
+        }
         File pdf = descargarArchivo(dato);
 
         mImageProvider.guardarPDF(context, pdf, carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen).addOnSuccessListener(uri -> {
@@ -765,6 +785,7 @@ public class WebScraping {
             System.out.println("Error al descargar el archivo. Código de respuesta: " + e);
         });
     }
+
     public static File descargarArchivo(String url) {
         try {
             URL urlObj = new URL(url);
@@ -800,10 +821,11 @@ public class WebScraping {
             return null;
         }
     }
-    private void guardarDatosPDF(String url1){
+
+    private void guardarDatosPDF(String url1) {
         urls.clear();
         Map<String, Object> updates = new HashMap<>();
-        if (url1 != null){
+        if (url1 != null) {
             urls.add(url1);
         }
         List<String> catalogos = new ArrayList<>();
@@ -813,82 +835,83 @@ public class WebScraping {
         mpostProvider.updatePost2(id, updates).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
-                }else {
+                if (task.isSuccessful()) {
+                } else {
                     Toast.makeText(context, "Hubo un error al almacenar la imagen", Toast.LENGTH_LONG).show();
                 }
             }
         });
     }
-    private  void guardarImagenesPrincipales(File ImageFile1, File ImageFile2, File ImageFile3, File ImageFile4, File ImageFile5, File ImageFile6, File ImageFile7, File ImageFile8){
+
+    private void guardarImagenesPrincipales(File ImageFile1, File ImageFile2, File ImageFile3, File ImageFile4, File ImageFile5, File ImageFile6, File ImageFile7, File ImageFile8) {
         List<String> contador = Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8");
-        mImageProvider.save1(context, ImageFile1, carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+contador.get(0)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+        mImageProvider.save1(context, ImageFile1, carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + contador.get(0)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                if (task.isSuccessful()){
+                if (task.isSuccessful()) {
                     mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri1) {
                             final String url1 = uri1.toString();
                             if (ImageFile2 != null && ImageFile2.exists()) {
-                                mImageProvider.save1(context, ImageFile2, carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+contador.get(1)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                mImageProvider.save1(context, ImageFile2, carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + contador.get(1)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task2) {
-                                        if (task2.isSuccessful()){
+                                        if (task2.isSuccessful()) {
                                             mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                 @Override
                                                 public void onSuccess(Uri uri2) {
                                                     final String url2 = uri2.toString();
                                                     if (ImageFile3 != null && ImageFile3.exists()) {
-                                                        mImageProvider.save1(context, ImageFile3, carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+contador.get(2)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                        mImageProvider.save1(context, ImageFile3, carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + contador.get(2)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task3) {
-                                                                if (task3.isSuccessful()){
+                                                                if (task3.isSuccessful()) {
                                                                     mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                         @Override
                                                                         public void onSuccess(Uri uri3) {
                                                                             final String url3 = uri3.toString();
                                                                             if (ImageFile4 != null && ImageFile4.exists()) {
-                                                                                mImageProvider.save1(context, ImageFile4, carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+contador.get(3)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                mImageProvider.save1(context, ImageFile4, carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + contador.get(3)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                     @Override
                                                                                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task4) {
-                                                                                        if (task4.isSuccessful()){
+                                                                                        if (task4.isSuccessful()) {
                                                                                             mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                 @Override
                                                                                                 public void onSuccess(Uri uri4) {
                                                                                                     final String url4 = uri4.toString();
                                                                                                     if (ImageFile5 != null && ImageFile5.exists()) {
-                                                                                                        mImageProvider.save1(context, ImageFile5, carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+contador.get(4)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                        mImageProvider.save1(context, ImageFile5, carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + contador.get(4)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                                             @Override
                                                                                                             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task5) {
-                                                                                                                if (task5.isSuccessful()){
+                                                                                                                if (task5.isSuccessful()) {
                                                                                                                     mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                                         @Override
                                                                                                                         public void onSuccess(Uri uri5) {
                                                                                                                             final String url5 = uri5.toString();
                                                                                                                             if (ImageFile6 != null && ImageFile6.exists()) {
-                                                                                                                                mImageProvider.save1(context, ImageFile6, carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+contador.get(5)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                                                mImageProvider.save1(context, ImageFile6, carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + contador.get(5)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                                                                     @Override
                                                                                                                                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task6) {
-                                                                                                                                        if (task6.isSuccessful()){
+                                                                                                                                        if (task6.isSuccessful()) {
                                                                                                                                             mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                                                                 @Override
                                                                                                                                                 public void onSuccess(Uri uri6) {
                                                                                                                                                     final String url6 = uri6.toString();
                                                                                                                                                     if (ImageFile7 != null && ImageFile7.exists()) {
-                                                                                                                                                        mImageProvider.save1(context, ImageFile7, carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+contador.get(6)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                                                                        mImageProvider.save1(context, ImageFile7, carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + contador.get(6)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                                                                                             @Override
                                                                                                                                                             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task7) {
-                                                                                                                                                                if (task7.isSuccessful()){
+                                                                                                                                                                if (task7.isSuccessful()) {
                                                                                                                                                                     mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                                                                                         @Override
                                                                                                                                                                         public void onSuccess(Uri uri7) {
                                                                                                                                                                             final String url7 = uri7.toString();
                                                                                                                                                                             if (ImageFile8 != null && ImageFile8.exists()) {
-                                                                                                                                                                                mImageProvider.save1(context, ImageFile8, carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+contador.get(7)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                                                                                                mImageProvider.save1(context, ImageFile8, carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + contador.get(7)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                                                                                                                     @Override
                                                                                                                                                                                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task8) {
-                                                                                                                                                                                        if (task8.isSuccessful()){
+                                                                                                                                                                                        if (task8.isSuccessful()) {
                                                                                                                                                                                             mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                                                                                                                 @Override
                                                                                                                                                                                                 public void onSuccess(Uri uri8) {
@@ -899,7 +922,7 @@ public class WebScraping {
                                                                                                                                                                                         }
                                                                                                                                                                                     }
                                                                                                                                                                                 });
-                                                                                                                                                                            }else{
+                                                                                                                                                                            } else {
                                                                                                                                                                                 guardarDatos2(url1, url2, url3, url4, url5, url6, url7, null);
                                                                                                                                                                             }
                                                                                                                                                                         }
@@ -907,7 +930,7 @@ public class WebScraping {
                                                                                                                                                                 }
                                                                                                                                                             }
                                                                                                                                                         });
-                                                                                                                                                    }else{
+                                                                                                                                                    } else {
                                                                                                                                                         guardarDatos2(url1, url2, url3, url4, url5, url6, null, null);
                                                                                                                                                     }
                                                                                                                                                 }
@@ -915,8 +938,7 @@ public class WebScraping {
                                                                                                                                         }
                                                                                                                                     }
                                                                                                                                 });
-                                                                                                                            }
-                                                                                                                            else{
+                                                                                                                            } else {
                                                                                                                                 guardarDatos2(url1, url2, url3, url4, url5, null, null, null);
                                                                                                                             }
                                                                                                                         }
@@ -924,7 +946,7 @@ public class WebScraping {
                                                                                                                 }
                                                                                                             }
                                                                                                         });
-                                                                                                    } else{
+                                                                                                    } else {
                                                                                                         guardarDatos2(url1, url2, url3, url4, null, null, null, null);
                                                                                                     }
                                                                                                 }
@@ -932,7 +954,7 @@ public class WebScraping {
                                                                                         }
                                                                                     }
                                                                                 });
-                                                                            } else{
+                                                                            } else {
                                                                                 guardarDatos2(url1, url2, url3, null, null, null, null, null);
                                                                             }
                                                                         }
@@ -940,7 +962,7 @@ public class WebScraping {
                                                                 }
                                                             }
                                                         });
-                                                    }else{
+                                                    } else {
                                                         guardarDatos2(url1, url2, null, null, null, null, null, null);
                                                     }
                                                 }
@@ -948,7 +970,7 @@ public class WebScraping {
                                         }
                                     }
                                 });
-                            }else{
+                            } else {
                                 guardarDatos2(url1, null, null, null, null, null, null, null);
                             }
                         }
@@ -957,24 +979,32 @@ public class WebScraping {
             }
         });
     }
-    private void guardarDatos2(String url1, String url2, String url3, String url4, String url5, String url6, String url7, String url8){
+
+    private void guardarDatos2(String url1, String url2, String url3, String url4, String url5, String url6, String url7, String url8) {
         urls.clear();
         Map<String, Object> updates = new HashMap<>();
-        if (url1 != null){
+        if (url1 != null) {
             urls.add(url1);
-        }if (url2 != null) {
+        }
+        if (url2 != null) {
             urls.add(url2);
-        }if (url3 != null) {
+        }
+        if (url3 != null) {
             urls.add(url3);
-        }if (url4 != null) {
+        }
+        if (url4 != null) {
             urls.add(url4);
-        }if (url5 != null) {
+        }
+        if (url5 != null) {
             urls.add(url5);
-        }if (url6 != null) {
+        }
+        if (url6 != null) {
             urls.add(url6);
-        }if (url7 != null) {
+        }
+        if (url7 != null) {
             urls.add(url7);
-        }if (url8 != null) {
+        }
+        if (url8 != null) {
             urls.add(url8);
         }
         updates.put("imagenes", urls);
@@ -982,92 +1012,93 @@ public class WebScraping {
         mpostProvider.updatePost2(id, updates).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
+                if (task.isSuccessful()) {
                     guardarImagenesAdd(ImagenesAdd);
-                }else {
+                } else {
                     Toast.makeText(context, "Hubo un error al almacenar la imagen", Toast.LENGTH_LONG).show();
                 }
             }
         });
     }
-    private  void guardarImagenesAdd(List<File> imagenesAdd){
+
+    private void guardarImagenesAdd(List<File> imagenesAdd) {
         List<String> contador = Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11");
-        mImageProvider.save(context, imagenesAdd.get(0), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_IMAGENES_ADD_"+contador.get(0)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+        mImageProvider.save(context, imagenesAdd.get(0), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_IMAGENES_ADD_" + contador.get(0)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> tarea1) {
-                if (tarea1.isSuccessful()){
+                if (tarea1.isSuccessful()) {
                     mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri url1) {
                             final String uri1 = url1.toString();
                             if (imagenesAdd.size() > 1 && imagenesAdd.get(1) != null && imagenesAdd.get(1).exists()) {
-                                mImageProvider.save(context, imagenesAdd.get(1), carpeta1, carpeta2, carpeta3, nombreImagen,nombreImagen+"_IMAGENES_ADD_"+contador.get(1)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                mImageProvider.save(context, imagenesAdd.get(1), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_IMAGENES_ADD_" + contador.get(1)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> tarea2) {
-                                        if (tarea2.isSuccessful()){
+                                        if (tarea2.isSuccessful()) {
                                             mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                 @Override
                                                 public void onSuccess(Uri url2) {
                                                     final String uri2 = url2.toString();
                                                     if (imagenesAdd.size() > 2 && imagenesAdd.get(2) != null && imagenesAdd.get(2).exists()) {
-                                                        mImageProvider.save(context, imagenesAdd.get(2), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_IMAGENES_ADD_"+contador.get(2)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                        mImageProvider.save(context, imagenesAdd.get(2), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_IMAGENES_ADD_" + contador.get(2)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> tarea3) {
-                                                                if (tarea3.isSuccessful()){
+                                                                if (tarea3.isSuccessful()) {
                                                                     mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                         @Override
                                                                         public void onSuccess(Uri url3) {
                                                                             final String uri3 = url3.toString();
                                                                             if (imagenesAdd.size() > 3 && imagenesAdd.get(3) != null && imagenesAdd.get(3).exists()) {
-                                                                                mImageProvider.save(context, imagenesAdd.get(3), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_IMAGENES_ADD_"+contador.get(3)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                mImageProvider.save(context, imagenesAdd.get(3), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_IMAGENES_ADD_" + contador.get(3)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                     @Override
                                                                                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> tarea4) {
-                                                                                        if (tarea4.isSuccessful()){
+                                                                                        if (tarea4.isSuccessful()) {
                                                                                             mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                 @Override
                                                                                                 public void onSuccess(Uri url4) {
                                                                                                     final String uri4 = url4.toString();
                                                                                                     if (imagenesAdd.size() > 4 && imagenesAdd.get(4) != null && imagenesAdd.get(4).exists()) {
-                                                                                                        mImageProvider.save(context, imagenesAdd.get(4), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_IMAGENES_ADD_"+contador.get(4)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                        mImageProvider.save(context, imagenesAdd.get(4), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_IMAGENES_ADD_" + contador.get(4)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                                             @Override
                                                                                                             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task4) {
-                                                                                                                if (task4.isSuccessful()){
+                                                                                                                if (task4.isSuccessful()) {
                                                                                                                     mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                                         @Override
                                                                                                                         public void onSuccess(Uri url5) {
                                                                                                                             final String uri5 = url5.toString();
                                                                                                                             if (imagenesAdd.size() > 5 && imagenesAdd.get(5) != null && imagenesAdd.get(5).exists()) {
-                                                                                                                                mImageProvider.save(context, imagenesAdd.get(5), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_IMAGENES_ADD_"+contador.get(5)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                                                mImageProvider.save(context, imagenesAdd.get(5), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_IMAGENES_ADD_" + contador.get(5)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                                                                     @Override
                                                                                                                                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task5) {
-                                                                                                                                        if (task5.isSuccessful()){
+                                                                                                                                        if (task5.isSuccessful()) {
                                                                                                                                             mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                                                                 @Override
                                                                                                                                                 public void onSuccess(Uri url6) {
                                                                                                                                                     final String uri6 = url6.toString();
                                                                                                                                                     if (imagenesAdd.size() > 6 && imagenesAdd.get(6) != null && imagenesAdd.get(6).exists()) {
-                                                                                                                                                        mImageProvider.save(context, imagenesAdd.get(6), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_IMAGENES_ADD_"+contador.get(6)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                                                                        mImageProvider.save(context, imagenesAdd.get(6), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_IMAGENES_ADD_" + contador.get(6)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                                                                                             @Override
                                                                                                                                                             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task6) {
-                                                                                                                                                                if (task6.isSuccessful()){
+                                                                                                                                                                if (task6.isSuccessful()) {
                                                                                                                                                                     mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                                                                                         @Override
                                                                                                                                                                         public void onSuccess(Uri url7) {
                                                                                                                                                                             final String uri7 = url7.toString();
                                                                                                                                                                             if (imagenesAdd.size() > 7 && imagenesAdd.get(7) != null && imagenesAdd.get(7).exists()) {
-                                                                                                                                                                                mImageProvider.save(context, imagenesAdd.get(7), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_IMAGENES_ADD_"+contador.get(7)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                                                                                                mImageProvider.save(context, imagenesAdd.get(7), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_IMAGENES_ADD_" + contador.get(7)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                                                                                                                     @Override
                                                                                                                                                                                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task7) {
-                                                                                                                                                                                        if (task7.isSuccessful()){
+                                                                                                                                                                                        if (task7.isSuccessful()) {
                                                                                                                                                                                             mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                                                                                                                 @Override
                                                                                                                                                                                                 public void onSuccess(Uri url8) {
                                                                                                                                                                                                     final String uri8 = url8.toString();
                                                                                                                                                                                                     if (imagenesAdd.size() > 8 && imagenesAdd.get(8) != null && imagenesAdd.get(8).exists()) {
-                                                                                                                                                                                                        mImageProvider.save(context, imagenesAdd.get(8), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_IMAGENES_ADD_"+contador.get(8)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                                                                                                                        mImageProvider.save(context, imagenesAdd.get(8), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_IMAGENES_ADD_" + contador.get(8)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                                                                                                                                             @Override
                                                                                                                                                                                                             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task8) {
-                                                                                                                                                                                                                if (task8.isSuccessful()){
+                                                                                                                                                                                                                if (task8.isSuccessful()) {
                                                                                                                                                                                                                     mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                                                                                                                                         @Override
                                                                                                                                                                                                                         public void onSuccess(Uri url9) {
@@ -1078,7 +1109,7 @@ public class WebScraping {
                                                                                                                                                                                                                 }
                                                                                                                                                                                                             }
                                                                                                                                                                                                         });
-                                                                                                                                                                                                    }else {
+                                                                                                                                                                                                    } else {
                                                                                                                                                                                                         guardarDatos(uri1, uri2, uri3, uri4, uri5, uri6, uri7, uri8, null);
                                                                                                                                                                                                     }
                                                                                                                                                                                                 }
@@ -1086,7 +1117,7 @@ public class WebScraping {
                                                                                                                                                                                         }
                                                                                                                                                                                     }
                                                                                                                                                                                 });
-                                                                                                                                                                            }else {
+                                                                                                                                                                            } else {
                                                                                                                                                                                 guardarDatos(uri1, uri2, uri3, uri4, uri5, uri6, uri7, null, null);
                                                                                                                                                                             }
                                                                                                                                                                         }
@@ -1094,7 +1125,7 @@ public class WebScraping {
                                                                                                                                                                 }
                                                                                                                                                             }
                                                                                                                                                         });
-                                                                                                                                                    }else {
+                                                                                                                                                    } else {
                                                                                                                                                         guardarDatos(uri1, uri2, uri3, uri4, uri5, uri6, null, null, null);
                                                                                                                                                     }
                                                                                                                                                 }
@@ -1102,7 +1133,7 @@ public class WebScraping {
                                                                                                                                         }
                                                                                                                                     }
                                                                                                                                 });
-                                                                                                                            }else {
+                                                                                                                            } else {
                                                                                                                                 guardarDatos(uri1, uri2, uri3, uri4, uri5, null, null, null, null);
                                                                                                                             }
                                                                                                                         }
@@ -1110,7 +1141,7 @@ public class WebScraping {
                                                                                                                 }
                                                                                                             }
                                                                                                         });
-                                                                                                    }else {
+                                                                                                    } else {
                                                                                                         guardarDatos(uri1, uri2, uri3, uri4, null, null, null, null, null);
                                                                                                     }
                                                                                                 }
@@ -1118,7 +1149,7 @@ public class WebScraping {
                                                                                         }
                                                                                     }
                                                                                 });
-                                                                            }else {
+                                                                            } else {
                                                                                 guardarDatos(uri1, uri2, uri3, null, null, null, null, null, null);
                                                                             }
                                                                         }
@@ -1126,7 +1157,7 @@ public class WebScraping {
                                                                 }
                                                             }
                                                         });
-                                                    }else {
+                                                    } else {
                                                         guardarDatos(uri1, uri2, null, null, null, null, null, null, null);
                                                     }
                                                 }
@@ -1134,7 +1165,7 @@ public class WebScraping {
                                         }
                                     }
                                 });
-                            }else {
+                            } else {
                                 guardarDatos(uri1, null, null, null, null, null, null, null, null);
                             }
                         }
@@ -1143,26 +1174,35 @@ public class WebScraping {
             }
         });
     }
-    private void guardarDatos(String uri1, String uri2, String uri3, String uri4, String uri5, String uri6, String uri7, String uri8, String uri9){
+
+    private void guardarDatos(String uri1, String uri2, String uri3, String uri4, String uri5, String uri6, String uri7, String uri8, String uri9) {
         urls.clear();
         Map<String, Object> updates = new HashMap<>();
-        if (uri1 != null){
+        if (uri1 != null) {
             urls.add(uri1);
-        }if (uri2 != null) {
+        }
+        if (uri2 != null) {
             urls.add(uri2);
-        }if (uri3 != null) {
+        }
+        if (uri3 != null) {
             urls.add(uri3);
-        }if (uri4 != null) {
+        }
+        if (uri4 != null) {
             urls.add(uri4);
-        }if (uri5 != null) {
+        }
+        if (uri5 != null) {
             urls.add(uri5);
-        }if (uri6!= null) {
+        }
+        if (uri6 != null) {
             urls.add(uri6);
-        }if (uri7 != null) {
+        }
+        if (uri7 != null) {
             urls.add(uri7);
-        }if (uri8 != null) {
+        }
+        if (uri8 != null) {
             urls.add(uri8);
-        }if (uri9 != null) {
+        }
+        if (uri9 != null) {
             urls.add(uri9);
         }
 
@@ -1170,83 +1210,86 @@ public class WebScraping {
         mpostProvider.updatePost(id, updates).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
-                    guardaColores1(files1, 1, coloresLista.get(1));
-                }else {
+                if (task.isSuccessful()) {
+                    if (coloresLista.size() > 1) {
+                        guardaColores1(files1, 1, coloresLista.get(1));
+                    }
+                } else {
                     Toast.makeText(context, "Hubo un error al almacenar la imagen", Toast.LENGTH_LONG).show();
                 }
             }
         });
     }
-    private void guardaColores1(List<File> colores, int posicion, String nombreColor){
+
+    private void guardaColores1(List<File> colores, int posicion, String nombreColor) {
         List<String> contador = Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8");
-        mImageProvider.save2(context, colores.get(0), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(0)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+        mImageProvider.save2(context, colores.get(0), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(0)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                if (task.isSuccessful()){
+                if (task.isSuccessful()) {
                     mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri1) {
                             final String url1 = uri1.toString();
                             if (colores.size() > 1 && colores.get(1) != null && colores.get(1).exists()) {
-                                mImageProvider.save2(context, colores.get(1), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(1)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                mImageProvider.save2(context, colores.get(1), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(1)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task2) {
-                                        if (task2.isSuccessful()){
+                                        if (task2.isSuccessful()) {
                                             mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                 @Override
                                                 public void onSuccess(Uri uri2) {
                                                     final String url2 = uri2.toString();
                                                     if (colores.size() > 2 && colores.get(2) != null && colores.get(2).exists()) {
-                                                        mImageProvider.save2(context, colores.get(2), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(2)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                        mImageProvider.save2(context, colores.get(2), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(2)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task3) {
-                                                                if (task3.isSuccessful()){
+                                                                if (task3.isSuccessful()) {
                                                                     mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                         @Override
                                                                         public void onSuccess(Uri uri3) {
                                                                             final String url3 = uri3.toString();
-                                                                            if (colores.size() > 3 && colores.get(3) != null && colores.get(3).exists())  {
-                                                                                mImageProvider.save2(context, colores.get(3), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(3)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                            if (colores.size() > 3 && colores.get(3) != null && colores.get(3).exists()) {
+                                                                                mImageProvider.save2(context, colores.get(3), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(3)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                     @Override
                                                                                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task4) {
-                                                                                        if (task4.isSuccessful()){
+                                                                                        if (task4.isSuccessful()) {
                                                                                             mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                 @Override
                                                                                                 public void onSuccess(Uri uri4) {
                                                                                                     final String url4 = uri4.toString();
-                                                                                                    if (colores.size() > 4 && colores.get(4) != null && colores.get(4).exists())  {
-                                                                                                        mImageProvider.save2(context, colores.get(4), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(4)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                    if (colores.size() > 4 && colores.get(4) != null && colores.get(4).exists()) {
+                                                                                                        mImageProvider.save2(context, colores.get(4), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(4)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                                             @Override
                                                                                                             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task5) {
-                                                                                                                if (task5.isSuccessful()){
+                                                                                                                if (task5.isSuccessful()) {
                                                                                                                     mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                                         @Override
                                                                                                                         public void onSuccess(Uri uri5) {
                                                                                                                             final String url5 = uri5.toString();
                                                                                                                             if (colores.size() > 5 && colores.get(5) != null && colores.get(5).exists()) {
-                                                                                                                                mImageProvider.save2(context, colores.get(5), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(5)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                                                mImageProvider.save2(context, colores.get(5), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(5)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                                                                     @Override
                                                                                                                                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task6) {
-                                                                                                                                        if (task6.isSuccessful()){
+                                                                                                                                        if (task6.isSuccessful()) {
                                                                                                                                             mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                                                                 @Override
                                                                                                                                                 public void onSuccess(Uri uri6) {
                                                                                                                                                     final String url6 = uri6.toString();
                                                                                                                                                     if (colores.size() > 6 && colores.get(6) != null && colores.get(6).exists()) {
-                                                                                                                                                        mImageProvider.save2(context, colores.get(6), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(6)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                                                                        mImageProvider.save2(context, colores.get(6), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(6)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                                                                                             @Override
                                                                                                                                                             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task7) {
-                                                                                                                                                                if (task7.isSuccessful()){
+                                                                                                                                                                if (task7.isSuccessful()) {
                                                                                                                                                                     mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                                                                                         @Override
                                                                                                                                                                         public void onSuccess(Uri uri7) {
                                                                                                                                                                             final String url7 = uri7.toString();
                                                                                                                                                                             if (colores.size() > 7 && colores.get(7) != null && colores.get(7).exists()) {
-                                                                                                                                                                                mImageProvider.save2(context, colores.get(7), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(7)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                                                                                                mImageProvider.save2(context, colores.get(7), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(7)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                                                                                                                     @Override
                                                                                                                                                                                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task8) {
-                                                                                                                                                                                        if (task8.isSuccessful()){
+                                                                                                                                                                                        if (task8.isSuccessful()) {
                                                                                                                                                                                             mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                                                                                                                 @Override
                                                                                                                                                                                                 public void onSuccess(Uri uri8) {
@@ -1257,7 +1300,7 @@ public class WebScraping {
                                                                                                                                                                                         }
                                                                                                                                                                                     }
                                                                                                                                                                                 });
-                                                                                                                                                                            }else {
+                                                                                                                                                                            } else {
                                                                                                                                                                                 guardarColor1(url1, url2, url3, url4, url5, url6, url7, null, posicion);
                                                                                                                                                                             }
                                                                                                                                                                         }
@@ -1265,7 +1308,7 @@ public class WebScraping {
                                                                                                                                                                 }
                                                                                                                                                             }
                                                                                                                                                         });
-                                                                                                                                                    }else {
+                                                                                                                                                    } else {
                                                                                                                                                         guardarColor1(url1, url2, url3, url4, url5, url6, null, null, posicion);
                                                                                                                                                     }
                                                                                                                                                 }
@@ -1273,7 +1316,7 @@ public class WebScraping {
                                                                                                                                         }
                                                                                                                                     }
                                                                                                                                 });
-                                                                                                                            }else {
+                                                                                                                            } else {
                                                                                                                                 guardarColor1(url1, url2, url3, url4, url5, null, null, null, posicion);
                                                                                                                             }
                                                                                                                         }
@@ -1281,7 +1324,7 @@ public class WebScraping {
                                                                                                                 }
                                                                                                             }
                                                                                                         });
-                                                                                                    }else {
+                                                                                                    } else {
                                                                                                         guardarColor1(url1, url2, url3, url4, null, null, null, null, posicion);
                                                                                                     }
                                                                                                 }
@@ -1289,7 +1332,7 @@ public class WebScraping {
                                                                                         }
                                                                                     }
                                                                                 });
-                                                                            }else {
+                                                                            } else {
                                                                                 guardarColor1(url1, url2, url3, null, null, null, null, null, posicion);
                                                                             }
                                                                         }
@@ -1297,7 +1340,7 @@ public class WebScraping {
                                                                 }
                                                             }
                                                         });
-                                                    }else {
+                                                    } else {
                                                         guardarColor1(url1, url2, null, null, null, null, null, null, posicion);
                                                     }
                                                 }
@@ -1305,7 +1348,7 @@ public class WebScraping {
                                         }
                                     }
                                 });
-                            }else {
+                            } else {
                                 guardarColor1(url1, null, null, null, null, null, null, null, posicion);
                             }
                         }
@@ -1314,128 +1357,137 @@ public class WebScraping {
             }
         });
     }
-    private void guardarColor1(String url1, String url2, String url3, String url4, String url5, String url6, String url7, String url8, int posicion){
+
+    private void guardarColor1(String url1, String url2, String url3, String url4, String url5, String url6, String url7, String url8, int posicion) {
         urls.clear();
         String imagenColores = "";
-        if (posicion==1){
-            imagenColores =  "imagenesColores1";
-        } else if (posicion==2){
-            imagenColores =  "imagenesColores2";
-        } else if (posicion==3){
-            imagenColores =  "imagenesColores3";
-        } else if (posicion==4){
-            imagenColores =  "imagenesColores4";
-        } else if (posicion==5){
-            imagenColores =  "imagenesColores5";
-        } else if (posicion==6){
-            imagenColores =  "imagenesColores6";
+        if (posicion == 1) {
+            imagenColores = "imagenesColores1";
+        } else if (posicion == 2) {
+            imagenColores = "imagenesColores2";
+        } else if (posicion == 3) {
+            imagenColores = "imagenesColores3";
+        } else if (posicion == 4) {
+            imagenColores = "imagenesColores4";
+        } else if (posicion == 5) {
+            imagenColores = "imagenesColores5";
+        } else if (posicion == 6) {
+            imagenColores = "imagenesColores6";
         }
         Map<String, Object> updates = new HashMap<>();
         updates.clear();
         imagenesColores.clear();
-        if (url1 != null){
+        if (url1 != null) {
             imagenesColores.add(url1);
-        }if (url2 != null) {
+        }
+        if (url2 != null) {
             imagenesColores.add(url2);
-        }if (url3 != null) {
+        }
+        if (url3 != null) {
             imagenesColores.add(url3);
-        }if (url4 != null) {
+        }
+        if (url4 != null) {
             imagenesColores.add(url4);
-        }if (url5 != null) {
+        }
+        if (url5 != null) {
             imagenesColores.add(url5);
-        }if (url6 != null) {
+        }
+        if (url6 != null) {
             imagenesColores.add(url6);
-        }if (url7 != null) {
+        }
+        if (url7 != null) {
             imagenesColores.add(url7);
-        }if (url8 != null) {
+        }
+        if (url8 != null) {
             imagenesColores.add(url8);
         }
         updates.put(imagenColores, imagenesColores);
         mpostProvider.updatePost3(id, updates).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
-                    if (files2.size() > 0){
+                if (task.isSuccessful()) {
+                    if (files2.size() > 0) {
                         guardaColores2(files2, 2, coloresLista.get(2));
-                    }else {
+                    } else {
                         progressBar.setVisibility(View.GONE);
                         btnURL.setVisibility(View.VISIBLE);
                     }
-                }else {
+                } else {
                     Toast.makeText(context, "Hubo un error al almacenar la imagen", Toast.LENGTH_LONG).show();
                 }
             }
         });
     }
-    private void guardaColores2(List<File> colores, int posicion, String nombreColor){
+
+    private void guardaColores2(List<File> colores, int posicion, String nombreColor) {
         List<String> contador = Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8");
-        mImageProvider.save2(context, colores.get(0), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(0)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+        mImageProvider.save2(context, colores.get(0), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(0)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                if (task.isSuccessful()){
+                if (task.isSuccessful()) {
                     mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri1) {
                             final String url1 = uri1.toString();
                             if (colores.size() > 1 && colores.get(1) != null && colores.get(1).exists()) {
-                                mImageProvider.save2(context, colores.get(1), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(1)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                mImageProvider.save2(context, colores.get(1), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(1)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task2) {
-                                        if (task2.isSuccessful()){
+                                        if (task2.isSuccessful()) {
                                             mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                 @Override
                                                 public void onSuccess(Uri uri2) {
                                                     final String url2 = uri2.toString();
                                                     if (colores.size() > 2 && colores.get(2) != null && colores.get(2).exists()) {
-                                                        mImageProvider.save2(context, colores.get(2), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(2)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                        mImageProvider.save2(context, colores.get(2), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(2)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task3) {
-                                                                if (task3.isSuccessful()){
+                                                                if (task3.isSuccessful()) {
                                                                     mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                         @Override
                                                                         public void onSuccess(Uri uri3) {
                                                                             final String url3 = uri3.toString();
-                                                                            if (colores.size() > 3 && colores.get(3) != null && colores.get(3).exists())  {
-                                                                                mImageProvider.save2(context, colores.get(3), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(3)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                            if (colores.size() > 3 && colores.get(3) != null && colores.get(3).exists()) {
+                                                                                mImageProvider.save2(context, colores.get(3), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(3)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                     @Override
                                                                                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task4) {
-                                                                                        if (task4.isSuccessful()){
+                                                                                        if (task4.isSuccessful()) {
                                                                                             mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                 @Override
                                                                                                 public void onSuccess(Uri uri4) {
                                                                                                     final String url4 = uri4.toString();
-                                                                                                    if (colores.size() > 4 && colores.get(4) != null && colores.get(4).exists())  {
-                                                                                                        mImageProvider.save2(context, colores.get(4), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(4)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                    if (colores.size() > 4 && colores.get(4) != null && colores.get(4).exists()) {
+                                                                                                        mImageProvider.save2(context, colores.get(4), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(4)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                                             @Override
                                                                                                             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task5) {
-                                                                                                                if (task5.isSuccessful()){
+                                                                                                                if (task5.isSuccessful()) {
                                                                                                                     mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                                         @Override
                                                                                                                         public void onSuccess(Uri uri5) {
                                                                                                                             final String url5 = uri5.toString();
                                                                                                                             if (colores.size() > 5 && colores.get(5) != null && colores.get(5).exists()) {
-                                                                                                                                mImageProvider.save2(context, colores.get(5), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(5)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                                                mImageProvider.save2(context, colores.get(5), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(5)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                                                                     @Override
                                                                                                                                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task6) {
-                                                                                                                                        if (task6.isSuccessful()){
+                                                                                                                                        if (task6.isSuccessful()) {
                                                                                                                                             mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                                                                 @Override
                                                                                                                                                 public void onSuccess(Uri uri6) {
                                                                                                                                                     final String url6 = uri6.toString();
                                                                                                                                                     if (colores.size() > 6 && colores.get(6) != null && colores.get(6).exists()) {
-                                                                                                                                                        mImageProvider.save2(context, colores.get(6), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(6)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                                                                        mImageProvider.save2(context, colores.get(6), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(6)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                                                                                             @Override
                                                                                                                                                             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task7) {
-                                                                                                                                                                if (task7.isSuccessful()){
+                                                                                                                                                                if (task7.isSuccessful()) {
                                                                                                                                                                     mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                                                                                         @Override
                                                                                                                                                                         public void onSuccess(Uri uri7) {
                                                                                                                                                                             final String url7 = uri7.toString();
                                                                                                                                                                             if (colores.size() > 7 && colores.get(7) != null && colores.get(7).exists()) {
-                                                                                                                                                                                mImageProvider.save2(context, colores.get(7), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(7)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                                                                                                mImageProvider.save2(context, colores.get(7), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(7)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                                                                                                                     @Override
                                                                                                                                                                                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task8) {
-                                                                                                                                                                                        if (task8.isSuccessful()){
+                                                                                                                                                                                        if (task8.isSuccessful()) {
                                                                                                                                                                                             mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                                                                                                                 @Override
                                                                                                                                                                                                 public void onSuccess(Uri uri8) {
@@ -1446,7 +1498,7 @@ public class WebScraping {
                                                                                                                                                                                         }
                                                                                                                                                                                     }
                                                                                                                                                                                 });
-                                                                                                                                                                            }else {
+                                                                                                                                                                            } else {
                                                                                                                                                                                 guardarColor2(url1, url2, url3, url4, url5, url6, url7, null, posicion);
                                                                                                                                                                             }
                                                                                                                                                                         }
@@ -1454,7 +1506,7 @@ public class WebScraping {
                                                                                                                                                                 }
                                                                                                                                                             }
                                                                                                                                                         });
-                                                                                                                                                    }else {
+                                                                                                                                                    } else {
                                                                                                                                                         guardarColor2(url1, url2, url3, url4, url5, url6, null, null, posicion);
                                                                                                                                                     }
                                                                                                                                                 }
@@ -1462,7 +1514,7 @@ public class WebScraping {
                                                                                                                                         }
                                                                                                                                     }
                                                                                                                                 });
-                                                                                                                            }else {
+                                                                                                                            } else {
                                                                                                                                 guardarColor2(url1, url2, url3, url4, url5, null, null, null, posicion);
                                                                                                                             }
                                                                                                                         }
@@ -1470,7 +1522,7 @@ public class WebScraping {
                                                                                                                 }
                                                                                                             }
                                                                                                         });
-                                                                                                    }else {
+                                                                                                    } else {
                                                                                                         guardarColor2(url1, url2, url3, url4, null, null, null, null, posicion);
                                                                                                     }
                                                                                                 }
@@ -1478,7 +1530,7 @@ public class WebScraping {
                                                                                         }
                                                                                     }
                                                                                 });
-                                                                            }else {
+                                                                            } else {
                                                                                 guardarColor2(url1, url2, url3, null, null, null, null, null, posicion);
                                                                             }
                                                                         }
@@ -1486,7 +1538,7 @@ public class WebScraping {
                                                                 }
                                                             }
                                                         });
-                                                    }else {
+                                                    } else {
                                                         guardarColor2(url1, url2, null, null, null, null, null, null, posicion);
                                                     }
                                                 }
@@ -1494,7 +1546,7 @@ public class WebScraping {
                                         }
                                     }
                                 });
-                            }else {
+                            } else {
                                 guardarColor2(url1, null, null, null, null, null, null, null, posicion);
                             }
                         }
@@ -1503,128 +1555,137 @@ public class WebScraping {
             }
         });
     }
-    private void guardarColor2(String url1, String url2, String url3, String url4, String url5, String url6, String url7, String url8, int posicion){
+
+    private void guardarColor2(String url1, String url2, String url3, String url4, String url5, String url6, String url7, String url8, int posicion) {
         urls.clear();
         String imagenColores = "";
-        if (posicion==1){
-            imagenColores =  "imagenesColores1";
-        } else if (posicion==2){
-            imagenColores =  "imagenesColores2";
-        } else if (posicion==3){
-            imagenColores =  "imagenesColores3";
-        } else if (posicion==4){
-            imagenColores =  "imagenesColores4";
-        } else if (posicion==5){
-            imagenColores =  "imagenesColores5";
-        } else if (posicion==6){
-            imagenColores =  "imagenesColores6";
+        if (posicion == 1) {
+            imagenColores = "imagenesColores1";
+        } else if (posicion == 2) {
+            imagenColores = "imagenesColores2";
+        } else if (posicion == 3) {
+            imagenColores = "imagenesColores3";
+        } else if (posicion == 4) {
+            imagenColores = "imagenesColores4";
+        } else if (posicion == 5) {
+            imagenColores = "imagenesColores5";
+        } else if (posicion == 6) {
+            imagenColores = "imagenesColores6";
         }
         Map<String, Object> updates = new HashMap<>();
         updates.clear();
         imagenesColores.clear();
-        if (url1 != null){
+        if (url1 != null) {
             imagenesColores.add(url1);
-        }if (url2 != null) {
+        }
+        if (url2 != null) {
             imagenesColores.add(url2);
-        }if (url3 != null) {
+        }
+        if (url3 != null) {
             imagenesColores.add(url3);
-        }if (url4 != null) {
+        }
+        if (url4 != null) {
             imagenesColores.add(url4);
-        }if (url5 != null) {
+        }
+        if (url5 != null) {
             imagenesColores.add(url5);
-        }if (url6 != null) {
+        }
+        if (url6 != null) {
             imagenesColores.add(url6);
-        }if (url7 != null) {
+        }
+        if (url7 != null) {
             imagenesColores.add(url7);
-        }if (url8 != null) {
+        }
+        if (url8 != null) {
             imagenesColores.add(url8);
         }
         updates.put(imagenColores, imagenesColores);
         mpostProvider.updatePost3(id, updates).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
-                    if (files3.size() > 0){
+                if (task.isSuccessful()) {
+                    if (files3.size() > 0) {
                         guardaColores3(files3, 3, coloresLista.get(3));
-                    }else {
+                    } else {
                         progressBar.setVisibility(View.GONE);
                         btnURL.setVisibility(View.VISIBLE);
                     }
-                }else {
+                } else {
                     Toast.makeText(context, "Hubo un error al almacenar la imagen", Toast.LENGTH_LONG).show();
                 }
             }
         });
     }
-    private void guardaColores3(List<File> colores, int posicion, String nombreColor){
+
+    private void guardaColores3(List<File> colores, int posicion, String nombreColor) {
         List<String> contador = Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8");
-        mImageProvider.save2(context, colores.get(0), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(0)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+        mImageProvider.save2(context, colores.get(0), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(0)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                if (task.isSuccessful()){
+                if (task.isSuccessful()) {
                     mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri1) {
                             final String url1 = uri1.toString();
                             if (colores.size() > 1 && colores.get(1) != null && colores.get(1).exists()) {
-                                mImageProvider.save2(context, colores.get(1), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(1)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                mImageProvider.save2(context, colores.get(1), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(1)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task2) {
-                                        if (task2.isSuccessful()){
+                                        if (task2.isSuccessful()) {
                                             mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                 @Override
                                                 public void onSuccess(Uri uri2) {
                                                     final String url2 = uri2.toString();
                                                     if (colores.size() > 2 && colores.get(2) != null && colores.get(2).exists()) {
-                                                        mImageProvider.save2(context, colores.get(2), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(2)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                        mImageProvider.save2(context, colores.get(2), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(2)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task3) {
-                                                                if (task3.isSuccessful()){
+                                                                if (task3.isSuccessful()) {
                                                                     mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                         @Override
                                                                         public void onSuccess(Uri uri3) {
                                                                             final String url3 = uri3.toString();
-                                                                            if (colores.size() > 3 && colores.get(3) != null && colores.get(3).exists())  {
-                                                                                mImageProvider.save2(context, colores.get(3), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(3)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                            if (colores.size() > 3 && colores.get(3) != null && colores.get(3).exists()) {
+                                                                                mImageProvider.save2(context, colores.get(3), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(3)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                     @Override
                                                                                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task4) {
-                                                                                        if (task4.isSuccessful()){
+                                                                                        if (task4.isSuccessful()) {
                                                                                             mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                 @Override
                                                                                                 public void onSuccess(Uri uri4) {
                                                                                                     final String url4 = uri4.toString();
-                                                                                                    if (colores.size() > 4 && colores.get(4) != null && colores.get(4).exists())  {
-                                                                                                        mImageProvider.save2(context, colores.get(4), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(4)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                    if (colores.size() > 4 && colores.get(4) != null && colores.get(4).exists()) {
+                                                                                                        mImageProvider.save2(context, colores.get(4), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(4)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                                             @Override
                                                                                                             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task5) {
-                                                                                                                if (task5.isSuccessful()){
+                                                                                                                if (task5.isSuccessful()) {
                                                                                                                     mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                                         @Override
                                                                                                                         public void onSuccess(Uri uri5) {
                                                                                                                             final String url5 = uri5.toString();
                                                                                                                             if (colores.size() > 5 && colores.get(5) != null && colores.get(5).exists()) {
-                                                                                                                                mImageProvider.save2(context, colores.get(5), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(5)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                                                mImageProvider.save2(context, colores.get(5), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(5)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                                                                     @Override
                                                                                                                                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task6) {
-                                                                                                                                        if (task6.isSuccessful()){
+                                                                                                                                        if (task6.isSuccessful()) {
                                                                                                                                             mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                                                                 @Override
                                                                                                                                                 public void onSuccess(Uri uri6) {
                                                                                                                                                     final String url6 = uri6.toString();
                                                                                                                                                     if (colores.size() > 6 && colores.get(6) != null && colores.get(6).exists()) {
-                                                                                                                                                        mImageProvider.save2(context, colores.get(6), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(6)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                                                                        mImageProvider.save2(context, colores.get(6), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(6)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                                                                                             @Override
                                                                                                                                                             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task7) {
-                                                                                                                                                                if (task7.isSuccessful()){
+                                                                                                                                                                if (task7.isSuccessful()) {
                                                                                                                                                                     mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                                                                                         @Override
                                                                                                                                                                         public void onSuccess(Uri uri7) {
                                                                                                                                                                             final String url7 = uri7.toString();
                                                                                                                                                                             if (colores.size() > 7 && colores.get(7) != null && colores.get(7).exists()) {
-                                                                                                                                                                                mImageProvider.save2(context, colores.get(7), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(7)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                                                                                                mImageProvider.save2(context, colores.get(7), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(7)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                                                                                                                     @Override
                                                                                                                                                                                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task8) {
-                                                                                                                                                                                        if (task8.isSuccessful()){
+                                                                                                                                                                                        if (task8.isSuccessful()) {
                                                                                                                                                                                             mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                                                                                                                 @Override
                                                                                                                                                                                                 public void onSuccess(Uri uri8) {
@@ -1635,7 +1696,7 @@ public class WebScraping {
                                                                                                                                                                                         }
                                                                                                                                                                                     }
                                                                                                                                                                                 });
-                                                                                                                                                                            }else {
+                                                                                                                                                                            } else {
                                                                                                                                                                                 guardarColor3(url1, url2, url3, url4, url5, url6, url7, null, posicion);
                                                                                                                                                                             }
                                                                                                                                                                         }
@@ -1643,7 +1704,7 @@ public class WebScraping {
                                                                                                                                                                 }
                                                                                                                                                             }
                                                                                                                                                         });
-                                                                                                                                                    }else {
+                                                                                                                                                    } else {
                                                                                                                                                         guardarColor3(url1, url2, url3, url4, url5, url6, null, null, posicion);
                                                                                                                                                     }
                                                                                                                                                 }
@@ -1651,7 +1712,7 @@ public class WebScraping {
                                                                                                                                         }
                                                                                                                                     }
                                                                                                                                 });
-                                                                                                                            }else {
+                                                                                                                            } else {
                                                                                                                                 guardarColor3(url1, url2, url3, url4, url5, null, null, null, posicion);
                                                                                                                             }
                                                                                                                         }
@@ -1659,7 +1720,7 @@ public class WebScraping {
                                                                                                                 }
                                                                                                             }
                                                                                                         });
-                                                                                                    }else {
+                                                                                                    } else {
                                                                                                         guardarColor3(url1, url2, url3, url4, null, null, null, null, posicion);
                                                                                                     }
                                                                                                 }
@@ -1667,7 +1728,7 @@ public class WebScraping {
                                                                                         }
                                                                                     }
                                                                                 });
-                                                                            }else {
+                                                                            } else {
                                                                                 guardarColor3(url1, url2, url3, null, null, null, null, null, posicion);
                                                                             }
                                                                         }
@@ -1675,7 +1736,7 @@ public class WebScraping {
                                                                 }
                                                             }
                                                         });
-                                                    }else {
+                                                    } else {
                                                         guardarColor3(url1, url2, null, null, null, null, null, null, posicion);
                                                     }
                                                 }
@@ -1683,7 +1744,7 @@ public class WebScraping {
                                         }
                                     }
                                 });
-                            }else {
+                            } else {
                                 guardarColor3(url1, null, null, null, null, null, null, null, posicion);
                             }
                         }
@@ -1692,128 +1753,137 @@ public class WebScraping {
             }
         });
     }
-    private void guardarColor3(String url1, String url2, String url3, String url4, String url5, String url6, String url7, String url8, int posicion){
+
+    private void guardarColor3(String url1, String url2, String url3, String url4, String url5, String url6, String url7, String url8, int posicion) {
         urls.clear();
         String imagenColores = "";
-        if (posicion==1){
-            imagenColores =  "imagenesColores1";
-        } else if (posicion==2){
-            imagenColores =  "imagenesColores2";
-        } else if (posicion==3){
-            imagenColores =  "imagenesColores3";
-        } else if (posicion==4){
-            imagenColores =  "imagenesColores4";
-        } else if (posicion==5){
-            imagenColores =  "imagenesColores5";
-        } else if (posicion==6){
-            imagenColores =  "imagenesColores6";
+        if (posicion == 1) {
+            imagenColores = "imagenesColores1";
+        } else if (posicion == 2) {
+            imagenColores = "imagenesColores2";
+        } else if (posicion == 3) {
+            imagenColores = "imagenesColores3";
+        } else if (posicion == 4) {
+            imagenColores = "imagenesColores4";
+        } else if (posicion == 5) {
+            imagenColores = "imagenesColores5";
+        } else if (posicion == 6) {
+            imagenColores = "imagenesColores6";
         }
         Map<String, Object> updates = new HashMap<>();
         updates.clear();
         imagenesColores.clear();
-        if (url1 != null){
+        if (url1 != null) {
             imagenesColores.add(url1);
-        }if (url2 != null) {
+        }
+        if (url2 != null) {
             imagenesColores.add(url2);
-        }if (url3 != null) {
+        }
+        if (url3 != null) {
             imagenesColores.add(url3);
-        }if (url4 != null) {
+        }
+        if (url4 != null) {
             imagenesColores.add(url4);
-        }if (url5 != null) {
+        }
+        if (url5 != null) {
             imagenesColores.add(url5);
-        }if (url6 != null) {
+        }
+        if (url6 != null) {
             imagenesColores.add(url6);
-        }if (url7 != null) {
+        }
+        if (url7 != null) {
             imagenesColores.add(url7);
-        }if (url8 != null) {
+        }
+        if (url8 != null) {
             imagenesColores.add(url8);
         }
         updates.put(imagenColores, imagenesColores);
         mpostProvider.updatePost3(id, updates).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
-                    if (files4.size() > 0){
+                if (task.isSuccessful()) {
+                    if (files4.size() > 0) {
                         guardaColores4(files4, 4, coloresLista.get(4));
-                    }else {
+                    } else {
                         progressBar.setVisibility(View.GONE);
                         btnURL.setVisibility(View.VISIBLE);
                     }
-                }else {
+                } else {
                     Toast.makeText(context, "Hubo un error al almacenar la imagen", Toast.LENGTH_LONG).show();
                 }
             }
         });
     }
-    private void guardaColores4(List<File> colores, int posicion, String nombreColor){
+
+    private void guardaColores4(List<File> colores, int posicion, String nombreColor) {
         List<String> contador = Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8");
-        mImageProvider.save2(context, colores.get(0), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(0)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+        mImageProvider.save2(context, colores.get(0), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(0)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                if (task.isSuccessful()){
+                if (task.isSuccessful()) {
                     mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri1) {
                             final String url1 = uri1.toString();
                             if (colores.size() > 1 && colores.get(1) != null && colores.get(1).exists()) {
-                                mImageProvider.save2(context, colores.get(1), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(1)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                mImageProvider.save2(context, colores.get(1), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(1)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task2) {
-                                        if (task2.isSuccessful()){
+                                        if (task2.isSuccessful()) {
                                             mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                 @Override
                                                 public void onSuccess(Uri uri2) {
                                                     final String url2 = uri2.toString();
                                                     if (colores.size() > 2 && colores.get(2) != null && colores.get(2).exists()) {
-                                                        mImageProvider.save2(context, colores.get(2), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(2)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                        mImageProvider.save2(context, colores.get(2), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(2)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task3) {
-                                                                if (task3.isSuccessful()){
+                                                                if (task3.isSuccessful()) {
                                                                     mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                         @Override
                                                                         public void onSuccess(Uri uri3) {
                                                                             final String url3 = uri3.toString();
-                                                                            if (colores.size() > 3 && colores.get(3) != null && colores.get(3).exists())  {
-                                                                                mImageProvider.save2(context, colores.get(3), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(3)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                            if (colores.size() > 3 && colores.get(3) != null && colores.get(3).exists()) {
+                                                                                mImageProvider.save2(context, colores.get(3), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(3)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                     @Override
                                                                                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task4) {
-                                                                                        if (task4.isSuccessful()){
+                                                                                        if (task4.isSuccessful()) {
                                                                                             mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                 @Override
                                                                                                 public void onSuccess(Uri uri4) {
                                                                                                     final String url4 = uri4.toString();
-                                                                                                    if (colores.size() > 4 && colores.get(4) != null && colores.get(4).exists())  {
-                                                                                                        mImageProvider.save2(context, colores.get(4), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(4)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                    if (colores.size() > 4 && colores.get(4) != null && colores.get(4).exists()) {
+                                                                                                        mImageProvider.save2(context, colores.get(4), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(4)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                                             @Override
                                                                                                             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task5) {
-                                                                                                                if (task5.isSuccessful()){
+                                                                                                                if (task5.isSuccessful()) {
                                                                                                                     mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                                         @Override
                                                                                                                         public void onSuccess(Uri uri5) {
                                                                                                                             final String url5 = uri5.toString();
                                                                                                                             if (colores.size() > 5 && colores.get(5) != null && colores.get(5).exists()) {
-                                                                                                                                mImageProvider.save2(context, colores.get(5), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(5)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                                                mImageProvider.save2(context, colores.get(5), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(5)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                                                                     @Override
                                                                                                                                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task6) {
-                                                                                                                                        if (task6.isSuccessful()){
+                                                                                                                                        if (task6.isSuccessful()) {
                                                                                                                                             mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                                                                 @Override
                                                                                                                                                 public void onSuccess(Uri uri6) {
                                                                                                                                                     final String url6 = uri6.toString();
                                                                                                                                                     if (colores.size() > 6 && colores.get(6) != null && colores.get(6).exists()) {
-                                                                                                                                                        mImageProvider.save2(context, colores.get(6), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(6)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                                                                        mImageProvider.save2(context, colores.get(6), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(6)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                                                                                             @Override
                                                                                                                                                             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task7) {
-                                                                                                                                                                if (task7.isSuccessful()){
+                                                                                                                                                                if (task7.isSuccessful()) {
                                                                                                                                                                     mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                                                                                         @Override
                                                                                                                                                                         public void onSuccess(Uri uri7) {
                                                                                                                                                                             final String url7 = uri7.toString();
                                                                                                                                                                             if (colores.size() > 7 && colores.get(7) != null && colores.get(7).exists()) {
-                                                                                                                                                                                mImageProvider.save2(context, colores.get(7), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen+"_"+nombreColor+contador.get(7)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                                                                                                mImageProvider.save2(context, colores.get(7), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(7)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                                                                                                                     @Override
                                                                                                                                                                                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task8) {
-                                                                                                                                                                                        if (task8.isSuccessful()){
+                                                                                                                                                                                        if (task8.isSuccessful()) {
                                                                                                                                                                                             mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                                                                                                                                                 @Override
                                                                                                                                                                                                 public void onSuccess(Uri uri8) {
@@ -1824,7 +1894,7 @@ public class WebScraping {
                                                                                                                                                                                         }
                                                                                                                                                                                     }
                                                                                                                                                                                 });
-                                                                                                                                                                            }else {
+                                                                                                                                                                            } else {
                                                                                                                                                                                 guardarColor4(url1, url2, url3, url4, url5, url6, url7, null, posicion);
                                                                                                                                                                             }
                                                                                                                                                                         }
@@ -1832,7 +1902,7 @@ public class WebScraping {
                                                                                                                                                                 }
                                                                                                                                                             }
                                                                                                                                                         });
-                                                                                                                                                    }else {
+                                                                                                                                                    } else {
                                                                                                                                                         guardarColor4(url1, url2, url3, url4, url5, url6, null, null, posicion);
                                                                                                                                                     }
                                                                                                                                                 }
@@ -1840,7 +1910,7 @@ public class WebScraping {
                                                                                                                                         }
                                                                                                                                     }
                                                                                                                                 });
-                                                                                                                            }else {
+                                                                                                                            } else {
                                                                                                                                 guardarColor4(url1, url2, url3, url4, url5, null, null, null, posicion);
                                                                                                                             }
                                                                                                                         }
@@ -1848,7 +1918,7 @@ public class WebScraping {
                                                                                                                 }
                                                                                                             }
                                                                                                         });
-                                                                                                    }else {
+                                                                                                    } else {
                                                                                                         guardarColor4(url1, url2, url3, url4, null, null, null, null, posicion);
                                                                                                     }
                                                                                                 }
@@ -1856,7 +1926,7 @@ public class WebScraping {
                                                                                         }
                                                                                     }
                                                                                 });
-                                                                            }else {
+                                                                            } else {
                                                                                 guardarColor4(url1, url2, url3, null, null, null, null, null, posicion);
                                                                             }
                                                                         }
@@ -1864,7 +1934,7 @@ public class WebScraping {
                                                                 }
                                                             }
                                                         });
-                                                    }else {
+                                                    } else {
                                                         guardarColor4(url1, url2, null, null, null, null, null, null, posicion);
                                                     }
                                                 }
@@ -1872,7 +1942,7 @@ public class WebScraping {
                                         }
                                     }
                                 });
-                            }else {
+                            } else {
                                 guardarColor4(url1, null, null, null, null, null, null, null, posicion);
                             }
                         }
@@ -1881,54 +1951,62 @@ public class WebScraping {
             }
         });
     }
-    private void guardarColor4(String url1, String url2, String url3, String url4, String url5, String url6, String url7, String url8, int posicion){
+
+    private void guardarColor4(String url1, String url2, String url3, String url4, String url5, String url6, String url7, String url8, int posicion) {
         urls.clear();
         String imagenColores = "";
-        if (posicion==1){
-            imagenColores =  "imagenesColores1";
-        } else if (posicion==2){
-            imagenColores =  "imagenesColores2";
-        } else if (posicion==3){
-            imagenColores =  "imagenesColores3";
-        } else if (posicion==4){
-            imagenColores =  "imagenesColores4";
-        } else if (posicion==5){
-            imagenColores =  "imagenesColores5";
-        } else if (posicion==6){
-            imagenColores =  "imagenesColores6";
+        if (posicion == 1) {
+            imagenColores = "imagenesColores1";
+        } else if (posicion == 2) {
+            imagenColores = "imagenesColores2";
+        } else if (posicion == 3) {
+            imagenColores = "imagenesColores3";
+        } else if (posicion == 4) {
+            imagenColores = "imagenesColores4";
+        } else if (posicion == 5) {
+            imagenColores = "imagenesColores5";
+        } else if (posicion == 6) {
+            imagenColores = "imagenesColores6";
         }
         Map<String, Object> updates = new HashMap<>();
         updates.clear();
         imagenesColores.clear();
-        if (url1 != null){
+        if (url1 != null) {
             imagenesColores.add(url1);
-        }if (url2 != null) {
+        }
+        if (url2 != null) {
             imagenesColores.add(url2);
-        }if (url3 != null) {
+        }
+        if (url3 != null) {
             imagenesColores.add(url3);
-        }if (url4 != null) {
+        }
+        if (url4 != null) {
             imagenesColores.add(url4);
-        }if (url5 != null) {
+        }
+        if (url5 != null) {
             imagenesColores.add(url5);
-        }if (url6 != null) {
+        }
+        if (url6 != null) {
             imagenesColores.add(url6);
-        }if (url7 != null) {
+        }
+        if (url7 != null) {
             imagenesColores.add(url7);
-        }if (url8 != null) {
+        }
+        if (url8 != null) {
             imagenesColores.add(url8);
         }
         updates.put(imagenColores, imagenesColores);
         mpostProvider.updatePost3(id, updates).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
-                    if (files4.size() > 0){
+                if (task.isSuccessful()) {
+                    if (files4.size() > 0) {
                         //guardaColores5(files5, 5, coloresLista.get(5));
-                    }else {
+                    } else {
                         progressBar.setVisibility(View.GONE);
                         btnURL.setVisibility(View.VISIBLE);
                     }
-                }else {
+                } else {
                     Toast.makeText(context, "Hubo un error al almacenar la imagen", Toast.LENGTH_LONG).show();
                 }
             }
@@ -1978,14 +2056,14 @@ public class WebScraping {
                     if (nextSibling != null && nextSibling.tagName().equals("a")) {
                         // Obtener la URL del enlace
                         String urlNew = nextSibling.attr("href");
-                        if (Integer.parseInt(modelo) == 2024){
+                        if (Integer.parseInt(modelo) == 2024) {
                             modelo2 = "2025";
-                        }else {
+                        } else {
                             modelo2 = "2024";
                         }
                         try {
                             doc = Jsoup.connect(urlNew).get();
-                        }catch (Exception e){
+                        } catch (Exception e) {
 
                         }
                     }
@@ -2013,7 +2091,7 @@ public class WebScraping {
                 }
                 for (int i = 0; i < imagenesColores1.size(); i++) {
                     if (i == 0) {
-                        try{
+                        try {
                             //convierto las url a imagenes
                             FutureTarget<File> futureTarget = Glide.with(context)
                                     .asFile()
@@ -2024,8 +2102,8 @@ public class WebScraping {
                             e.printStackTrace();
                         }
 
-                    } else if (i == 1){
-                        try{
+                    } else if (i == 1) {
+                        try {
                             FutureTarget<File> futureTarget = Glide.with(context)
                                     .asFile()
                                     .load(imagenesColores1.get(i))
@@ -2034,8 +2112,8 @@ public class WebScraping {
                         } catch (InterruptedException | ExecutionException e) {
                             e.printStackTrace();
                         }
-                    } else if (i == 2){
-                        try{
+                    } else if (i == 2) {
+                        try {
                             FutureTarget<File> futureTarget = Glide.with(context)
                                     .asFile()
                                     .load(imagenesColores1.get(i))
@@ -2044,8 +2122,8 @@ public class WebScraping {
                         } catch (InterruptedException | ExecutionException e) {
                             e.printStackTrace();
                         }
-                    } else if (i == 3){
-                        try{
+                    } else if (i == 3) {
+                        try {
                             FutureTarget<File> futureTarget = Glide.with(context)
                                     .asFile()
                                     .load(imagenesColores1.get(i))
@@ -2054,8 +2132,8 @@ public class WebScraping {
                         } catch (InterruptedException | ExecutionException e) {
                             e.printStackTrace();
                         }
-                    } else if (i == 4){
-                        try{
+                    } else if (i == 4) {
+                        try {
                             FutureTarget<File> futureTarget = Glide.with(context)
                                     .asFile()
                                     .load(imagenesColores1.get(i))
@@ -2065,8 +2143,8 @@ public class WebScraping {
                         } catch (InterruptedException | ExecutionException e) {
                             e.printStackTrace();
                         }
-                    } else if (i == 5){
-                        try{
+                    } else if (i == 5) {
+                        try {
                             FutureTarget<File> futureTarget = Glide.with(context)
                                     .asFile()
                                     .load(imagenesColores1.get(i))
@@ -2075,8 +2153,8 @@ public class WebScraping {
                         } catch (InterruptedException | ExecutionException e) {
                             e.printStackTrace();
                         }
-                    } else if (i == 6){
-                        try{
+                    } else if (i == 6) {
+                        try {
                             FutureTarget<File> futureTarget = Glide.with(context)
                                     .asFile()
                                     .load(imagenesColores1.get(i))
@@ -2087,7 +2165,7 @@ public class WebScraping {
                         }
                     }
                     imagenesColorPrincipal.clear();
-                    if (i == 0){
+                    if (i == 0) {
                         //guardarImagenesPrincipales(imagen1, null, null, null, null, null, null, null);
                     }
                 }
@@ -2120,14 +2198,14 @@ public class WebScraping {
                     }
                 }
                 for (int i = 0; i < imagenesAdicionales.size(); i++) {
-                    try{
+                    try {
                         //convierto las url a imagenes
                         FutureTarget<File> futureTarget = Glide.with(context)
                                 .asFile()
                                 .load(recuperarImagenes.get(i))
                                 .submit();
 
-                        if (i == 0){
+                        if (i == 0) {
                             ImagenesAdd.add(futureTarget.get());
                         } else if (i == 1) {
                             ImagenesAdd.add(futureTarget.get());
@@ -2150,7 +2228,7 @@ public class WebScraping {
                         e.printStackTrace();
                     }
                 }
-            }else {
+            } else {
                 Elements divItems = doc.select("div.items");
                 imagenesColores.clear();
                 ImagenesAdd.clear();
@@ -2172,14 +2250,14 @@ public class WebScraping {
                     }
                 }
                 for (int i = 0; i < recuperarImagenes.size(); i++) {
-                    try{
+                    try {
                         //convierto las url a imagenes
                         FutureTarget<File> futureTarget = Glide.with(context)
                                 .asFile()
                                 .load(recuperarImagenes.get(i))
                                 .submit();
 
-                        if (i == 0){
+                        if (i == 0) {
                             ImagenesAdd.add(futureTarget.get());
                         } else if (i == 1) {
                             ImagenesAdd.add(futureTarget.get());
@@ -2207,14 +2285,14 @@ public class WebScraping {
             //melo hasta aqui
 
             Map<String, Object> updates = new HashMap<>();
-            for (int i = 0; i <nombreMoto.size() ; i++) {
+            for (int i = 0; i < nombreMoto.size(); i++) {
                 //quita los espacios, tildes, parentesis, puntos:, y lo coloca en minuscula
                 String textoSinEspacios = nombreMoto.get(i)
                         .replaceAll("\\s+|\\p{InCombiningDiacriticalMarks}|\\(.*?\\)|:", "")
                         .toLowerCase();
                 //quita las tildes
                 textoSinEspacios = Normalizer.normalize(textoSinEspacios, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-                updates.put(textoSinEspacios, nombreMoto.get(i+1));
+                updates.put(textoSinEspacios, nombreMoto.get(i + 1));
                 i++;
             }
             // problema con los datos a guardar de la ficha tecnica
@@ -2222,12 +2300,12 @@ public class WebScraping {
             updates.put("caracteristicasTexto", imagenesColores);
             if (modelo.matches(".*[a-zA-Z].*")) {
                 updates.put("Modelo", modelo);
-                if (!modelo2.isEmpty()){
+                if (!modelo2.isEmpty()) {
                     updates.put("Modelo2", modelo2);
                 }
             } else {
                 updates.put("modelo", "Modelo " + modelo);
-                if (!modelo2.isEmpty()){
+                if (!modelo2.isEmpty()) {
                     updates.put("modelo2", "Modelo" + modelo2);
                 }
             }
@@ -2258,7 +2336,7 @@ public class WebScraping {
             return "Negro";
         } else if (isWhite(r, g, b)) {
             return "Blanco";
-        }else if (isHueso(r, g, b)) {
+        } else if (isHueso(r, g, b)) {
             return "Blanco";
         } else if (isRed(r, g, b)) {
             return "Rojo";
@@ -2293,6 +2371,7 @@ public class WebScraping {
     private static boolean isWhite(int r, int g, int b) {
         return r >= 240 && g >= 240 && b >= 240;
     }
+
     private static boolean isHueso(int r, int g, int b) {
         return r >= 232 && g >= 232 && b >= 232;
     }
@@ -2304,6 +2383,7 @@ public class WebScraping {
     private static boolean isGreen(int r, int g, int b) {
         return r <= 100 && g >= 200 && b <= 100;
     }
+
     private static boolean isDarkGreen(int r, int g, int b) {
         // Ajusta estos valores según los tonos de azul oscuro que desees reconocer
         return r <= 57 && g <= 90 && b >= 86;
@@ -2312,6 +2392,7 @@ public class WebScraping {
     private static boolean isBlue(int r, int g, int b) {
         return r <= 100 && g <= 100 && b >= 200;
     }
+
     private static boolean isGold(int r, int g, int b) {
         // Ajusta estos valores según los tonos de dorado que desees reconocer
         return r >= 160 && g >= 160 && g <= 220 && b <= 56;
@@ -2336,6 +2417,7 @@ public class WebScraping {
         // Ajusta estos valores según los tonos de amarillo que desees reconocer
         return r >= 200 && g >= 200 && b <= 50;
     }
+
     private static boolean isSkyBlue(int r, int g, int b) {
         // Ajustamos los valores para definir el color celeste
         return r >= 27 && g >= 180 && b >= 185;
