@@ -53,18 +53,28 @@ public class PostAuteco {
     private ArrayList<String> nombresArchivos;
     private ArrayList<String> caracteristicasTexto;
     private ArrayList<String> caracteristicasImagenes;
-    private ArrayList<String> clasificacion;
     private double vistas;
     private double busquedas;
     private int consumoPorGalon;
-    private double velocidadMaxima; //cambiar a int
+    private int velocidadMaxima;
     private boolean visible;
 
     public PostAuteco(){
 
     }
 
-    public PostAuteco(String id, int precio, String nombreMoto, String marcaMoto, int prioridad, ArrayList<String> imagenes, ArrayList<String> colores, ArrayList<String> imagenesColores1, ArrayList<String> imagenesColores2, ArrayList<String> imagenesColores3, ArrayList<String> imagenesColores4, ArrayList<String> imagenesColores5, ArrayList<String> imagenesColores6, String cilindraje, String motor, String torqueMaximo, String potenciaMaxima, String relacionCompresion, String sistemaAlimentacion, String diametroCarrera, String refrigeracion, String combustible, String arranque, String transmision, String suspensionDelantera, String suspensionTrasera, String frenoDelantero, String frenoTrasero, String llantaDelantera, String llantaTrasera, String rines, String capacidadTanque, String sistemaEncendido, String largoTotal, String alturaTotal, String anchoTotal, String distanciaEntreEjes, String alturaSillin, String pesoNeto, String descripcion, String modelo, boolean descuento, int nuevoValorDescuento, String carpeta1, String carpeta2, String carpeta3, ArrayList<String> manualesArchivos, ArrayList<String> nombresArchivos, ArrayList<String> caracteristicasTexto, ArrayList<String> caracteristicasImagenes, ArrayList<String> clasificacion, double vistas, double busquedas, int consumoPorGalon, double velocidadMaxima, boolean visible) {
+    public PostAuteco(String id, int precio, String nombreMoto, String marcaMoto,
+                      int prioridad, ArrayList<String> imagenes, ArrayList<String> colores, ArrayList<String> imagenesColores1,
+                      ArrayList<String> imagenesColores2, ArrayList<String> imagenesColores3, ArrayList<String> imagenesColores4,
+                      ArrayList<String> imagenesColores5, ArrayList<String> imagenesColores6, String cilindraje, String motor,
+                      String torqueMaximo, String potenciaMaxima, String relacionCompresion, String sistemaAlimentacion, String diametroCarrera,
+                      String refrigeracion, String combustible, String arranque, String transmision, String suspensionDelantera,
+                      String suspensionTrasera, String frenoDelantero, String frenoTrasero, String llantaDelantera, String llantaTrasera,
+                      String rines, String capacidadTanque, String sistemaEncendido, String largoTotal, String alturaTotal, String anchoTotal,
+                      String distanciaEntreEjes, String alturaSillin, String pesoNeto, String descripcion, String modelo, boolean descuento,
+                      int nuevoValorDescuento, String carpeta1, String carpeta2, String carpeta3, ArrayList<String> manualesArchivos,
+                      ArrayList<String> nombresArchivos, ArrayList<String> caracteristicasTexto, ArrayList<String> caracteristicasImagenes,
+                      double vistas, double busquedas, int consumoPorGalon, int velocidadMaxima, boolean visible) {
         this.id = id;
         this.precio = precio;
         this.nombreMoto = nombreMoto;
@@ -115,7 +125,6 @@ public class PostAuteco {
         this.nombresArchivos = nombresArchivos;
         this.caracteristicasTexto = caracteristicasTexto;
         this.caracteristicasImagenes = caracteristicasImagenes;
-        this.clasificacion = clasificacion;
         this.vistas = vistas;
         this.busquedas = busquedas;
         this.consumoPorGalon = consumoPorGalon;
@@ -522,15 +531,6 @@ public class PostAuteco {
     public void setCaracteristicasImagenes(ArrayList<String> caracteristicasImagenes) {
         this.caracteristicasImagenes = caracteristicasImagenes;
     }
-
-    public ArrayList<String> getClasificacion() {
-        return clasificacion;
-    }
-
-    public void setClasificacion(ArrayList<String> clasificacion) {
-        this.clasificacion = clasificacion;
-    }
-
     public double getVistas() {
         return vistas;
     }
@@ -559,7 +559,7 @@ public class PostAuteco {
         return velocidadMaxima;
     }
 
-    public void setVelocidadMaxima(double velocidadMaxima) {
+    public void setVelocidadMaxima(int velocidadMaxima) {
         this.velocidadMaxima = velocidadMaxima;
     }
 

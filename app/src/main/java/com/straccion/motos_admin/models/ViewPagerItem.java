@@ -1,16 +1,16 @@
 package com.straccion.motos_admin.models;
 public class ViewPagerItem {
 
-    String imageurl;
+    String imageUrl;
 
     public ViewPagerItem() { }
 
     public String getImageurl() {
-        return imageurl;
+        return imageUrl;
     }
 
     public void setImageurl(String imageurl) {
-        this.imageurl = imageurl;
+        this.imageUrl = imageurl;
     }
 
 }

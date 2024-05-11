@@ -47,11 +47,6 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link NuevoCompararFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class NuevoCompararFragment extends Fragment {
     View mview;
     LinearLayout lnlcontenedorInfo;
@@ -126,14 +121,6 @@ public class NuevoCompararFragment extends Fragment {
 
     public NuevoCompararFragment() {
         // Required empty public constructor
-    }
-
-
-    public static NuevoCompararFragment newInstance(String param1, String param2) {
-        NuevoCompararFragment fragment = new NuevoCompararFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -444,6 +431,279 @@ public class NuevoCompararFragment extends Fragment {
                                     valor1 = Integer.parseInt(documentSnapshot.get("nuevoValorDescuento").toString());
                                 }
                             }
+
+                            if (fabricante.equals("HERO")){
+                                if (documentSnapshot.contains("nombreMoto")) {
+                                    nombre1 = documentSnapshot.get("nombreMoto").toString();
+                                    txtNombreMoto1.setText(nombre1);
+                                    btnMotoNombre1.setText(nombre1);
+                                    ABS1 = ABSoSisAlimen(nombre1);
+                                    txtPreguntaTitulo.setText("¿Por que la "+ nombre1 + " es mejor?");
+                                }
+                                if (documentSnapshot.contains("carpeta3")) {
+                                    especialidad1 = documentSnapshot.get("carpeta3").toString();
+                                }
+                                if (documentSnapshot.contains("delanteros")) {
+                                    String TipoFreno = documentSnapshot.get("delanteros").toString();
+                                    boolean disco = tipoDeFreno(TipoFreno);
+                                    if (disco){
+                                        frenodelantero1 = "Disco";
+                                    }else {
+                                        frenodelantero1 = "Tambor";
+                                    }
+                                    if (!ABS1){
+                                        ABS1 = ABSoSisAlimen(TipoFreno);
+                                    }else {
+
+                                    }
+                                }
+                                if (documentSnapshot.contains("traseros")) {
+                                    String TipoFreno = documentSnapshot.get("traseros").toString();
+                                    boolean disco = tipoDeFreno(TipoFreno);
+                                    ABSLlantaTrasera1 = ABSoSisAlimen(TipoFreno); // abs en la llanta trasera
+                                    if (disco){
+                                        frenotrasero1 = "Disco";
+                                    }else {
+                                        frenotrasero1 = "Tambor";
+                                    }
+                                    if (!ABS1){
+                                        ABS1 = ABSoSisAlimen(TipoFreno);
+                                    }
+                                }
+                                if (documentSnapshot.contains("maxpotencia")) {
+                                    potencia = documentSnapshot.get("maxpotencia").toString();
+                                    potencia1 = buscarNumero(potencia);
+                                    txtPotencia1.setText(potencia1 + " HP");
+                                }
+                                if (documentSnapshot.contains("cilindraje")) {
+                                    cilindraje1 = documentSnapshot.get("cilindraje").toString();
+                                    cilindrajeValor1 = buscarNumero(cilindraje1);
+                                    Pattern patron = Pattern.compile(".*[a-zA-Z].*");
+                                    Matcher matcher = patron.matcher(cilindraje1);
+                                    if (matcher.find()) {
+                                        txtCilindraje1.setText(cilindraje1.toUpperCase());
+                                    } else {
+                                        txtCilindraje1.setText(cilindraje1 + " CC");
+                                    }
+                                }
+                                if (documentSnapshot.contains("maxtorque")) {
+                                    torque = documentSnapshot.get("maxtorque").toString();
+                                    torque1 = buscarNumero(torque);
+                                    txtTorque1.setText(torque1 + " Nm");
+                                }
+                                if (documentSnapshot.contains("pesosincarga")) {
+                                    peso = documentSnapshot.get("pesosincarga").toString();
+                                    peso1 = buscarNumero(peso);
+                                    txtPeso1.setText(peso1 + " KG");
+                                }
+                                if (!documentSnapshot.contains("alimentacion")) {
+                                    Fi1 = false;
+                                }else {
+                                    sistemaAlimentacion1 = documentSnapshot.get("alimentacion").toString();
+                                    Fi1 = ABSoSisAlimen(sistemaAlimentacion1);
+                                }
+                                if (documentSnapshot.contains("consumoPorGalon")) {
+                                    consumoPorGalon1 = Integer.parseInt(documentSnapshot.get("consumoPorGalon").toString());
+                                }
+                                if (documentSnapshot.contains("velocidadMaxima")) {
+                                    double dato = Double.parseDouble(documentSnapshot.get("velocidadMaxima").toString());
+                                    velocidadMaxima1 = (int) dato;
+                                    txtVelMaxima1.setText(velocidadMaxima1 + " KM/H");
+                                }
+                                if (documentSnapshot.contains("imagenes")) {
+                                    listaImagenes = (List<String>) documentSnapshot.get("imagenes");
+                                    String imagen = listaImagenes.get(0);
+                                    Picasso.get().load(imagen).into(imgMoto1);
+                                    imgMoto1.setPadding(18,18,18,18);
+                                }
+                                if (documentSnapshot.contains("arranque")) {
+                                    arranque1 = documentSnapshot.get("arranque").toString();
+                                    arranqueElectrico1 = tipoArranque(arranque1);
+                                }
+                                if (documentSnapshot.contains("nuevoValorDescuento")) {
+                                    valor1 = Integer.parseInt(documentSnapshot.get("nuevoValorDescuento").toString());
+                                }
+                            }
+                            if (fabricante.equals("SUZUKI")){
+                                if (documentSnapshot.contains("nombreMoto")) {
+                                    nombre1 = documentSnapshot.get("nombreMoto").toString();
+                                    txtNombreMoto1.setText(nombre1);
+                                    btnMotoNombre1.setText(nombre1);
+                                    ABS1 = ABSoSisAlimen(nombre1);
+                                    txtPreguntaTitulo.setText("¿Por que la "+ nombre1 + " es mejor?");
+                                }
+                                if (documentSnapshot.contains("carpeta3")) {
+                                    especialidad1 = documentSnapshot.get("carpeta3").toString();
+                                }
+                                if (documentSnapshot.contains("frenodelantero")) {
+                                    String TipoFreno = documentSnapshot.get("frenodelantero").toString();
+                                    boolean disco = tipoDeFreno(TipoFreno);
+                                    if (disco){
+                                        frenodelantero1 = "Disco";
+                                    }else {
+                                        frenodelantero1 = "Tambor";
+                                    }
+                                    if (!ABS1){
+                                        ABS1 = ABSoSisAlimen(TipoFreno);
+                                    }else {
+
+                                    }
+                                }
+                                if (documentSnapshot.contains("frenotrasero")) {
+                                    String TipoFreno = documentSnapshot.get("frenotrasero").toString();
+                                    boolean disco = tipoDeFreno(TipoFreno);
+                                    ABSLlantaTrasera1 = ABSoSisAlimen(TipoFreno); // abs en la llanta trasera
+                                    if (disco){
+                                        frenotrasero1 = "Disco";
+                                    }else {
+                                        frenotrasero1 = "Tambor";
+                                    }
+                                    if (!ABS1){
+                                        ABS1 = ABSoSisAlimen(TipoFreno);
+                                    }
+                                }
+                                if (documentSnapshot.contains("potencia")) {
+                                    potencia = documentSnapshot.get("potencia").toString();
+                                    potencia1 = buscarNumero(potencia);
+                                    txtPotencia1.setText(potencia1 + " HP");
+                                }
+                                if (documentSnapshot.contains("cilindraje")) {
+                                    cilindraje1 = documentSnapshot.get("cilindraje").toString();
+                                    cilindrajeValor1 = buscarNumero(cilindraje1);
+                                    Pattern patron = Pattern.compile(".*[a-zA-Z].*");
+                                    Matcher matcher = patron.matcher(cilindraje1);
+                                    if (matcher.find()) {
+                                        txtCilindraje1.setText(cilindraje1.toUpperCase());
+                                    } else {
+                                        txtCilindraje1.setText(cilindraje1 + " CC");
+                                    }
+                                }
+                                if (documentSnapshot.contains("torque")) {
+                                    torque = documentSnapshot.get("torque").toString();
+                                    torque1 = buscarNumero(torque);
+                                    txtTorque1.setText(torque1 + " Nm");
+                                }
+                                if (documentSnapshot.contains("pesoenseco")) {
+                                    peso = documentSnapshot.get("pesoenseco").toString();
+                                    peso1 = buscarNumero(peso);
+                                    txtPeso1.setText(peso1 + " KG");
+                                }
+                                if (documentSnapshot.contains("sistemadealimentaciondecombustible")) {
+                                    sistemaAlimentacion1 = documentSnapshot.get("sistemadealimentaciondecombustible").toString();
+                                    Fi1 = ABSoSisAlimen(sistemaAlimentacion1);
+                                }
+                                if (documentSnapshot.contains("consumoPorGalon")) {
+                                    consumoPorGalon1 = Integer.parseInt(documentSnapshot.get("consumoPorGalon").toString());
+                                }
+                                if (documentSnapshot.contains("velocidadMaxima")) {
+                                    double dato = Double.parseDouble(documentSnapshot.get("velocidadMaxima").toString());
+                                    velocidadMaxima1 = (int) dato;
+                                    txtVelMaxima1.setText(velocidadMaxima1 + " KM/H");
+                                }
+                                if (documentSnapshot.contains("imagenes")) {
+                                    listaImagenes = (List<String>) documentSnapshot.get("imagenes");
+                                    String imagen = listaImagenes.get(0);
+                                    Picasso.get().load(imagen).into(imgMoto1);
+                                    imgMoto1.setPadding(18,18,18,18);
+                                }
+                                if (documentSnapshot.contains("sistemadearranque")) {
+                                    arranque1 = documentSnapshot.get("sistemadearranque").toString();
+                                    arranqueElectrico1 = tipoArranque(arranque1);
+                                }
+                                if (documentSnapshot.contains("nuevoValorDescuento")) {
+                                    valor1 = Integer.parseInt(documentSnapshot.get("nuevoValorDescuento").toString());
+                                }
+                            }
+                            if (fabricante.equals("HONDA")){
+                                if (documentSnapshot.contains("nombreMoto")) {
+                                    nombre1 = documentSnapshot.get("nombreMoto").toString();
+                                    txtNombreMoto1.setText(nombre1);
+                                    btnMotoNombre1.setText(nombre1);
+                                    ABS1 = ABSoSisAlimen(nombre1);
+                                    txtPreguntaTitulo.setText("¿Por que la "+ nombre1 + " es mejor?");
+                                }
+                                if (documentSnapshot.contains("carpeta3")) {
+                                    especialidad1 = documentSnapshot.get("carpeta3").toString();
+                                }
+                                if (documentSnapshot.contains("frenodelantero")) {
+                                    String TipoFreno = documentSnapshot.get("frenodelantero").toString();
+                                    boolean disco = tipoDeFreno(TipoFreno);
+                                    if (disco){
+                                        frenodelantero1 = "Disco";
+                                    }else {
+                                        frenodelantero1 = "Tambor";
+                                    }
+                                    if (!ABS1){
+                                        ABS1 = ABSoSisAlimen(TipoFreno);
+                                    }else {
+
+                                    }
+                                }
+                                if (documentSnapshot.contains("frenotrasero")) {
+                                    String TipoFreno = documentSnapshot.get("frenotrasero").toString();
+                                    boolean disco = tipoDeFreno(TipoFreno);
+                                    ABSLlantaTrasera1 = ABSoSisAlimen(TipoFreno); // abs en la llanta trasera
+                                    if (disco){
+                                        frenotrasero1 = "Disco";
+                                    }else {
+                                        frenotrasero1 = "Tambor";
+                                    }
+                                    if (!ABS1){
+                                        ABS1 = ABSoSisAlimen(TipoFreno);
+                                    }
+                                }
+                                if (documentSnapshot.contains("potenciamaxima")) {
+                                    potencia = documentSnapshot.get("potenciamaxima").toString();
+                                    potencia1 = buscarNumero(potencia);
+                                    txtPotencia1.setText(potencia1 + " HP");
+                                }
+                                if (documentSnapshot.contains("cilindraje")) {
+                                    cilindraje1 = documentSnapshot.get("cilindraje").toString();
+                                    cilindrajeValor1 = buscarNumero(cilindraje1);
+                                    Pattern patron = Pattern.compile(".*[a-zA-Z].*");
+                                    Matcher matcher = patron.matcher(cilindraje1);
+                                    if (matcher.find()) {
+                                        txtCilindraje1.setText(cilindraje1.toUpperCase());
+                                    } else {
+                                        txtCilindraje1.setText(cilindraje1 + " CC");
+                                    }
+                                }
+                                if (documentSnapshot.contains("torquemaximo")) {
+                                    torque = documentSnapshot.get("torquemaximo").toString();
+                                    torque1 = buscarNumero(torque);
+                                    txtTorque1.setText(torque1 + " Nm");
+                                }
+                                if (documentSnapshot.contains("peso")) {
+                                    peso = documentSnapshot.get("peso").toString();
+                                    peso1 = buscarNumero(peso);
+                                    txtPeso1.setText(peso1 + " KG");
+                                }
+//                                if (documentSnapshot.contains("sistemadealimentaciondecombustible")) {
+//                                    sistemaAlimentacion1 = documentSnapshot.get("sistemadealimentaciondecombustible").toString();
+//                                    Fi1 = ABSoSisAlimen(sistemaAlimentacion1);
+//                                }
+                                if (documentSnapshot.contains("consumoPorGalon")) {
+                                    consumoPorGalon1 = Integer.parseInt(documentSnapshot.get("consumoPorGalon").toString());
+                                }
+                                if (documentSnapshot.contains("velocidadMaxima")) {
+                                    double dato = Double.parseDouble(documentSnapshot.get("velocidadMaxima").toString());
+                                    velocidadMaxima1 = (int) dato;
+                                    txtVelMaxima1.setText(velocidadMaxima1 + " KM/H");
+                                }
+                                if (documentSnapshot.contains("imagenes")) {
+                                    listaImagenes = (List<String>) documentSnapshot.get("imagenes");
+                                    String imagen = listaImagenes.get(0);
+                                    Picasso.get().load(imagen).into(imgMoto1);
+                                    imgMoto1.setPadding(18,18,18,18);
+                                }
+                                if (documentSnapshot.contains("tipodearranque")) {
+                                    arranque1 = documentSnapshot.get("tipodearranque").toString();
+                                    arranqueElectrico1 = tipoArranque(arranque1);
+                                }
+                                if (documentSnapshot.contains("nuevoValorDescuento")) {
+                                    valor1 = Integer.parseInt(documentSnapshot.get("nuevoValorDescuento").toString());
+                                }
+                            }
                         }
                     }else {
                         //moto a comparar numero 2
@@ -633,6 +893,271 @@ public class NuevoCompararFragment extends Fragment {
                                 }
                                 if (documentSnapshot.contains("arranque")) {
                                     arranque2 = documentSnapshot.get("arranque").toString();
+                                    arranqueElectrico2 = tipoArranque(arranque2);
+                                }
+                                if (documentSnapshot.contains("nuevoValorDescuento")) {
+                                    valor2 = Integer.parseInt(documentSnapshot.get("nuevoValorDescuento").toString());
+                                }
+                            }
+                            if (fabricante.equals("HERO")){
+                                if (documentSnapshot.contains("nombreMoto")) {
+                                    nombre2 = documentSnapshot.get("nombreMoto").toString();
+                                    txtNombreMoto2.setText(nombre2);
+                                    btnMotoNombre2.setText(nombre2);
+                                    ABS2 = ABSoSisAlimen(nombre2);
+                                }
+                                if (documentSnapshot.contains("carpeta3")) {
+                                    especialidad2 = documentSnapshot.get("carpeta3").toString();
+                                }
+                                if (documentSnapshot.contains("delanteros")) {
+                                    String TipoFreno = documentSnapshot.get("delanteros").toString();
+                                    boolean disco = tipoDeFreno(TipoFreno);
+                                    if (disco){
+                                        frenodelantero2 = "Disco";
+                                    }else {
+                                        frenodelantero2 = "Tambor";
+                                    }
+                                    if (!ABS2){
+                                        ABS2 = ABSoSisAlimen(TipoFreno);
+                                    }else {
+
+                                    }
+                                }
+                                if (documentSnapshot.contains("traseros")) {
+                                    String TipoFreno = documentSnapshot.get("traseros").toString();
+                                    boolean disco = tipoDeFreno(TipoFreno);
+                                    ABSLlantaTrasera2 = ABSoSisAlimen(TipoFreno); // abs en la llanta trasera
+                                    if (disco){
+                                        frenotrasero2 = "Disco";
+                                    }else {
+                                        frenotrasero2 = "Tambor";
+                                    }
+                                    if (!ABS2){
+                                        ABS2 = ABSoSisAlimen(TipoFreno);
+                                    }
+                                }
+                                if (documentSnapshot.contains("maxpotencia")) {
+                                    potencia = documentSnapshot.get("maxpotencia").toString();
+                                    potencia2 = buscarNumero(potencia);
+                                    txtPotencia2.setText(potencia1 + " HP");
+                                }
+                                if (documentSnapshot.contains("cilindraje")) {
+                                    cilindraje2 = documentSnapshot.get("cilindraje").toString();
+                                    cilindrajeValor2 = buscarNumero(cilindraje2);
+                                    Pattern patron = Pattern.compile(".*[a-zA-Z].*");
+                                    Matcher matcher = patron.matcher(cilindraje2);
+                                    if (matcher.find()) {
+                                        txtCilindraje2.setText(cilindraje2.toUpperCase());
+                                    } else {
+                                        txtCilindraje2.setText(cilindraje2 + " CC");
+                                    }
+                                }
+                                if (documentSnapshot.contains("maxtorque")) {
+                                    torque = documentSnapshot.get("maxtorque").toString();
+                                    torque2 = buscarNumero(torque);
+                                    txtTorque2.setText(torque2 + " Nm");
+                                }
+                                if (documentSnapshot.contains("pesosincarga")) {
+                                    peso = documentSnapshot.get("pesosincarga").toString();
+                                    peso2 = buscarNumero(peso);
+                                    txtPeso2.setText(peso2 + " KG");
+                                }
+                                if (!documentSnapshot.contains("alimentacion")) {
+                                    Fi2 = false;
+                                }else {
+                                    sistemaAlimentacion1 = documentSnapshot.get("alimentacion").toString();
+                                    Fi2 = ABSoSisAlimen(sistemaAlimentacion1);
+                                }
+                                if (documentSnapshot.contains("consumoPorGalon")) {
+                                    consumoPorGalon2 = Integer.parseInt(documentSnapshot.get("consumoPorGalon").toString());
+                                }
+                                if (documentSnapshot.contains("velocidadMaxima")) {
+                                    double dato = Double.parseDouble(documentSnapshot.get("velocidadMaxima").toString());
+                                    velocidadMaxima2 = (int) dato;
+                                    txtVelMaxima2.setText(velocidadMaxima2 + " KM/H");
+                                }
+                                if (documentSnapshot.contains("imagenes")) {
+                                    listaImagenes = (List<String>) documentSnapshot.get("imagenes");
+                                    String imagen = listaImagenes.get(0);
+                                    Picasso.get().load(imagen).into(imgMoto2);
+                                    imgMoto2.setPadding(18,18,18,18);
+                                }
+                                if (documentSnapshot.contains("arranque")) {
+                                    arranque2 = documentSnapshot.get("arranque").toString();
+                                    arranqueElectrico2 = tipoArranque(arranque2);
+                                }
+                                if (documentSnapshot.contains("nuevoValorDescuento")) {
+                                    valor2 = Integer.parseInt(documentSnapshot.get("nuevoValorDescuento").toString());
+                                }
+                            }
+                            if (fabricante.equals("SUZUKI")){
+                                if (documentSnapshot.contains("nombreMoto")) {
+                                    nombre2 = documentSnapshot.get("nombreMoto").toString();
+                                    txtNombreMoto2.setText(nombre2);
+                                    btnMotoNombre2.setText(nombre2);
+                                    ABS2 = ABSoSisAlimen(nombre2);
+                                }
+                                if (documentSnapshot.contains("carpeta3")) {
+                                    especialidad2 = documentSnapshot.get("carpeta3").toString();
+                                }
+                                if (documentSnapshot.contains("frenodelantero")) {
+                                    String TipoFreno = documentSnapshot.get("frenodelantero").toString();
+                                    boolean disco = tipoDeFreno(TipoFreno);
+                                    if (disco){
+                                        frenodelantero2 = "Disco";
+                                    }else {
+                                        frenodelantero2 = "Tambor";
+                                    }
+                                    if (!ABS2){
+                                        ABS2 = ABSoSisAlimen(TipoFreno);
+                                    }
+                                }
+                                if (documentSnapshot.contains("frenotrasero")) {
+                                    String TipoFreno = documentSnapshot.get("frenotrasero").toString();
+                                    boolean disco = tipoDeFreno(TipoFreno);
+                                    ABSLlantaTrasera2 = ABSoSisAlimen(TipoFreno); // abs en la llanta trasera
+                                    if (disco){
+                                        frenotrasero2 = "Disco";
+                                    }else {
+                                        frenotrasero2 = "Tambor";
+                                    }
+                                    if (!ABS2){
+                                        ABS2 = ABSoSisAlimen(TipoFreno);
+                                    }
+                                }
+                                if (documentSnapshot.contains("potencia")) {
+                                    potencia = documentSnapshot.get("potencia").toString();
+                                    potencia2 = buscarNumero(potencia);
+                                    txtPotencia2.setText(potencia2 + " HP");
+                                }
+                                if (documentSnapshot.contains("cilindraje")) {
+                                    cilindraje2 = documentSnapshot.get("cilindraje").toString();
+                                    cilindrajeValor2 = buscarNumero(cilindraje2);
+                                    Pattern patron = Pattern.compile(".*[a-zA-Z].*");
+                                    Matcher matcher = patron.matcher(cilindraje2);
+                                    if (matcher.find()) {
+                                        txtCilindraje2.setText(cilindraje2.toUpperCase());
+                                    } else {
+                                        txtCilindraje2.setText(cilindraje2 + " CC");
+                                    }
+                                }
+                                if (documentSnapshot.contains("torque")) {
+                                    torque = documentSnapshot.get("torque").toString();
+                                    torque2 = buscarNumero(torque);
+                                    txtTorque2.setText(torque2 + " Nm");
+                                }
+                                if (documentSnapshot.contains("pesoenseco")) {
+                                    peso = documentSnapshot.get("pesoenseco").toString();
+                                    peso2 = buscarNumero(peso);
+                                    txtPeso2.setText(peso2 + " KG");
+                                }
+                                if (documentSnapshot.contains("sistemadealimentaciondecombustible")) {
+                                    sistemaAlimentacion2 = documentSnapshot.get("sistemadealimentaciondecombustible").toString();
+                                    Fi2 = ABSoSisAlimen(sistemaAlimentacion2);
+                                }
+                                if (documentSnapshot.contains("consumoPorGalon")) {
+                                    consumoPorGalon2 = Integer.parseInt(documentSnapshot.get("consumoPorGalon").toString());
+                                }
+                                if (documentSnapshot.contains("velocidadMaxima")) {
+                                    double dato = Double.parseDouble(documentSnapshot.get("velocidadMaxima").toString());
+                                    velocidadMaxima2 = (int) dato;
+                                    txtVelMaxima2.setText(velocidadMaxima2 + " KM/H");
+                                }
+                                if (documentSnapshot.contains("imagenes")) {
+                                    listaImagenes = (List<String>) documentSnapshot.get("imagenes");
+                                    String imagen = listaImagenes.get(0);
+                                    Picasso.get().load(imagen).into(imgMoto2);
+                                    imgMoto2.setPadding(18,18,18,18);
+                                }
+                                if (documentSnapshot.contains("sistemadearranque")) {
+                                    arranque2 = documentSnapshot.get("sistemadearranque").toString();
+                                    arranqueElectrico2 = tipoArranque(arranque2);
+                                }
+                                if (documentSnapshot.contains("nuevoValorDescuento")) {
+                                    valor2 = Integer.parseInt(documentSnapshot.get("nuevoValorDescuento").toString());
+                                }
+                            }
+                            if (fabricante.equals("HONDA")){
+                                if (documentSnapshot.contains("nombreMoto")) {
+                                    nombre2 = documentSnapshot.get("nombreMoto").toString();
+                                    txtNombreMoto2.setText(nombre2);
+                                    btnMotoNombre2.setText(nombre2);
+                                    ABS2 = ABSoSisAlimen(nombre2);
+                                }
+                                if (documentSnapshot.contains("carpeta3")) {
+                                    especialidad2 = documentSnapshot.get("carpeta3").toString();
+                                }
+                                if (documentSnapshot.contains("frenodelantero")) {
+                                    String TipoFreno = documentSnapshot.get("frenodelantero").toString();
+                                    boolean disco = tipoDeFreno(TipoFreno);
+                                    if (disco){
+                                        frenodelantero2 = "Disco";
+                                    }else {
+                                        frenodelantero2 = "Tambor";
+                                    }
+                                    if (!ABS2){
+                                        ABS2 = ABSoSisAlimen(TipoFreno);
+                                    }
+                                }
+                                if (documentSnapshot.contains("frenotrasero")) {
+                                    String TipoFreno = documentSnapshot.get("frenotrasero").toString();
+                                    boolean disco = tipoDeFreno(TipoFreno);
+                                    ABSLlantaTrasera2 = ABSoSisAlimen(TipoFreno); // abs en la llanta trasera
+                                    if (disco){
+                                        frenotrasero2 = "Disco";
+                                    }else {
+                                        frenotrasero2 = "Tambor";
+                                    }
+                                    if (!ABS2){
+                                        ABS2 = ABSoSisAlimen(TipoFreno);
+                                    }
+                                }
+                                if (documentSnapshot.contains("potenciamaxima")) {
+                                    potencia = documentSnapshot.get("potenciamaxima").toString();
+                                    potencia2 = buscarNumero(potencia);
+                                    txtPotencia2.setText(potencia2 + " HP");
+                                }
+                                if (documentSnapshot.contains("cilindraje")) {
+                                    cilindraje2 = documentSnapshot.get("cilindraje").toString();
+                                    cilindrajeValor2 = buscarNumero(cilindraje2);
+                                    Pattern patron = Pattern.compile(".*[a-zA-Z].*");
+                                    Matcher matcher = patron.matcher(cilindraje2);
+                                    if (matcher.find()) {
+                                        txtCilindraje2.setText(cilindraje2.toUpperCase());
+                                    } else {
+                                        txtCilindraje2.setText(cilindraje2 + " CC");
+                                    }
+                                }
+                                if (documentSnapshot.contains("torquemaximo")) {
+                                    torque = documentSnapshot.get("torquemaximo").toString();
+                                    torque2 = buscarNumero(torque);
+                                    txtTorque2.setText(torque2 + " Nm");
+                                }
+                                if (documentSnapshot.contains("peso")) {
+                                    peso = documentSnapshot.get("peso").toString();
+                                    peso2 = buscarNumero(peso);
+                                    txtPeso2.setText(peso2 + " KG");
+                                }
+//                                if (documentSnapshot.contains("sistemadealimentaciondecombustible")) {
+//                                    sistemaAlimentacion1 = documentSnapshot.get("sistemadealimentaciondecombustible").toString();
+//                                    Fi1 = ABSoSisAlimen(sistemaAlimentacion1);
+//                                }
+                                if (documentSnapshot.contains("consumoPorGalon")) {
+                                    consumoPorGalon2 = Integer.parseInt(documentSnapshot.get("consumoPorGalon").toString());
+                                }
+                                if (documentSnapshot.contains("velocidadMaxima")) {
+                                    double dato = Double.parseDouble(documentSnapshot.get("velocidadMaxima").toString());
+                                    velocidadMaxima2 = (int) dato;
+                                    txtVelMaxima2.setText(velocidadMaxima2 + " KM/H");
+                                }
+                                if (documentSnapshot.contains("imagenes")) {
+                                    listaImagenes = (List<String>) documentSnapshot.get("imagenes");
+                                    String imagen = listaImagenes.get(0);
+                                    Picasso.get().load(imagen).into(imgMoto2);
+                                    imgMoto2.setPadding(18,18,18,18);
+                                }
+                                if (documentSnapshot.contains("tipodearranque")) {
+                                    arranque2 = documentSnapshot.get("tipodearranque").toString();
                                     arranqueElectrico2 = tipoArranque(arranque2);
                                 }
                                 if (documentSnapshot.contains("nuevoValorDescuento")) {
@@ -1105,9 +1630,9 @@ public class NuevoCompararFragment extends Fragment {
             }
         }).start();
     }
-    public boolean ABSoSisAlimen(String args) {
+    private boolean ABSoSisAlimen(String args) {
 
-        Pattern patron = Pattern.compile("Inyección|electrónica|fi|full|ABS", Pattern.CASE_INSENSITIVE);
+        Pattern patron = Pattern.compile("Inyección|electrónica|fi|full|ABS|IBS", Pattern.CASE_INSENSITIVE);
 
         // Buscar coincidencias en el texto
         Matcher matcher = patron.matcher(args);
@@ -1136,7 +1661,7 @@ public class NuevoCompararFragment extends Fragment {
     public boolean tipoArranque(String arranque) {
 
         // Definir el patrón de búsqueda
-        Pattern patron = Pattern.compile("Eléctrico|Electrico|electrónico|eléctrica|batería", Pattern.CASE_INSENSITIVE);
+        Pattern patron = Pattern.compile("Eléctrico|Electrico|electrónico|eléctrica|batería|Eléctrico y Pedal|automático", Pattern.CASE_INSENSITIVE);
 
         // Buscar coincidencias en el texto
         Matcher matcher = patron.matcher(arranque);
@@ -1149,13 +1674,17 @@ public class NuevoCompararFragment extends Fragment {
         }
     }
     private static double buscarNumero(String texto) {
-        // Patrón de expresión regular para buscar el primer número seguido de letras
-        Pattern patron = Pattern.compile("(\\d+\\.?\\d*)(?=\\s*[a-zA-Z])");
+        Pattern patron = Pattern.compile("(\\d+[.,]?\\d*)(?=\\s*[a-zA-Z])");
         Matcher matcher = patron.matcher(texto);
 
-        // Encontrar el primer número seguido de letras en la cadena de texto
         if (matcher.find()) {
+            // Obtener el número encontrado
             String numero = matcher.group();
+
+            // Reemplazar comas con puntos para que Double.parseDouble pueda analizar el número
+            numero = numero.replace(',', '.');
+
+            // Parsear el número a Double
             return Double.parseDouble(numero);
         }
 
@@ -1171,9 +1700,6 @@ public class NuevoCompararFragment extends Fragment {
                 double numericValue = Double.parseDouble(texto);
                 return numericValue;
                 // Realiza acciones adicionales con el valor numérico
-            } else {
-                // La cadena contiene caracteres no numéricos
-                // Realiza acciones en caso de que no sea numérico
             }
         }
         return 0.0;

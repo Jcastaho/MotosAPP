@@ -5,8 +5,13 @@ import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.app.Dialog;
 import android.app.DownloadManager;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
@@ -66,6 +71,7 @@ import com.straccion.motos_admin.models.ViewPagerItem;
 import com.straccion.motos_admin.providers.ImageProvider;
 import com.straccion.motos_admin.providers.PostProvider;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -75,11 +81,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link DetallesMoto#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class DetallesMoto extends Fragment {
     View mview;
     LinearLayout lnlMostrarManuales;
@@ -97,6 +98,7 @@ public class DetallesMoto extends Fragment {
     CardView crdArchivo4;
     CardView crdArchivo5;
     CardView crdArchivo6;
+    CardView cdvManuales;
     TextView txtArchivo1;
     TextView txtArchivo2;
     TextView txtArchivo3;
@@ -150,6 +152,7 @@ public class DetallesMoto extends Fragment {
     String modelo = "";
     String modelo2 = "";
     String DescripcionMoto = "";
+    String nombreImagenVs = "";
     int precio = 0;
     int precio2 = 0;
     int nuevoValorDescuento = 0;
@@ -212,6 +215,7 @@ public class DetallesMoto extends Fragment {
         crdArchivo4 = mview.findViewById(R.id.crdArchivo4);
         crdArchivo5 = mview.findViewById(R.id.crdArchivo5);
         crdArchivo6 = mview.findViewById(R.id.crdArchivo6);
+        cdvManuales = mview.findViewById(R.id.cdvManuales);
         txtArchivo1 = mview.findViewById(R.id.txtArchivo1);
         txtArchivo2 = mview.findViewById(R.id.txtArchivo2);
         txtArchivo3 = mview.findViewById(R.id.txtArchivo3);
@@ -285,7 +289,6 @@ public class DetallesMoto extends Fragment {
                 FrameLayout contenedor = dialog.findViewById(R.id.contenedor);
                 TextView txtVs = dialog.findViewById(R.id.txtVs);
                 Dialog dialog2 = new Dialog(getContext());
-
                 dialog.show();
 
                 String moto = listaImagenes.get(0);
@@ -299,7 +302,6 @@ public class DetallesMoto extends Fragment {
                         RecyclerView reciclerViewElegirMoto = dialog2.findViewById(R.id.reciclerViewElegirMoto);
                         LinearLayout lnlMostrarMotos = dialog2.findViewById(R.id.lnlMostrarMotos);
                         ProgressBar progressBar = dialog2.findViewById(R.id.progressBar);
-
 
                         int tiempoMostrandoProgressBar = 1200;
                         lnlMostrarMotos.setVisibility(View.VISIBLE);
@@ -332,55 +334,59 @@ public class DetallesMoto extends Fragment {
                 btnComparar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //animacion a las imagenes
-                        ObjectAnimator animMoto1 = ObjectAnimator.ofFloat(imgMoto1, "translationX", 0f, 460f, 80);
-                        animMoto1.setDuration(500);
+                        String nombreMoto = txtMoto2.getText().toString();
+                        if (!nombreMoto.isEmpty()){
+//animacion a las imagenes
+                            ObjectAnimator animMoto1 = ObjectAnimator.ofFloat(imgMoto1, "translationX", 0f, 460f, 80);
+                            animMoto1.setDuration(500);
 
-                        ObjectAnimator animMoto2 = ObjectAnimator.ofFloat(imgMoto2, "translationX", 0f, -460f, -80);
-                        animMoto2.setDuration(500);
+                            ObjectAnimator animMoto2 = ObjectAnimator.ofFloat(imgMoto2, "translationX", 0f, -460f, -80);
+                            animMoto2.setDuration(500);
 
-                        //animacion al txt VS
-                        ObjectAnimator scaleX = ObjectAnimator.ofFloat(txtVs, "scaleX", 1.0f, 3.5f);
-                        ObjectAnimator scaleY = ObjectAnimator.ofFloat(txtVs, "scaleY", 1.0f, 3.5f);
-                        scaleX.setDuration(600);
-                        scaleY.setDuration(600);
+                            //animacion al txt VS
+                            ObjectAnimator scaleX = ObjectAnimator.ofFloat(txtVs, "scaleX", 1.0f, 3.5f);
+                            ObjectAnimator scaleY = ObjectAnimator.ofFloat(txtVs, "scaleY", 1.0f, 3.5f);
+                            scaleX.setDuration(600);
+                            scaleY.setDuration(600);
 
-                        //"vibracion a las imagenes"
-                        PropertyValuesHolder holderX1 = PropertyValuesHolder.ofFloat("translationX", -20f, 20f);
-                        PropertyValuesHolder holderY1 = PropertyValuesHolder.ofFloat("translationY", -20f, 20f);
+                            //"vibracion a las imagenes"
+                            PropertyValuesHolder holderX1 = PropertyValuesHolder.ofFloat("translationX", -20f, 20f);
+                            PropertyValuesHolder holderY1 = PropertyValuesHolder.ofFloat("translationY", -20f, 20f);
 
-                        PropertyValuesHolder holderX2 = PropertyValuesHolder.ofFloat("translationX", -20f, 20f);
-                        PropertyValuesHolder holderY2 = PropertyValuesHolder.ofFloat("translationY", -20f, 20f);
-
-
-                        ObjectAnimator animTiembla1 = ObjectAnimator.ofPropertyValuesHolder(imgMoto1, holderX1, holderY1);
-                        ObjectAnimator animTiembla2 = ObjectAnimator.ofPropertyValuesHolder(imgMoto2, holderX2, holderY2);
+                            PropertyValuesHolder holderX2 = PropertyValuesHolder.ofFloat("translationX", -20f, 20f);
+                            PropertyValuesHolder holderY2 = PropertyValuesHolder.ofFloat("translationY", -20f, 20f);
 
 
-                        ScaleAnimation zoomAnimation = new ScaleAnimation(1f, 1.5f, 1f, 1.5f, Animation.RELATIVE_TO_SELF, 0.758f, Animation.RELATIVE_TO_SELF, 0.85f);
-                        zoomAnimation.setDuration(3000);
+                            ObjectAnimator animTiembla1 = ObjectAnimator.ofPropertyValuesHolder(imgMoto1, holderX1, holderY1);
+                            ObjectAnimator animTiembla2 = ObjectAnimator.ofPropertyValuesHolder(imgMoto2, holderX2, holderY2);
 
-                        AnimatorSet animatorSet = new AnimatorSet();
-                        animatorSet.playTogether(animMoto1, animMoto2, animTiembla1, animTiembla2, scaleX, scaleY);
-                        contenedor.startAnimation(zoomAnimation);
-                        animatorSet.start();
 
-                        Handler handler = new Handler();
-                        int delayMillis = 500;
+                            ScaleAnimation zoomAnimation = new ScaleAnimation(1f, 1.5f, 1f, 1.5f, Animation.RELATIVE_TO_SELF, 0.758f, Animation.RELATIVE_TO_SELF, 0.85f);
+                            zoomAnimation.setDuration(3000);
 
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                dialog.dismiss();
-                                Bundle args = new Bundle();
-                                args.putString("idDocument", idDocument);
-                                String idNew = mListaCompararAdapter.getPostIdSeleccionado();
-                                args.putString("idDocument2", idNew);
-                                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
-                                navController.navigate(R.id.action_detallesMoto_to_nuevoCompararFragment, args);
-                            }
-                        }, delayMillis);
+                            AnimatorSet animatorSet = new AnimatorSet();
+                            animatorSet.playTogether(animMoto1, animMoto2, animTiembla1, animTiembla2, scaleX, scaleY);
+                            contenedor.startAnimation(zoomAnimation);
+                            animatorSet.start();
 
+                            Handler handler = new Handler();
+                            int delayMillis = 500;
+
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dialog.dismiss();
+                                    Bundle args = new Bundle();
+                                    args.putString("idDocument", idDocument);
+                                    String idNew = mListaCompararAdapter.getPostIdSeleccionado();
+                                    args.putString("idDocument2", idNew);
+                                    NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
+                                    navController.navigate(R.id.action_detallesMoto_to_nuevoCompararFragment, args);
+                                }
+                            }, delayMillis);
+                        }else {
+                            Toast.makeText(getContext(), "Por favor seleccione una moto a comparar", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
                 btnCancelar.setOnClickListener(new View.OnClickListener() {
@@ -623,7 +629,7 @@ public class DetallesMoto extends Fragment {
         }
 
         //imagenes caractreristicas adicionales
-        if (listaTextoCaracteristicas == null){
+        if (listaTextoCaracteristicas == null || listaTextoCaracteristicas.isEmpty()){
             mViewPagerAdapter = new ViewPagerAdapter(getContext(), viewPagerImagenes, viewImagenesAdd, null);
         }else {
             mViewPagerAdapter = new ViewPagerAdapter(getContext(), viewPagerImagenes, viewImagenesAdd, listaTextoCaracteristicas);
@@ -766,6 +772,9 @@ public class DetallesMoto extends Fragment {
                     instanceSlider();
                     actualizarVistas();
                 }
+                if (nombreArchivosPDF==null || nombreArchivosPDF.isEmpty()){
+                    cdvManuales.setVisibility(View.GONE);
+                }
                 txtModelo.setText(modelo);
                 txtFabricanteMoto.setText(fabricante);
                 if (modelo2 != ""){
@@ -814,6 +823,7 @@ public class DetallesMoto extends Fragment {
             colorMap.put("ROJO APACHE - GRIS NEGRO", R.color.rojoNegro);
             colorMap.put("NEGRO NEBULOSA - ROJO GRIS PLATA", R.color.rojoNegro);
             colorMap.put("AZUL PETROLEO - ROJO", R.color.rojoNegro);
+            colorMap.put("ROJO-NEGRO", R.color.rojoNegro);
 
             colorMap.put("NEGRA", R.color.black);
             colorMap.put("NEGRO", R.color.black);
@@ -834,15 +844,18 @@ public class DetallesMoto extends Fragment {
             colorMap.put("AZUL PETRÓLEO - GRIS DORADO", R.color.azulPetroleo);
             colorMap.put("AZUL MATE/NEGRO NEB - GRIS", R.color.azulPetroleo);
             colorMap.put("AZUL PETRÓLEO - GRIS ROJO", R.color.azulPetroleo);
+            colorMap.put("NEGRAAZUL", R.color.azulPetroleo);
             colorMap.put("NEGRA - AZUL", R.color.azulPetroleo);
 
             colorMap.put("GRIS", R.color.grisOscuro);
+            colorMap.put("GRIS MATE", R.color.grisOscuro);
             colorMap.put("TOP FROST", R.color.grisOscuro);
             colorMap.put("TOP FROST - ROJO", R.color.grisOscuro);
             colorMap.put("GRIS CARBONO - AZUL MIAMI BLUE", R.color.grisOscuro);
             colorMap.put("GRIS CARBONO", R.color.grisOscuro);
             colorMap.put("TOP FROST/NEGRO NEB - GRIS", R.color.grisOscuro);
             colorMap.put("GRIS CARBONO - NEGRO DORADO", R.color.grisOscuro);
+            colorMap.put("NEGRAGRIS", R.color.grisOscuro);
 
             colorMap.put("TOP FROST - GRIS METALIZADO", R.color.grisclaro);
 
@@ -856,14 +869,17 @@ public class DetallesMoto extends Fragment {
 
 
             colorMap.put("AZUL", R.color.azul);
+            colorMap.put("AZUL MATE", R.color.azul);
             colorMap.put("NEGRO MATE AZUL MATE", R.color.azul);
             colorMap.put("AZUL MATE - GRIS VERDE", R.color.azul);
             colorMap.put("AZUL MATE - DORADO METALIZADO", R.color.azul);
             colorMap.put("AZUL ARLEQUÍN", R.color.azul);
             colorMap.put("GRIS CARBONO - AZUL", R.color.azul);
+            colorMap.put("AZUL-NEGRO", R.color.azul);
 
             colorMap.put("BLANCO", R.color.white);
             colorMap.put("BLANCA", R.color.white);
+            colorMap.put("BLANCO-AZUL", R.color.white);
             lnlTextoColores.setVisibility(View.VISIBLE);
 
             Integer colorCirculo = colorMap.get(elemento);

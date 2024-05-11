@@ -32,7 +32,7 @@ public class AuthProvider {
             return null;
         }
     }
-    public void Logout(){
+    public void logout(){
         if (mAuth != null){
             mAuth.signOut();
         }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,13 +10,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_marginTop="15dp">
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="55dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Listado de motos"
-            android:layout_marginLeft="30dp"
-            android:textSize="16dp"/>
+            android:layout_gravity="center"
+            android:textSize="20dp"
+            android:textColor="@color/black"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -50,25 +53,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginTop="50dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-            <Button
-                android:id="@+id/btnActualizarPrecios"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:layout_marginLeft="10dp"
-                android:text="Actualizar Precios"
-                android:backgroundTint="@color/black"/>
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
             android:orientation="horizontal"
             android:layout_marginTop="15dp">
 
@@ -77,34 +61,69 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:orientation="vertical">
+
+
+                <EditText
+                    android:id="@+id/txtGalonAprox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="KM Aprox por galon"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="25dp"/>
+
+                <EditText
+                    android:id="@+id/edtURL"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="URL"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="35dp"/>
+
+                <Button
+                    android:id="@+id/btnURL"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:text="GUARDAR REGISTRO"
+                    android:backgroundTint="@color/black"
+                    android:layout_marginTop="35dp"
+                    android:layout_marginRight="55dp"
+                    android:layout_marginLeft="55dp"
+                    android:layout_marginBottom="30dp"/>
                 <ProgressBar
                     android:id="@+id/progressBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="gone"/>
-                <Button
-                    android:id="@+id/btnURL"
-                    android:layout_width="210dp"
-                    android:layout_height="wrap_content"
-                    android:text="GUARDAR REGISTRO"
-                    android:backgroundTint="@color/black"
-                    android:layout_marginBottom="10dp"/>
-
-                <EditText
-                    android:id="@+id/txtGalonAprox"
-                    android:layout_width="230dp"
-                    android:layout_height="wrap_content"
-                    android:hint="KM Aprox por galon"
-                    android:layout_marginTop="25dp"/>
-
-                <EditText
-                    android:id="@+id/edtURL"
-                    android:layout_width="230dp"
-                    android:layout_height="wrap_content"
-                    android:hint="URL"
-                    android:layout_marginTop="15dp"/>
 
             </LinearLayout>
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Actualizar Precios de la Base de Datos"
+                android:textColor="@color/black"
+                android:textSize="25dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textStyle="bold"/>
+
+            <Button
+                android:id="@+id/btnActualizarPrecios"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="Actualizar Precios"
+                android:layout_marginRight="55dp"
+                android:layout_marginLeft="55dp"
+                android:backgroundTint="@color/black"/>
+        </LinearLayout>
     </LinearLayout>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</ScrollView>

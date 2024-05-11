@@ -324,9 +324,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginBottom="80dp">
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cdvManuales"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginRight="20dp"
@@ -490,6 +492,14 @@
                         </LinearLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="10dp"
+                    android:layout_margin="10dp"
+                    android:textColor="@android:color/darker_gray"
+                    android:gravity="center"
+                    android:text="La información mostrada se obtiene de las páginas oficiales del fabricante, te recomendamos verificar la información directamente en el sitio web oficial del fabricante"/>
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

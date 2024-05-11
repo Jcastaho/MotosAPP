@@ -18,11 +18,39 @@
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
             android:visibility="gone"
             android:gravity="center">
+
             <ProgressBar
                 android:id="@+id/progressBarHome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+            android:orientation="horizontal">
+            <EditText
+                android:id="@+id/edtBuscar"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:background="@drawable/edittext_custom_background"
+                android:hint="Ingrese el termino de busqueda"
+                android:visibility="gone"
+                android:maxLength="40"/>
+            <Button
+                android:id="@+id/botonBuscar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Buscar"
+                android:backgroundTint="@color/transparent"
+                android:drawableBottom="@drawable/ic_busqueda_lupa"
+                android:layout_gravity="top"
+                android:visibility="gone"
+                android:layout_marginBottom="3dp"/>
+
+        </LinearLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/reciclerViewHome"

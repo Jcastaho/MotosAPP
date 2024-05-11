@@ -1,0 +1,9 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <!-- Este drawable no tiene ninguna línea de fondo -->
+    <solid android:color="@android:color/transparent" />
+    <!-- Establece el tamaño de la línea a 0dp para que no haya línea subrayada -->
+    <stroke
+        android:width="0dp"
+        android:color="@android:color/transparent" />
+</shape>

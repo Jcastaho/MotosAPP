@@ -1,28 +1,17 @@
 package com.straccion.motos_admin.providers;
 
-import android.util.Log;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldPath;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.straccion.motos_admin.models.PostAKT;
-import com.straccion.motos_admin.models.PostAuteco;
-import com.straccion.motos_admin.models.PostYamaha;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class PostProvider {
     CollectionReference mCollection;
@@ -41,6 +30,30 @@ public class PostProvider {
     }
     public Task<Void> updatePost3(String postId, Map<String, Object> updates) {
         return mCollection.document(postId).update(updates);
+    }
+
+
+    public Task<Void> eliminarDatosFichaTecnica(String postId, List<String> updates) {
+        Map<String, Object> camposAEliminar = new HashMap<>();
+        if (updates != null && !updates.isEmpty()) {
+            for (String campo : updates) {
+                camposAEliminar.put(campo, FieldValue.delete());
+            }
+        }
+
+        // Usar el método update() para eliminar los campos
+        return mCollection.document(postId).update(camposAEliminar);
+
+    }
+    public Query getAllConsulta2(String dato){
+        return mCollection.orderBy("id")
+                .startAt(dato)
+                .endAt(dato + "\uf8ff");    }
+    public Query getAllConsulta(String dato){
+        return mCollection.whereGreaterThanOrEqualTo("carpeta1", dato)
+                .whereLessThanOrEqualTo("carpeta1", dato + "\uf8ff")
+                .orderBy("carpeta1") // Puedes ordenar por el campo "id" si deseas
+                .orderBy("id"); // Ordenar también por el campo "carpeta1"
     }
     public Query getAll(){
         return mCollection.whereEqualTo("visible", true).orderBy("prioridad", Query.Direction.DESCENDING);

@@ -2,16 +2,16 @@ package com.straccion.motos_admin.models;
 
 public class SliderItem {
 
-    String imageurl;
+    String imageUrl;
 
     public SliderItem() { }
 
     public String getImageurl() {
-        return imageurl;
+        return imageUrl;
     }
 
     public void setImageurl(String imageurl) {
-        this.imageurl = imageurl;
+        this.imageUrl = imageurl;
     }
 
 }

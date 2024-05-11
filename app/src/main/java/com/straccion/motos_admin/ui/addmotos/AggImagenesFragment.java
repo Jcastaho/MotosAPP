@@ -50,15 +50,12 @@ public class AggImagenesFragment extends Fragment {
     ImageProvider mImageProvider;
 
     String nombreMotos="";
-    String seleccionMoto="";
     String seleccionMotoSin="";
     String carpeta1;
     String carpeta2;
     String carpeta3;
-    String dato ="";
     String marcaMoto ="";
     int consumo =0;
-
     String id ="";
     List<String> nombreMotoSin = new ArrayList<>();
 
@@ -99,7 +96,7 @@ public class AggImagenesFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int posicion, long id) {
                 seleccionMotoSin = spnSinDatos.getSelectedItem().toString();
-                SaberDatos();
+                saberDatos();
             }
 
             @Override
@@ -132,7 +129,7 @@ public class AggImagenesFragment extends Fragment {
                 if(seleccionMotoSin != "NINGUNA" && consumo != 0) {
                     progressBar.setVisibility(View.VISIBLE);
                     btnURL.setVisibility(View.GONE);
-                    llenarBasedatos();
+                    llenarBaseDatos();
                 }
             }
         });
@@ -156,7 +153,7 @@ public class AggImagenesFragment extends Fragment {
             }
         });
     }
-    private void SaberDatos(){
+    private void saberDatos(){
         if (!seleccionMotoSin.equals("NINGUNA")) {
             Query query = mpostProvider.buscarPorNombreMoto(seleccionMotoSin);
             query.get().addOnCompleteListener(task -> {
@@ -195,36 +192,8 @@ public class AggImagenesFragment extends Fragment {
             spnSinDatos.setAdapter(adapter);
         }
     }
-    //hacer el analisis
-//    private void hacerAnalisis() {
-//        if (carpeta3.equals("TODOTERRENO") || carpeta3.equals("URBANAS")){
-//            if (cilindraje <= 100){
-//                caracteristicas.add("Trabajo");
-//            } else if (cilindraje <= 125) {
-//                caracteristicas.add("MasTrabajo");
-//            } else if (cilindraje <= 150) {
-//                caracteristicas.add("Trabajo-Andar");
-//            } else if (cilindraje <= 196) {
-//                caracteristicas.add("Trabajo-Andar-Semideportiva");
-//            }
-//        }
-//
-//        Map<String, Object> updates = new HashMap<>();
-//        updates.put("clasificacion", caracteristicas);
-//        mpostProvider.updatePost(id, updates).addOnCompleteListener(new OnCompleteListener<Void>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Void> task) {
-//                if (task.isSuccessful()){
-//                    Toast.makeText(getContext(), "Dato guardado", Toast.LENGTH_LONG).show();
-//                }else {
-//                    Toast.makeText(getContext(), "Hubo un error", Toast.LENGTH_LONG).show();
-//                }
-//
-//            }
-//        });
-//    }
 
-    private void llenarBasedatos(){
+    private void llenarBaseDatos(){
         new Thread(new Runnable() {
             @Override
             public void run() {

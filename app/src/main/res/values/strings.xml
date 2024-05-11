@@ -9,7 +9,7 @@
     <string name="seleccionarMoto">  Eliga una Moto  </string>
     <string name="seleccionarColorMoto">  Elige un color  </string>
     <string name="menu_home">Inicio</string>
-    <string name="menu_gallery">Agregar Motos</string>
+    <string name="menu_gallery">Añadir/Modificar Motos</string>
     <string name="menu_slideshow">Comparar Motos</string>
     <string name="menu_MiMoto">Mi Moto Ideal</string>
     <string name="menu_Estadistica">Estadistica</string>

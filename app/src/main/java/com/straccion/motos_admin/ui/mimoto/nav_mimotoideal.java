@@ -3,9 +3,11 @@ package com.straccion.motos_admin.ui.mimoto;
 import static android.content.ContentValues.TAG;
 
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -24,6 +26,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -39,13 +42,9 @@ import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.straccion.motos_admin.R;
 import com.straccion.motos_admin.adapters.FiltrosMiMotoAdapter;
-import com.straccion.motos_admin.adapters.PostsAdapters;
 import com.straccion.motos_admin.models.PostAuteco;
-import com.straccion.motos_admin.models.PostYamaha;
 import com.straccion.motos_admin.providers.PostProvider;
 
 import java.util.ArrayList;
@@ -53,25 +52,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link nav_mimotoideal#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class nav_mimotoideal extends Fragment {
     View mview;
-
     PostProvider mpostProvider;
     FiltrosMiMotoAdapter mPostsAdapters;
-
     TextView txtPregunta;
     Button btnRespuesta1;
     Button btnRespuesta2;
@@ -81,7 +69,7 @@ public class nav_mimotoideal extends Fragment {
     Button btnVerMas2;
     ProgressBar progressBarMiMotoIdeal;
     LinearLayout contenedorRecycler;
-    LinearLayout lnlPantalla;
+    ScrollView sclPantalla;
     RecyclerView reciclerViewMiMoto1;
     RecyclerView reciclerViewMiMoto2;
     RecyclerView reciclerViewMiMoto3;
@@ -93,28 +81,16 @@ public class nav_mimotoideal extends Fragment {
     String pregunta2 = "¿Cual sera principalmente el uso de la moto?";
     String pregunta3 = "¿Qué tan importante es la eficiencia de combustible para ti?";
     String pregunta4 = "¿Prefieres una moto con transmisión manual, automática o semiautomatica?";
-    String pregunta7 = "¿Qué tipo de terreno y condiciones climáticas predominarán en tus trayectos habituales?";
-    String pregunta8 = "¿Con que frecuencia usara la moto para trabajar?";
-    //String trabajo="";
+    String pregunta5 = "¿Qué tipo de terreno y condiciones climáticas predominarán en tus trayectos habituales?";
+    String pregunta6 = "¿Con que frecuencia usara la moto para trabajar?";
     List<String> trabajo = new ArrayList<>();
     int contador = 0;
     int sumadorClick = 0;
     int numberOfColumns = 0;
-    int prioridad1 = 0;
-    int prioridad2 = 0;
-    int prioridad3 = 0;
-    int prioridad4 = 0;
     int precioFiltro1 = 0;
     int precioFiltro2 = 0;
     List<String> respuestas = new ArrayList<>();
 
-
-    public static nav_mimotoideal newInstance(String param1, String param2) {
-        nav_mimotoideal fragment = new nav_mimotoideal();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -140,7 +116,7 @@ public class nav_mimotoideal extends Fragment {
         reciclerViewMiMoto1 = mview.findViewById(R.id.reciclerViewMiMoto1);
         reciclerViewMiMoto2 = mview.findViewById(R.id.reciclerViewMiMoto2);
         reciclerViewMiMoto3 = mview.findViewById(R.id.reciclerViewMiMoto3);
-        lnlPantalla = mview.findViewById(R.id.lnlPantalla);
+        sclPantalla = mview.findViewById(R.id.sclPantalla);
 
 
         mpostProvider = new PostProvider();
@@ -251,7 +227,7 @@ public class nav_mimotoideal extends Fragment {
         btnRespuesta3.setVisibility(View.GONE);
         btnRespuesta4.setVisibility(View.GONE);
         progressBarMiMotoIdeal.setVisibility(View.VISIBLE);
-        lnlPantalla.setVisibility(View.VISIBLE);
+        sclPantalla.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.color_gris_claro));
 
     }
 
@@ -286,13 +262,13 @@ public class nav_mimotoideal extends Fragment {
             btnRespuesta4.setText("Irrelevante");
 
         } else if (contador == 5) {
-            txtPregunta.setText(pregunta7);
+            txtPregunta.setText(pregunta5);
             btnRespuesta1.setText("Principalmente asfalto");
             btnRespuesta2.setText("Mayormente caminos de tierra/grava");
             btnRespuesta3.setText("Variado (mezcla de asfalto, tierra y grava)");
             btnRespuesta4.setVisibility(View.GONE);
         } else if (contador == 6) {
-            txtPregunta.setText(pregunta8);
+            txtPregunta.setText(pregunta6);
             btnRespuesta1.setText("Frecuentemente");
             btnRespuesta2.setText("Regularmente");
             btnRespuesta3.setText("Esporádicamente");
@@ -322,7 +298,6 @@ public class nav_mimotoideal extends Fragment {
             prioridadesPreguntas.put("URBANAS", 1);
             prioridadesPreguntas.put("AUTOMATICAS", 2);
             prioridadesPreguntas.put("SEMIAUTOMATICAS", 2);
-            //si responde a esta pregunta, la pregunta 7 no deberia de estar
 
         } else if (respuestas.contains("Viajes")) {
             prioridadesPreguntas.put("ADVENTURE", 1);
@@ -453,21 +428,13 @@ public class nav_mimotoideal extends Fragment {
         reciclerViewMiMoto1.setAdapter(mPostsAdapters);
         mPostsAdapters.startListening();
         reciclerViewMiMoto1.scrollToPosition(0);
-        btnVerMas2.setVisibility(View.GONE);
-        txtTitulo2.setVisibility(View.GONE);
+
         if (filteredQuery.size() > 1) {
             FirestoreRecyclerOptions<PostAuteco> options2 = new FirestoreRecyclerOptions.Builder<PostAuteco>().setQuery(filteredQuery.get(1), PostAuteco.class).build();
             FiltrosMiMotoAdapter adapter2 = new FiltrosMiMotoAdapter(options2, getContext(), navController, economica);
             reciclerViewMiMoto2.setAdapter(adapter2);
             adapter2.startListening();
             reciclerViewMiMoto2.scrollToPosition(0);
-            if (adapter2.getItemCount() > 0){
-                btnVerMas2.setVisibility(View.VISIBLE);
-                txtTitulo2.setVisibility(View.VISIBLE);
-            }else {
-                btnVerMas2.setVisibility(View.GONE);
-                txtTitulo2.setVisibility(View.GONE);
-            }
         }
         if (filteredQuery.size() > 2) {
             txtTitulo3.setVisibility(View.VISIBLE);
@@ -484,7 +451,7 @@ public class nav_mimotoideal extends Fragment {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    lnlPantalla.setVisibility(View.GONE);
+                    sclPantalla.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.transparent));
                     contenedorRecycler.setVisibility(View.VISIBLE);
                     progressBarMiMotoIdeal.setVisibility(View.GONE);
                     contenedorRecycler.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.transparent));
@@ -537,6 +504,11 @@ public class nav_mimotoideal extends Fragment {
                         .whereEqualTo("carpeta3", "TODOTERRENO");
                 queries.add(query1);
                 txtTitulo2.setText("MOTOS GRANDES / TODOTERRENO");
+                txtTitulo2.setVisibility(View.VISIBLE);
+                btnVerMas2.setVisibility(View.VISIBLE);
+            }else {
+                txtTitulo2.setVisibility(View.GONE);
+                btnVerMas2.setVisibility(View.GONE);
             }
         }
         if (1==1) {
@@ -593,5 +565,4 @@ public class nav_mimotoideal extends Fragment {
         }
         return queries;
     }
-
 }

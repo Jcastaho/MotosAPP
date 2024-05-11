@@ -48,7 +48,7 @@ public class SlideshowFragment extends Fragment {
     View viewRaya1;
     View viewRaya2;
     CoordinatorLayout cdlImagenfondo;
-    NestedScrollView nscImagenfondo;
+    ImageView imgImagenfondo;
     int imagenFondo1 = R.drawable.fondosuperior;
     int imagenFondo2 = R.drawable.compararmotos;
     int controlador_Imagenes1 = 0;
@@ -144,13 +144,7 @@ public class SlideshowFragment extends Fragment {
     private FragmentSlideshowBinding binding;
     List<String> imagenesList = new ArrayList<>();
     List<String> nombreImagenes = new ArrayList<>();
-    List<String> listaMarcas = new ArrayList<>();
     List<String> idDocumento = new ArrayList<>();
-    List<List<String>> listasDocumentos = new ArrayList<>();
-    List<List<String>> listasAuteco = new ArrayList<>();
-    List<List<String>> listasYamaha = new ArrayList<>();
-
-    QueryDocumentSnapshot documentoMoto = null;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -162,7 +156,7 @@ public class SlideshowFragment extends Fragment {
         viewRaya1 = mview.findViewById(R.id.viewRaya1);
         viewRaya2 = mview.findViewById(R.id.viewRaya2);
         cdlImagenfondo = mview.findViewById(R.id.cdlImagenfondo);
-        nscImagenfondo = mview.findViewById(R.id.nscImagenfondo);
+        imgImagenfondo = mview.findViewById(R.id.imgImagenfondo);
 
         txtCilindrajeMoto1 = mview.findViewById(R.id.txtCilindrajeMoto1);
         txtMotorMoto1 = mview.findViewById(R.id.txtMotorMoto1);
@@ -654,6 +648,426 @@ public class SlideshowFragment extends Fragment {
                                     }
                                 }
                                 break;
+                            case "HERO":
+                                if (documentSnapshot.contains("cilindraje")) {
+                                    if (contadorimgView == 1){
+                                        txtCilindrajevalor1.setText(documentSnapshot.getString("cilindraje"));
+                                        controlador_Imagenes1 = 1;
+                                    } else if (contadorimgView == 2) {
+                                        txtCilindrajevalor2.setText(documentSnapshot.getString("cilindraje"));
+                                        controlador_Imagenes2 = 1;
+                                    }else if (contadorimgView == 3) {
+                                        txtCilindrajevalor3.setText(documentSnapshot.getString("cilindraje"));
+                                        controlador_Imagenes3= 1;
+                                    }
+                                }
+                                if (documentSnapshot.contains("tipo")) {
+                                    if (contadorimgView == 1){
+                                        txtMotorvalor1.setText(documentSnapshot.getString("tipo"));
+                                    } else if (contadorimgView == 2) {
+                                        txtMotorvalor2.setText(documentSnapshot.getString("tipo"));
+                                    }else if (contadorimgView == 3) {
+                                        txtMotorvalor3.setText(documentSnapshot.getString("tipo"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("maxtorque")) {
+                                    if (contadorimgView == 1){
+                                        txtTorqueValor1.setText(documentSnapshot.getString("maxtorque"));
+                                    } else if (contadorimgView == 2) {
+                                        txtTorqueValor2.setText(documentSnapshot.getString("maxtorque"));
+                                    }else if (contadorimgView == 3) {
+                                        txtTorqueValor3.setText(documentSnapshot.getString("maxtorque"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("alimentacion")) {
+                                    if (contadorimgView == 1){
+                                        txtAlimentacionValor1.setText(documentSnapshot.getString("alimentacion"));
+                                    } else if (contadorimgView == 2) {
+                                        txtAlimentacionValor2.setText(documentSnapshot.getString("alimentacion"));
+                                    }else if (contadorimgView == 3) {
+                                        txtAlimentacionValor3.setText(documentSnapshot.getString("alimentacion"));
+                                    }
+                                }else {
+                                    if (contadorimgView == 1){
+                                        txtAlimentacionValor1.setText("N/A");
+                                    } else if (contadorimgView == 2) {
+                                        txtAlimentacionValor2.setText("N/A");
+                                    }else if (contadorimgView == 3) {
+                                        txtAlimentacionValor3.setText("N/A");
+                                    }
+                                }
+                                if (documentSnapshot.contains("cajadecambios")) {
+                                    if (contadorimgView == 1){
+                                        txtTransmisionValor1.setText(documentSnapshot.getString("cajadecambios"));
+                                    } else if (contadorimgView == 2) {
+                                        txtTransmisionValor2.setText(documentSnapshot.getString("cajadecambios"));
+                                    }else if (contadorimgView == 3) {
+                                        txtTransmisionValor3.setText(documentSnapshot.getString("cajadecambios"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("delantera")) {
+                                    if (contadorimgView == 1){
+                                        txtSuspensionDelanValor1.setText(documentSnapshot.getString("delantera"));
+                                    } else if (contadorimgView == 2) {
+                                        txtSuspensionDelanValor2.setText(documentSnapshot.getString("delantera"));
+                                    }else if (contadorimgView == 3) {
+                                        txtSuspensionDelanValor3.setText(documentSnapshot.getString("delantera"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("trasera")) {
+                                    if (contadorimgView == 1){
+                                        txtSuspensionTrasValor1.setText(documentSnapshot.getString("trasera"));
+                                    } else if (contadorimgView == 2) {
+                                        txtSuspensionTrasValor2.setText(documentSnapshot.getString("trasera"));
+                                    }else if (contadorimgView == 3) {
+                                        txtSuspensionTrasValor3.setText(documentSnapshot.getString("trasera"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("delanteros")) {
+                                    if (contadorimgView == 1){
+                                        txtFrenoDelanValor1.setText(documentSnapshot.getString("delanteros"));
+                                    } else if (contadorimgView == 2) {
+                                        txtFrenoDelanValor1.setText(documentSnapshot.getString("delanteros"));
+                                    }else if (contadorimgView == 3) {
+                                        txtFrenoDelanValor1.setText(documentSnapshot.getString("delanteros"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("traseros")) {
+                                    if (contadorimgView == 1){
+                                        txtFrenoTrasValor1.setText(documentSnapshot.getString("traseros"));
+                                    } else if (contadorimgView == 2) {
+                                        txtFrenoTrasValor2.setText(documentSnapshot.getString("traseros"));
+                                    }else if (contadorimgView == 3) {
+                                        txtFrenoTrasValor3.setText(documentSnapshot.getString("traseros"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("capacidaddeltanquedegasolina")) {
+                                    if (contadorimgView == 1){
+                                        txtTanqueValor1.setText(documentSnapshot.getString("capacidaddeltanquedegasolina"));
+                                    } else if (contadorimgView == 2) {
+                                        txtTanqueValor2.setText(documentSnapshot.getString("capacidaddeltanquedegasolina"));
+                                    }else if (contadorimgView == 3) {
+                                        txtTanqueValor3.setText(documentSnapshot.getString("capacidaddeltanquedegasolina"));
+                                    }
+                                }
+                                if (!documentSnapshot.contains("refrigeracion")) {
+                                    if (contadorimgView == 1){
+                                        txtRefrigeracionMoto1.setVisibility(View.GONE);
+                                        txtRefrigeracionValor1.setVisibility(View.GONE);
+                                    } else if (contadorimgView == 2) {
+                                        txtRefrigeracionMoto2.setVisibility(View.GONE);
+                                        txtRefrigeracionValor2.setVisibility(View.GONE);
+                                    }else if (contadorimgView == 3) {
+                                        txtRefrigeracionMoto3.setVisibility(View.GONE);
+                                        txtRefrigeracionValor3.setVisibility(View.GONE);
+                                    }
+                                }
+                                if (documentSnapshot.contains("pesosincarga")) {
+                                    if (contadorimgView == 1){
+                                        txtPesoValor1.setText(documentSnapshot.getString("pesosincarga"));
+                                    } else if (contadorimgView == 2) {
+                                        txtPesoValor2.setText(documentSnapshot.getString("pesosincarga"));
+                                    }else if (contadorimgView == 3) {
+                                        txtPesoValor3.setText(documentSnapshot.getString("pesosincarga"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("nuevoValorDescuento")) {
+                                    int precio = Integer.parseInt(documentSnapshot.get("nuevoValorDescuento").toString());
+                                    DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+                                    symbols.setGroupingSeparator('.');
+                                    symbols.setDecimalSeparator(',');
+                                    DecimalFormat formato = new DecimalFormat("#,###", symbols);
+                                    String numeroFormato = formato.format(precio);
+                                    if (contadorimgView == 1){
+                                        txtPrecioValor1.setText("$" + numeroFormato);
+                                    } else if (contadorimgView == 2) {
+                                        txtPrecioValor2.setText("$" + numeroFormato);
+                                    }else if (contadorimgView == 3) {
+                                        txtPrecioValor3.setText("$" + numeroFormato);
+                                    }
+                                }
+                                break;
+                            case "HONDA":
+                                if (documentSnapshot.contains("cilindraje")) {
+                                    if (contadorimgView == 1){
+                                        txtCilindrajevalor1.setText(documentSnapshot.getString("cilindraje"));
+                                        controlador_Imagenes1 = 1;
+                                    } else if (contadorimgView == 2) {
+                                        txtCilindrajevalor2.setText(documentSnapshot.getString("cilindraje"));
+                                        controlador_Imagenes2 = 1;
+                                    }else if (contadorimgView == 3) {
+                                        txtCilindrajevalor3.setText(documentSnapshot.getString("cilindraje"));
+                                        controlador_Imagenes3= 1;
+                                    }
+                                }
+                                if (documentSnapshot.contains("tipodemotor")) {
+                                    if (contadorimgView == 1){
+                                        txtMotorvalor1.setText(documentSnapshot.getString("tipodemotor"));
+                                    } else if (contadorimgView == 2) {
+                                        txtMotorvalor2.setText(documentSnapshot.getString("tipodemotor"));
+                                    }else if (contadorimgView == 3) {
+                                        txtMotorvalor3.setText(documentSnapshot.getString("tipodemotor"));
+                                    }
+                                }
+                                if (!documentSnapshot.contains("refrigeracion")) {
+                                    if (contadorimgView == 1){
+                                        txtRefrigeracionMoto1.setVisibility(View.GONE);
+                                        txtRefrigeracionValor1.setVisibility(View.GONE);
+                                    } else if (contadorimgView == 2) {
+                                        txtRefrigeracionMoto2.setVisibility(View.GONE);
+                                        txtRefrigeracionValor2.setVisibility(View.GONE);
+                                    }else if (contadorimgView == 3) {
+                                        txtRefrigeracionMoto3.setVisibility(View.GONE);
+                                        txtRefrigeracionValor3.setVisibility(View.GONE);
+                                    }
+                                }
+                                if (documentSnapshot.contains("torquemaximo")) {
+                                    if (contadorimgView == 1){
+                                        txtTorqueValor1.setText(documentSnapshot.getString("torquemaximo"));
+                                    } else if (contadorimgView == 2) {
+                                        txtTorqueValor2.setText(documentSnapshot.getString("torquemaximo"));
+                                    }else if (contadorimgView == 3) {
+                                        txtTorqueValor3.setText(documentSnapshot.getString("torquemaximo"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("alimentacion")) {
+                                    if (contadorimgView == 1){
+                                        txtAlimentacionValor1.setText(documentSnapshot.getString("alimentacion"));
+                                    } else if (contadorimgView == 2) {
+                                        txtAlimentacionValor2.setText(documentSnapshot.getString("alimentacion"));
+                                    }else if (contadorimgView == 3) {
+                                        txtAlimentacionValor3.setText(documentSnapshot.getString("alimentacion"));
+                                    }
+                                }else {
+                                    if (contadorimgView == 1){
+                                        txtAlimentacionValor1.setText("N/A");
+                                    } else if (contadorimgView == 2) {
+                                        txtAlimentacionValor2.setText("N/A");
+                                    }else if (contadorimgView == 3) {
+                                        txtAlimentacionValor3.setText("N/A");
+                                    }
+                                }
+                                if (documentSnapshot.contains("tipodetransmision")) {
+                                    if (contadorimgView == 1){
+                                        txtTransmisionValor1.setText(documentSnapshot.getString("tipodetransmision"));
+                                    } else if (contadorimgView == 2) {
+                                        txtTransmisionValor2.setText(documentSnapshot.getString("tipodetransmision"));
+                                    }else if (contadorimgView == 3) {
+                                        txtTransmisionValor3.setText(documentSnapshot.getString("tipodetransmision"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("tipodesuspensiondelantera")) {
+                                    if (contadorimgView == 1){
+                                        txtSuspensionDelanValor1.setText(documentSnapshot.getString("tipodesuspensiondelantera"));
+                                    } else if (contadorimgView == 2) {
+                                        txtSuspensionDelanValor2.setText(documentSnapshot.getString("tipodesuspensiondelantera"));
+                                    }else if (contadorimgView == 3) {
+                                        txtSuspensionDelanValor3.setText(documentSnapshot.getString("tipodesuspensiondelantera"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("tipodesuspensiontrasera")) {
+                                    if (contadorimgView == 1){
+                                        txtSuspensionTrasValor1.setText(documentSnapshot.getString("tipodesuspensiontrasera"));
+                                    } else if (contadorimgView == 2) {
+                                        txtSuspensionTrasValor2.setText(documentSnapshot.getString("tipodesuspensiontrasera"));
+                                    }else if (contadorimgView == 3) {
+                                        txtSuspensionTrasValor3.setText(documentSnapshot.getString("tipodesuspensiontrasera"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("frenodelantero")) {
+                                    if (contadorimgView == 1){
+                                        txtFrenoDelanValor1.setText(documentSnapshot.getString("frenodelantero"));
+                                    } else if (contadorimgView == 2) {
+                                        txtFrenoDelanValor1.setText(documentSnapshot.getString("frenodelantero"));
+                                    }else if (contadorimgView == 3) {
+                                        txtFrenoDelanValor1.setText(documentSnapshot.getString("frenodelantero"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("frenotrasero")) {
+                                    if (contadorimgView == 1){
+                                        txtFrenoTrasValor1.setText(documentSnapshot.getString("frenotrasero"));
+                                    } else if (contadorimgView == 2) {
+                                        txtFrenoTrasValor2.setText(documentSnapshot.getString("frenotrasero"));
+                                    }else if (contadorimgView == 3) {
+                                        txtFrenoTrasValor3.setText(documentSnapshot.getString("frenotrasero"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("capacidaddeltanquedegasolina")) {
+                                    if (contadorimgView == 1){
+                                        txtTanqueValor1.setText(documentSnapshot.getString("capacidaddeltanquedegasolina"));
+                                    } else if (contadorimgView == 2) {
+                                        txtTanqueValor2.setText(documentSnapshot.getString("capacidaddeltanquedegasolina"));
+                                    }else if (contadorimgView == 3) {
+                                        txtTanqueValor3.setText(documentSnapshot.getString("capacidaddeltanquedegasolina"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("peso")) {
+                                    if (contadorimgView == 1){
+                                        txtPesoValor1.setText(documentSnapshot.getString("peso"));
+                                    } else if (contadorimgView == 2) {
+                                        txtPesoValor2.setText(documentSnapshot.getString("peso"));
+                                    }else if (contadorimgView == 3) {
+                                        txtPesoValor3.setText(documentSnapshot.getString("peso"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("nuevoValorDescuento")) {
+                                    int precio = Integer.parseInt(documentSnapshot.get("nuevoValorDescuento").toString());
+                                    DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+                                    symbols.setGroupingSeparator('.');
+                                    symbols.setDecimalSeparator(',');
+                                    DecimalFormat formato = new DecimalFormat("#,###", symbols);
+                                    String numeroFormato = formato.format(precio);
+                                    if (contadorimgView == 1){
+                                        txtPrecioValor1.setText("$" + numeroFormato);
+                                    } else if (contadorimgView == 2) {
+                                        txtPrecioValor2.setText("$" + numeroFormato);
+                                    }else if (contadorimgView == 3) {
+                                        txtPrecioValor3.setText("$" + numeroFormato);
+                                    }
+                                }
+                                break;
+                            case "SUZUKI":
+                                if (documentSnapshot.contains("cilindraje")) {
+                                    if (contadorimgView == 1){
+                                        txtCilindrajevalor1.setText(documentSnapshot.getString("cilindraje"));
+                                        controlador_Imagenes1 = 1;
+                                    } else if (contadorimgView == 2) {
+                                        txtCilindrajevalor2.setText(documentSnapshot.getString("cilindraje"));
+                                        controlador_Imagenes2 = 1;
+                                    }else if (contadorimgView == 3) {
+                                        txtCilindrajevalor3.setText(documentSnapshot.getString("cilindraje"));
+                                        controlador_Imagenes3= 1;
+                                    }
+                                }
+                                if (documentSnapshot.contains("motor")) {
+                                    if (contadorimgView == 1){
+                                        txtMotorvalor1.setText(documentSnapshot.getString("motor"));
+                                    } else if (contadorimgView == 2) {
+                                        txtMotorvalor2.setText(documentSnapshot.getString("motor"));
+                                    }else if (contadorimgView == 3) {
+                                        txtMotorvalor3.setText(documentSnapshot.getString("motor"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("torque")) {
+                                    if (contadorimgView == 1){
+                                        txtTorqueValor1.setText(documentSnapshot.getString("torque"));
+                                    } else if (contadorimgView == 2) {
+                                        txtTorqueValor2.setText(documentSnapshot.getString("torque"));
+                                    }else if (contadorimgView == 3) {
+                                        txtTorqueValor3.setText(documentSnapshot.getString("torque"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("sistemaderefrigeracion")) {
+                                    if (contadorimgView == 1){
+                                        txtRefrigeracionValor1.setText(documentSnapshot.getString("sistemaderefrigeracion"));
+                                        txtRefrigeracionMoto1.setVisibility(View.VISIBLE);
+                                        txtRefrigeracionValor1.setVisibility(View.VISIBLE);
+                                    } else if (contadorimgView == 2) {
+                                        txtRefrigeracionValor2.setText(documentSnapshot.getString("sistemaderefrigeracion"));
+                                        txtRefrigeracionMoto2.setVisibility(View.VISIBLE);
+                                        txtRefrigeracionValor2.setVisibility(View.VISIBLE);
+                                    }else if (contadorimgView == 3) {
+                                        txtRefrigeracionMoto3.setVisibility(View.VISIBLE);
+                                        txtRefrigeracionValor3.setVisibility(View.VISIBLE);
+                                        txtRefrigeracionValor3.setText(documentSnapshot.getString("sistemaderefrigeracion"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("sistemadealimentaciondecombustible")) {
+                                    if (contadorimgView == 1){
+                                        txtAlimentacionValor1.setText(documentSnapshot.getString("sistemadealimentaciondecombustible"));
+                                    } else if (contadorimgView == 2) {
+                                        txtAlimentacionValor2.setText(documentSnapshot.getString("sistemadealimentaciondecombustible"));
+                                    }else if (contadorimgView == 3) {
+                                        txtAlimentacionValor3.setText(documentSnapshot.getString("sistemadealimentaciondecombustible"));
+                                    }
+                                }else {
+                                    if (contadorimgView == 1){
+                                        txtAlimentacionValor1.setText("N/A");
+                                    } else if (contadorimgView == 2) {
+                                        txtAlimentacionValor2.setText("N/A");
+                                    }else if (contadorimgView == 3) {
+                                        txtAlimentacionValor3.setText("N/A");
+                                    }
+                                }
+                                if (documentSnapshot.contains("transmision")) {
+                                    if (contadorimgView == 1){
+                                        txtTransmisionValor1.setText(documentSnapshot.getString("transmision"));
+                                    } else if (contadorimgView == 2) {
+                                        txtTransmisionValor2.setText(documentSnapshot.getString("transmision"));
+                                    }else if (contadorimgView == 3) {
+                                        txtTransmisionValor3.setText(documentSnapshot.getString("transmision"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("suspensiondelantera")) {
+                                    if (contadorimgView == 1){
+                                        txtSuspensionDelanValor1.setText(documentSnapshot.getString("suspensiondelantera"));
+                                    } else if (contadorimgView == 2) {
+                                        txtSuspensionDelanValor2.setText(documentSnapshot.getString("suspensiondelantera"));
+                                    }else if (contadorimgView == 3) {
+                                        txtSuspensionDelanValor3.setText(documentSnapshot.getString("suspensiondelantera"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("suspensiontrasera")) {
+                                    if (contadorimgView == 1){
+                                        txtSuspensionTrasValor1.setText(documentSnapshot.getString("suspensiontrasera"));
+                                    } else if (contadorimgView == 2) {
+                                        txtSuspensionTrasValor2.setText(documentSnapshot.getString("suspensiontrasera"));
+                                    }else if (contadorimgView == 3) {
+                                        txtSuspensionTrasValor3.setText(documentSnapshot.getString("suspensiontrasera"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("frenodelantero")) {
+                                    if (contadorimgView == 1){
+                                        txtFrenoDelanValor1.setText(documentSnapshot.getString("frenodelantero"));
+                                    } else if (contadorimgView == 2) {
+                                        txtFrenoDelanValor1.setText(documentSnapshot.getString("frenodelantero"));
+                                    }else if (contadorimgView == 3) {
+                                        txtFrenoDelanValor1.setText(documentSnapshot.getString("frenodelantero"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("frenotrasero")) {
+                                    if (contadorimgView == 1){
+                                        txtFrenoTrasValor1.setText(documentSnapshot.getString("frenotrasero"));
+                                    } else if (contadorimgView == 2) {
+                                        txtFrenoTrasValor2.setText(documentSnapshot.getString("frenotrasero"));
+                                    }else if (contadorimgView == 3) {
+                                        txtFrenoTrasValor3.setText(documentSnapshot.getString("frenotrasero"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("capacidadtanque")) {
+                                    if (contadorimgView == 1){
+                                        txtTanqueValor1.setText(documentSnapshot.getString("capacidadtanque"));
+                                    } else if (contadorimgView == 2) {
+                                        txtTanqueValor2.setText(documentSnapshot.getString("capacidadtanque"));
+                                    }else if (contadorimgView == 3) {
+                                        txtTanqueValor3.setText(documentSnapshot.getString("capacidadtanque"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("pesoenseco")) {
+                                    if (contadorimgView == 1){
+                                        txtPesoValor1.setText(documentSnapshot.getString("pesoenseco"));
+                                    } else if (contadorimgView == 2) {
+                                        txtPesoValor2.setText(documentSnapshot.getString("pesoenseco"));
+                                    }else if (contadorimgView == 3) {
+                                        txtPesoValor3.setText(documentSnapshot.getString("pesoenseco"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("nuevoValorDescuento")) {
+                                    int precio = Integer.parseInt(documentSnapshot.get("nuevoValorDescuento").toString());
+                                    DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+                                    symbols.setGroupingSeparator('.');
+                                    symbols.setDecimalSeparator(',');
+                                    DecimalFormat formato = new DecimalFormat("#,###", symbols);
+                                    String numeroFormato = formato.format(precio);
+                                    if (contadorimgView == 1){
+                                        txtPrecioValor1.setText("$" + numeroFormato);
+                                    } else if (contadorimgView == 2) {
+                                        txtPrecioValor2.setText("$" + numeroFormato);
+                                    }else if (contadorimgView == 3) {
+                                        txtPrecioValor3.setText("$" + numeroFormato);
+                                    }
+                                }
+                                break;
                         }
                     }
                 }
@@ -770,12 +1184,12 @@ public class SlideshowFragment extends Fragment {
 
     private void mostrarTextos(int controlador) {
         cdlImagenfondo.setBackgroundColor(Color.WHITE);
-        nscImagenfondo.setBackgroundColor(Color.WHITE);
+        imgImagenfondo.setVisibility(View.GONE);
         viewRaya1.setVisibility(View.VISIBLE);
         viewRaya2.setVisibility(View.VISIBLE);
         if (controlador == 0) {
             cdlImagenfondo.setBackgroundResource(imagenFondo1);
-            nscImagenfondo.setBackgroundResource(imagenFondo2);
+            imgImagenfondo.setVisibility(View.VISIBLE);
             viewRaya1.setVisibility(View.GONE);
             viewRaya2.setVisibility(View.GONE);
             txtCilindrajeMoto1.setVisibility(View.GONE);

@@ -76,7 +76,6 @@ public class WebScraping {
     List<String> precioMoto = new ArrayList<>();
     List<String> imagenesColorPrincipal = new ArrayList<>();
     List<String> coloresLista = new ArrayList<>();
-
     List<String> imagenesColores1 = new ArrayList<>();
     List<String> imagenesColores2 = new ArrayList<>();
     List<String> imagenesColores3 = new ArrayList<>();
@@ -89,10 +88,6 @@ public class WebScraping {
     List<File> files4 = new ArrayList<>();
     List<File> files5 = new ArrayList<>();
     List<File> files6 = new ArrayList<>();
-    List<File> files7 = new ArrayList<>();
-    List<File> files8 = new ArrayList<>();
-
-
     String id = "";
     String url = "";
     String modelo = "";
@@ -105,7 +100,7 @@ public class WebScraping {
     List<String> prueba = new ArrayList<>();
     List<String> urls = new ArrayList<>();
     Context context;
-    List<File> ImagenesAdd = new ArrayList<>();
+    List<File> imagenesAdd = new ArrayList<>();
 
     File imagen1 = new File("");
     File imagen2 = new File("");
@@ -115,40 +110,16 @@ public class WebScraping {
     File imagen6 = new File("");
     File imagen7 = new File("");
     File imagen8 = new File("");
-
-    File colorImagen1 = new File("");
-    File colorImagen2 = new File("");
-    File colorImagen3 = new File("");
-    File colorImagen4 = new File("");
-    File colorImagen5 = new File("");
-    File colorImagen6 = new File("");
-    File colorImagen7 = new File("");
-    File colorImagen8 = new File("");
-    List<String> motosConDescuentoNombre = new ArrayList<>();
     ArrayList<String> imagenesColores = new ArrayList<>();
     List<String> recuperarImagenes = new ArrayList<>();
-
     PostProvider mpostProvider = new PostProvider();
     ImageProvider mImageProvider = new ImageProvider();
-
-    List<Integer> precioAnterior = new ArrayList<>();
-    List<Integer> precioAnterior2 = new ArrayList<>();
-
     Elements colorPrincipalDiv;
     Elements liElements;
     Element liElement;
     Elements divElements;
     Elements color;
     Document doc = null;
-
-    String urlColor1 = "";
-    String urlColor2 = "";
-    String urlColor3 = "";
-    String urlColor4 = "";
-    String urlColor5 = "";
-    String urlColor6 = "";
-    String urlColor7 = "";
-    String urlColor8 = "";
     int contador = 0;
     //endregion
 
@@ -173,7 +144,7 @@ public class WebScraping {
 
     //region ACTUALIZADOR DE PRECIOS
 
-    public void PreciosAutecoTVS() {
+    private void preciosAutecoTVS() {
 
         try {
             List<String> url = new ArrayList<>();
@@ -203,7 +174,7 @@ public class WebScraping {
         }
     }
 
-    public void PreciosYamaha() {
+    private void preciosYamaha() {
         try {
             List<String> url = new ArrayList<>();
             url.add("https://www.incolmotos-yamaha.com.co/vehiculo/mt152024-2/25495/");
@@ -282,7 +253,7 @@ public class WebScraping {
             Log.e("MainActivity", "Error al obtener el nombre de la moto: " + e.getMessage());
         }
     }
-    public void PreciosHERO() {
+    private void preciosHERO() {
         try {
             List<String> url = new ArrayList<>();
             url.add("https://heromotos.com.co/trabajo/");
@@ -323,7 +294,7 @@ public class WebScraping {
             Log.e("MainActivity", "Error al obtener el nombre de la moto: " + e.getMessage());
         }
     }
-    public void PreciosSUZUKI() {
+    private void preciosSUZUKI() {
         try {
             List<String> url = new ArrayList<>();
             List<Integer> motosConDescuentoIndice = new ArrayList<>();
@@ -374,80 +345,64 @@ public class WebScraping {
         }
     }
 
-//    public void PreciosHONDA() {
-//        try {
-//            List<String> url = new ArrayList<>();
-//            List<Integer> motosConDescuentoIndice = new ArrayList<>();
-//
-//            url.add("https://motos.honda.com.co/motos-honda/motos-sport/CB-100");
-//            url.add("https://motos.honda.com.co/motos-honda/motos-sport/CB-125F");
-//            url.add("https://motos.honda.com.co/motos-honda/motos-sport/CB-125F-DLX");
-//            url.add("https://motos.honda.com.co/motos-honda/motos-sport/XBLADE-160");
-//            url.add("https://motos.honda.com.co/motos-honda/motos-sport/CB-190-R");
-//            url.add("https://motos.honda.com.co/motos-honda/motos-sport/CB-190-R-Tricolor");
-//            url.add("https://motos.honda.com.co/motos-honda/motos-sport/CB-190-REPSOL");
-//            url.add("https://motos.honda.com.co/motos-honda/motos-sport/CB-300F");
-//            url.add("https://motos.honda.com.co/motos-honda/motos-sport/CB-1000R");
-//            url.add("https://motos.honda.com.co/motos-honda/super-sport/CBR-650R");
-//            url.add("https://motos.honda.com.co/motos-honda/todo-terreno/XR-150L");
-//            url.add("https://motos.honda.com.co/motos-honda/todo-terreno/XR-190L");
-//            url.add("https://motos.honda.com.co/motos-honda/todo-terreno/xre-300-abs-std");
-//            url.add("https://motos.honda.com.co/motos-honda/todo-terreno/xre-300-abs-dlx");
-//            url.add("https://motos.honda.com.co/motos-honda/scooter-y-semiautomatica/DIO-LED-STD");
-//            url.add("https://motos.honda.com.co/motos-honda/scooter-y-semiautomatica/WAVE-110S");
-//            url.add("https://motos.honda.com.co/motos-honda/scooter-y-semiautomatica/DIO-LED-DLX");
-//            url.add("https://motos.honda.com.co/motos-honda/scooter-y-semiautomatica/pcx-160?q=motos-honda/scooter-y-semiautomatica/PCX-150");
-//            url.add("https://motos.honda.com.co/motos-honda/scooter-y-semiautomatica/pcx-160?q=motos-honda/scooter-y-semiautomatica/PCX-150-DLX");
-//            url.add("https://motos.honda.com.co/motos-honda/scooter-y-semiautomatica/PCX-160");
-//            url.add("https://motos.honda.com.co/motos-honda/NAVI/NAVI");
-//            url.add("https://motos.honda.com.co/motos-honda/NAVI/navi-mix");
-//            url.add("https://motos.honda.com.co/motos-honda/NAVI/NAVI-RALLY");
-//            url.add("https://motos.honda.com.co/motos-honda/NAVI/NAVI-ADVENTURE");
-//            url.add("https://motos.honda.com.co/motos-honda/aventura/NX-500");
-//            url.add("https://motos.honda.com.co/motos-honda/aventura/CB-500X");
-//            url.add("https://motos.honda.com.co/motos-honda/aventura/NC-750XD");
-//            url.add("https://motos.honda.com.co/motos-honda/aventura/AFRICA-TWIN-CRF-1100L");
-//            url.add("https://motos.honda.com.co/motos-honda/aventura/africa-twin-adventure-sports");
-//            url.add("https://motos.honda.com.co/motos-honda/aventura/AFRICA-TWIN-ADVENTURE-SPORTS-SE");
-//            url.add("https://motos.honda.com.co/motos-honda/custom/CMX-500");
-//
-//            for (int i = 0; i < url.size(); i++) {
-//                doc = Jsoup.connect(url.get(i)).get();
-//
-//                Elements NombreMotoYPrecio = doc.select("div.col-md-12.col-lg-12.col-sm-12.col-xs-12.content");
-//                if (NombreMotoYPrecio != null) {
-//
-//                    Elements nombremotos = NombreMotoYPrecio.select("h4.text-uppercase.text-center");
-//                    Elements pElements = NombreMotoYPrecio.select("h4.text-uppercase.text-center, p.precio, p.precio-antes");
-//
-//                    String info = "";
-//                    for (Element pElement : pElements) {
-//                        // Obtén el texto del elemento <h5>
-//                        if (pElement.hasClass("text-uppercase text-center")) {
-//                            nombresMotos.add(pElement.text());
-//                        }
-//                        else if (pElement.hasClass("precio")) {
-//                            // Agregar a la lista de elementos con clase 'precio-antes'
-//                            info = pElement.text().replace(" IVA Incluido","");
-//                            precioMoto.add(info.replace(",","."));
-//                        }
-//                        else if (pElement.hasClass("precio-antes")) {
-//                            // Agregar a la lista de elementos con clase 'precio'
-//                            int ultimoDato = nombresMotos.size() - 1;
-//                            info = pElement.text().replace(" IVA Incluido","");
-//                            precioMoto.add(info.replace(",","."));
-//                            String ultimoNombreMoto = nombresMotos.get(ultimoDato);
-//                            nombresMotos.add(ultimoNombreMoto);
-//                            motosConDescuentoIndice.add(precioMoto.size());
-//                        }
-//                    }//cambiar las comas por puntos.
-//                }
-//            }
-//        } catch (IOException e) {
-//            Log.e("MainActivity", "Error al obtener el nombre de la moto: " + e.getMessage());
-//        }
-//        guardarPreciosenFirebase();
-//    }
+    private void preciosHONDA() {
+        try {
+            List<String> url = new ArrayList<>();
+            List<Integer> motosConDescuentoIndice = new ArrayList<>();
+
+            url.add("https://motos.honda.com.co/motos-honda/motos-sport/CB-100");
+            url.add("https://motos.honda.com.co/motos-honda/motos-sport/CB-125F");
+            url.add("https://motos.honda.com.co/motos-honda/motos-sport/CB-125F-DLX");
+            url.add("https://motos.honda.com.co/motos-honda/motos-sport/XBLADE-160");
+            url.add("https://motos.honda.com.co/motos-honda/motos-sport/CB-190-R");
+            url.add("https://motos.honda.com.co/motos-honda/motos-sport/CB-190-R-Tricolor");
+            url.add("https://motos.honda.com.co/motos-honda/motos-sport/CB-190-REPSOL");
+            url.add("https://motos.honda.com.co/motos-honda/motos-sport/CB-300F");
+            url.add("https://motos.honda.com.co/motos-honda/motos-sport/CB-1000R");
+            url.add("https://motos.honda.com.co/motos-honda/super-sport/CBR-650R");
+            url.add("https://motos.honda.com.co/motos-honda/todo-terreno/XR-150L");
+            url.add("https://motos.honda.com.co/motos-honda/todo-terreno/XR-190L");
+            url.add("https://motos.honda.com.co/motos-honda/todo-terreno/xre-300-abs-std");
+            url.add("https://motos.honda.com.co/motos-honda/todo-terreno/xre-300-abs-dlx");
+            url.add("https://motos.honda.com.co/motos-honda/scooter-y-semiautomatica/DIO-LED-STD");
+            url.add("https://motos.honda.com.co/motos-honda/scooter-y-semiautomatica/WAVE-110S");
+            url.add("https://motos.honda.com.co/motos-honda/scooter-y-semiautomatica/DIO-LED-DLX");
+            url.add("https://motos.honda.com.co/motos-honda/scooter-y-semiautomatica/pcx-160?q=motos-honda/scooter-y-semiautomatica/PCX-150");
+            url.add("https://motos.honda.com.co/motos-honda/scooter-y-semiautomatica/pcx-160?q=motos-honda/scooter-y-semiautomatica/PCX-150-DLX");
+            url.add("https://motos.honda.com.co/motos-honda/scooter-y-semiautomatica/PCX-160");
+            url.add("https://motos.honda.com.co/motos-honda/NAVI/NAVI");
+            url.add("https://motos.honda.com.co/motos-honda/NAVI/navi-mix");
+            url.add("https://motos.honda.com.co/motos-honda/NAVI/NAVI-RALLY");
+            url.add("https://motos.honda.com.co/motos-honda/NAVI/NAVI-ADVENTURE");
+            url.add("https://motos.honda.com.co/motos-honda/aventura/NX-500");
+            url.add("https://motos.honda.com.co/motos-honda/aventura/CB-500X");
+            url.add("https://motos.honda.com.co/motos-honda/aventura/NC-750XD");
+            url.add("https://motos.honda.com.co/motos-honda/aventura/AFRICA-TWIN-CRF-1100L");
+            url.add("https://motos.honda.com.co/motos-honda/aventura/africa-twin-adventure-sports");
+            url.add("https://motos.honda.com.co/motos-honda/aventura/AFRICA-TWIN-ADVENTURE-SPORTS-SE");
+            url.add("https://motos.honda.com.co/motos-honda/custom/CMX-500");
+
+            for (int i = 0; i < url.size(); i++) {
+                doc = Jsoup.connect(url.get(i)).get();
+
+                Elements NombreMotoYPrecio = doc.select("h1.t1TitleMoto.moto-title-color");
+                Element PreciosMoto = doc.selectFirst("div.price.1");
+
+                if (NombreMotoYPrecio != null) {
+                    if (PreciosMoto != null) {
+                        String infoPrecio = PreciosMoto.text();
+                        precioMoto.add(infoPrecio.replace(",","."));
+                        for (Element h1Element : NombreMotoYPrecio) {
+                            nombresMotos.add(h1Element.text());
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            Log.e("MainActivity", "Error al obtener el nombre de la moto: " + e.getMessage());
+        }
+        guardarPreciosenFirebase();
+    }
 
 
     private void guardarPreciosenFirebase() {
@@ -598,11 +553,11 @@ public class WebScraping {
     //region DIRECCIONADOR POR FABRICANTE
 
     public void direccionamientoxFabricantePrecios() {
-        PreciosAutecoTVS();
-        PreciosYamaha();
-        PreciosHERO();
-        PreciosSUZUKI();
-        //PreciosHONDA();
+        preciosAutecoTVS();
+        preciosYamaha();
+        preciosHERO();
+        preciosSUZUKI();
+        preciosHONDA();
     }
 
     public void direccionamientoxFabricante(String fabricante) {
@@ -616,6 +571,8 @@ public class WebScraping {
             llenarInfoSUZUKI();
         }else if (fabricante.equals("HONDA")) {
             llenarInfoHONDA();
+        }else if (fabricante.equals("KAWASAKI")) {
+            llenarInfoBAJAJ();
         }
     }
 
@@ -623,7 +580,7 @@ public class WebScraping {
 
     //region PROCESO DE AUTECO
 
-    public void llenarInfoAuteco() {
+    private void llenarInfoAuteco() {
         nombreMoto.clear();
         try {
             //conexion
@@ -911,23 +868,23 @@ public class WebScraping {
                                 .submit();
 
                         if (i == 0) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 1) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 2) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 3) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 4) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 5) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 6) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 7) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 8) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         }
                     } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
@@ -990,7 +947,7 @@ public class WebScraping {
         });
     }
 
-    public static File descargarArchivo(String url) {
+    private static File descargarArchivo(String url) {
         try {
             URL urlObj = new URL(url);
             HttpURLConnection connection = (HttpURLConnection) urlObj.openConnection();
@@ -1217,7 +1174,7 @@ public class WebScraping {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    guardarImagenesAdd(ImagenesAdd);
+                    guardarImagenesAdd(imagenesAdd);
                 } else {
                     Toast.makeText(context, "Hubo un error al almacenar la imagen", Toast.LENGTH_LONG).show();
                 }
@@ -2243,7 +2200,7 @@ public class WebScraping {
     //endregion
 
     //region PROCESO DE YAMAHA
-    public void llenarInfoYamaha() {
+    private void llenarInfoYamaha() {
         nombreMoto.clear();
         try {
             //conexion
@@ -2405,7 +2362,7 @@ public class WebScraping {
             }
 
             if (imagenesAdicionales.size() >= 2) {
-                ImagenesAdd.clear();
+                imagenesAdd.clear();
                 imagenesColores.clear();
                 for (int i = 0; i < imagenesAdicionales.size(); i++) {
                     Element imagen = imagenesAdicionales.get(i);
@@ -2430,23 +2387,23 @@ public class WebScraping {
                                 .submit();
 
                         if (i == 0) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 1) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 2) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 3) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 4) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 5) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 6) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 7) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 8) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         }
                     } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
@@ -2455,7 +2412,7 @@ public class WebScraping {
             } else {
                 Elements divItems = doc.select("div.items");
                 imagenesColores.clear();
-                ImagenesAdd.clear();
+                imagenesAdd.clear();
 
                 // Iterar sobre cada elemento div con la clase "items"
                 for (Element divItem : divItems) {
@@ -2482,23 +2439,23 @@ public class WebScraping {
                                 .submit();
 
                         if (i == 0) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 1) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 2) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 3) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 4) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 5) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 6) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 7) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 8) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         }
                     } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
@@ -2548,109 +2505,111 @@ public class WebScraping {
     }
 
     //saber el color aproximado
-    public static String getColorName(String colorHexadeximal) {
-        // Convertir el color hexadecimal a RGB
-        int color = Color.parseColor(colorHexadeximal);
-        int r = Color.red(color);
-        int g = Color.green(color);
-        int b = Color.blue(color);
+//    public static String getColorName(String colorHexadeximal) {
+//        // Convertir el color hexadecimal a RGB
+//        int color = Color.parseColor(colorHexadeximal);
+//        int r = Color.red(color);
+//        int g = Color.green(color);
+//        int b = Color.blue(color);
+//
+//        // Asignar nombres aproximados basados en los valores RGB
+//        if (isBlack(r, g, b)) {
+//            return "Negro";
+//        } else if (isWhite(r, g, b)) {
+//            return "Blanco";
+//        } else if (isHueso(r, g, b)) {
+//            return "Blanco";
+//        } else if (isRed(r, g, b)) {
+//            return "Rojo";
+//        } else if (isGreen(r, g, b)) {
+//            return "Verde";
+//        } else if (isDarkGreen(r, g, b)) {
+//            return "Verde Oscuro";
+//        } else if (isBlue(r, g, b)) {
+//            return "Azul";
+//        } else if (isGold(r, g, b)) {
+//            return "Dorado";
+//        } else if (isDarkBlue(r, g, b)) {
+//            return "Azul Oscuro";
+//        } else if (isDarkRed(r, g, b)) {
+//            return "Rojo Oscuro";
+//        } else if (isPurple(r, g, b)) {
+//            return "Morado";
+//        } else if (isYellow(r, g, b)) {
+//            return "Amarillo";
+//        } else if (isSkyBlue(r, g, b)) {
+//            return "Celeste";
+//        }
+//        // Agregar más condiciones según sea necesario para otros colores
+//        // Si el color no coincide con ninguno de los nombres predefinidos, puedes devolver "Desconocido" o algo similar
+//        return "AZUL";
+//    }
+//
+//    private static boolean isBlack(int r, int g, int b) {
+//        return r <= 10 && g <= 10 && b <= 10;
+//    }
+//
+//    private static boolean isWhite(int r, int g, int b) {
+//        return r >= 240 && g >= 240 && b >= 240;
+//    }
+//
+//    private static boolean isHueso(int r, int g, int b) {
+//        return r >= 232 && g >= 232 && b >= 232;
+//    }
+//
+//    private static boolean isRed(int r, int g, int b) {
+//        return r >= 200 && g <= 100 && b <= 100;
+//    }
+//
+//    private static boolean isGreen(int r, int g, int b) {
+//        return r <= 100 && g >= 200 && b <= 100;
+//    }
+//
+//    private static boolean isDarkGreen(int r, int g, int b) {
+//        // Ajusta estos valores según los tonos de azul oscuro que desees reconocer
+//        return r <= 57 && g <= 90 && b >= 86;
+//    }
+//
+//    private static boolean isBlue(int r, int g, int b) {
+//        return r <= 100 && g <= 100 && b >= 200;
+//    }
+//
+//    private static boolean isGold(int r, int g, int b) {
+//        // Ajusta estos valores según los tonos de dorado que desees reconocer
+//        return r >= 160 && g >= 160 && g <= 220 && b <= 56;
+//    }
+//
+//    private static boolean isDarkBlue(int r, int g, int b) {
+//        // Ajusta estos valores según los tonos de azul oscuro que desees reconocer
+//        return r <= 30 && g <= 30 && b >= 100;
+//    }
+//
+//    private static boolean isDarkRed(int r, int g, int b) {
+//        // Ajusta estos valores según los tonos de rojo oscuro que desees reconocer
+//        return r >= 100 && g <= 30 && b <= 30;
+//    }
+//
+//    private static boolean isPurple(int r, int g, int b) {
+//        // Ajusta estos valores según los tonos de morado que desees reconocer
+//        return r >= 100 && g <= 30 && b >= 100;
+//    }
+//
+//    private static boolean isYellow(int r, int g, int b) {
+//        // Ajusta estos valores según los tonos de amarillo que desees reconocer
+//        return r >= 200 && g >= 200 && b <= 50;
+//    }
+//
+//    private static boolean isSkyBlue(int r, int g, int b) {
+//        // Ajustamos los valores para definir el color celeste
+//        return r >= 27 && g >= 180 && b >= 185;
+//    }
 
-        // Asignar nombres aproximados basados en los valores RGB
-        if (isBlack(r, g, b)) {
-            return "Negro";
-        } else if (isWhite(r, g, b)) {
-            return "Blanco";
-        } else if (isHueso(r, g, b)) {
-            return "Blanco";
-        } else if (isRed(r, g, b)) {
-            return "Rojo";
-        } else if (isGreen(r, g, b)) {
-            return "Verde";
-        } else if (isDarkGreen(r, g, b)) {
-            return "Verde Oscuro";
-        } else if (isBlue(r, g, b)) {
-            return "Azul";
-        } else if (isGold(r, g, b)) {
-            return "Dorado";
-        } else if (isDarkBlue(r, g, b)) {
-            return "Azul Oscuro";
-        } else if (isDarkRed(r, g, b)) {
-            return "Rojo Oscuro";
-        } else if (isPurple(r, g, b)) {
-            return "Morado";
-        } else if (isYellow(r, g, b)) {
-            return "Amarillo";
-        } else if (isSkyBlue(r, g, b)) {
-            return "Celeste";
-        }
-        // Agregar más condiciones según sea necesario para otros colores
-        // Si el color no coincide con ninguno de los nombres predefinidos, puedes devolver "Desconocido" o algo similar
-        return "AZUL";
-    }
 
-    private static boolean isBlack(int r, int g, int b) {
-        return r <= 10 && g <= 10 && b <= 10;
-    }
-
-    private static boolean isWhite(int r, int g, int b) {
-        return r >= 240 && g >= 240 && b >= 240;
-    }
-
-    private static boolean isHueso(int r, int g, int b) {
-        return r >= 232 && g >= 232 && b >= 232;
-    }
-
-    private static boolean isRed(int r, int g, int b) {
-        return r >= 200 && g <= 100 && b <= 100;
-    }
-
-    private static boolean isGreen(int r, int g, int b) {
-        return r <= 100 && g >= 200 && b <= 100;
-    }
-
-    private static boolean isDarkGreen(int r, int g, int b) {
-        // Ajusta estos valores según los tonos de azul oscuro que desees reconocer
-        return r <= 57 && g <= 90 && b >= 86;
-    }
-
-    private static boolean isBlue(int r, int g, int b) {
-        return r <= 100 && g <= 100 && b >= 200;
-    }
-
-    private static boolean isGold(int r, int g, int b) {
-        // Ajusta estos valores según los tonos de dorado que desees reconocer
-        return r >= 160 && g >= 160 && g <= 220 && b <= 56;
-    }
-
-    private static boolean isDarkBlue(int r, int g, int b) {
-        // Ajusta estos valores según los tonos de azul oscuro que desees reconocer
-        return r <= 30 && g <= 30 && b >= 100;
-    }
-
-    private static boolean isDarkRed(int r, int g, int b) {
-        // Ajusta estos valores según los tonos de rojo oscuro que desees reconocer
-        return r >= 100 && g <= 30 && b <= 30;
-    }
-
-    private static boolean isPurple(int r, int g, int b) {
-        // Ajusta estos valores según los tonos de morado que desees reconocer
-        return r >= 100 && g <= 30 && b >= 100;
-    }
-
-    private static boolean isYellow(int r, int g, int b) {
-        // Ajusta estos valores según los tonos de amarillo que desees reconocer
-        return r >= 200 && g >= 200 && b <= 50;
-    }
-
-    private static boolean isSkyBlue(int r, int g, int b) {
-        // Ajustamos los valores para definir el color celeste
-        return r >= 27 && g >= 180 && b >= 185;
-    }
 //endregion
 
     //region PROCESO DE HERO
 
-    public void llenarInfoHERO() {
+    private void llenarInfoHERO() {
         nombreMoto.clear();
         List<String> h5 = new ArrayList<>();
         List<String> h4 = new ArrayList<>();
@@ -2736,7 +2695,7 @@ public class WebScraping {
                     }
                 }
 
-                borrarpalbrasHero(h5, palabra);
+                borrarpalabrasHero(h5, palabra);
                 words = h4.get(0).split(" ");
                 // Devuelve la primera palabra (si existe)
                 if (words.length > 0) {
@@ -2747,7 +2706,7 @@ public class WebScraping {
                         palabra = words[0];
                     }
                 }
-                borrarpalbrasHero(h4, palabra);
+                borrarpalabrasHero(h4, palabra);
 
 
                 int indice = h4.indexOf("delanteros");
@@ -2988,7 +2947,7 @@ public class WebScraping {
 
     }
 
-    public void borrarpalbrasHero(List<String> list, String prefix) {
+    private void borrarpalabrasHero(List<String> list, String prefix) {
         // Crear un iterator para recorrer la lista
         Iterator<String> iterator = list.iterator();
 
@@ -3008,7 +2967,7 @@ public class WebScraping {
     //region PROCESO DE SUZUKI
 
 
-    public void llenarInfoSUZUKI() {
+    private void llenarInfoSUZUKI() {
         nombreMoto.clear();
         List<String> titulo = new ArrayList<>();
         List<String> contenido = new ArrayList<>();
@@ -3084,7 +3043,7 @@ public class WebScraping {
 
             recuperarImagenes.clear();
             if (!extraerImagenesAdd.isEmpty()) {
-                ImagenesAdd.clear();
+                imagenesAdd.clear();
                 imagenesColores.clear();
                 //obtener las imagenes adicionales
                 Elements imgElements = extraerImagenesAdd.first().select("img");
@@ -3103,23 +3062,23 @@ public class WebScraping {
                                 .submit();
 
                         if (i == 0) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 1) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 2) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 3) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 4) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 5) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 6) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 7) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 8) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         }
                     } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
@@ -3295,7 +3254,7 @@ public class WebScraping {
 
     //region PROCESO DE HONDA
 
-    public void llenarInfoHONDA() {
+    private void llenarInfoHONDA() {
         nombreMoto.clear();
         List<String> titulo = new ArrayList<>();
         List<String> contenido = new ArrayList<>();
@@ -3317,7 +3276,7 @@ public class WebScraping {
                 fichaTecnica = doc.select("section.technical-specifications");
             }
 
-            //Falta la descripcion y el modelo 
+
 
             if (fichaTecnica != null) {
                 // Selecciona el elemento <h5> dentro del div
@@ -3384,7 +3343,7 @@ public class WebScraping {
 
                     // Verificar si la palabra no está vacía (puede haber una coma final)
                     if (!palabra.isEmpty()) {
-                        coloresLista.add(palabra);
+                        coloresLista.add(palabra.toUpperCase());
                     }
                 }
             }
@@ -3493,7 +3452,7 @@ public class WebScraping {
 
 
             if (!imagenesAdicionales.isEmpty()) {
-                ImagenesAdd.clear();
+                imagenesAdd.clear();
                 imagenesColores.clear();
 
                 Elements imgElements = imagenesAdicionales.select("img");
@@ -3552,23 +3511,23 @@ public class WebScraping {
                                 .submit();
 
                         if (i == 0) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 1) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 2) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 3) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 4) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 5) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 6) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 7) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         } else if (i == 8) {
-                            ImagenesAdd.add(futureTarget.get());
+                            imagenesAdd.add(futureTarget.get());
                         }
                     } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
@@ -3665,35 +3624,45 @@ public class WebScraping {
                     .timeout(10000) // Aumentar el timeout a 10 segundos
                     .get();
 
-// Agregar un retraso aleatorio entre 2 y 5 segundos
-            Random random = new Random();
-            int delay = random.nextInt(3000) + 2000; // Retraso aleatorio entre 2 y 5 segundos
 
 
-            Elements FichaTecnica = doc.select("div.wrapper-tabs-description-product");
-
-//            Elements cosasAdd = doc.select("div.slick-list.draggable");
-//            Elements cosasAdd2 = doc.select("div.slick-track");
+            Elements FichaTecnicaExtraer = doc.select("div.col-lg-12");
+            Element FichaTecnica = FichaTecnicaExtraer.get(1);
+            Elements listaItems = FichaTecnica.select("ul > li");
+            Element imagenesAdd = FichaTecnicaExtraer.get(0);
 
 
 
-//            if (descripcionPagina != null) {
-//                // Selecciona el elemento <h5> dentro del div
-//                Elements pElements = descripcionPagina.select("p");
-//
-//                for (Element pElement : pElements) {
-//                    // Obtén el texto del elemento <h5>
-//                    descripcion = pElement.text();
-//                }
-//            }
-            if (FichaTecnica != null) {
-                // Selecciona el elemento <h5> dentro del div
-                Elements pElements = FichaTecnica.select("p");
+            if (listaItems != null) {
+                for (Element item : listaItems) {
+                    String texto = item.text();
+                    String[] partes = texto.split(":");
+                    if (partes.length > 1) {
+                        String nombreCampo = partes[0].trim().toLowerCase().replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+                        String valorCampo = partes[1].trim();
+                        nombreMoto.add(nombreCampo);
+                        nombreMoto.add(valorCampo);
+                    }
+                }
+            }
+            if (imagenesAdd != null) {
+                Elements imagenesAdicionales = imagenesAdd.select("div.col-lg-7.tech_feature_img");
+                Elements imgElements = imagenesAdicionales.select("img");
 
+                contador = 4;
+                for (int i = 1; i < contador; i++) {
+                    Element imagen = imgElements.get(i);
+                    String urlmod = imagen.attr("src");
+                    String urlSinParametros = urlmod.replaceAll("\\.png\\?.*", ".png");
+                    int totalCaracteres = urlSinParametros.length();
+                    // Obtener el substring antes de la posición
+                    String primeraParteString = urlSinParametros.substring(0, totalCaracteres-5);
 
-                for (Element pElement : pElements) {
-                    // obtener el modelo de la moto
-                    modelo = pElement.text();
+                    // Obtener el substring después de la posición
+                    String segundaParteString = urlSinParametros.substring(totalCaracteres-4);
+                    String urlConNuevoNumero = primeraParteString + i + segundaParteString;
+
+                    recuperarImagenes.add(urlConNuevoNumero);
                 }
             }
 //            if (FichaTecnica2 != null) {
@@ -3733,7 +3702,7 @@ public class WebScraping {
 
 //            recuperarImagenes.clear();
 //            if (!extraerImagenesAdd.isEmpty()) {
-//                ImagenesAdd.clear();
+//                imagenesAdd.clear();
 //                imagenesColores.clear();
 //                //obtener las imagenes adicionales
 //                Elements imgElements = extraerImagenesAdd.first().select("img");
@@ -3752,23 +3721,23 @@ public class WebScraping {
 //                                .submit();
 //
 //                        if (i == 0) {
-//                            ImagenesAdd.add(futureTarget.get());
+//                            imagenesAdd.add(futureTarget.get());
 //                        } else if (i == 1) {
-//                            ImagenesAdd.add(futureTarget.get());
+//                            imagenesAdd.add(futureTarget.get());
 //                        } else if (i == 2) {
-//                            ImagenesAdd.add(futureTarget.get());
+//                            imagenesAdd.add(futureTarget.get());
 //                        } else if (i == 3) {
-//                            ImagenesAdd.add(futureTarget.get());
+//                            imagenesAdd.add(futureTarget.get());
 //                        } else if (i == 4) {
-//                            ImagenesAdd.add(futureTarget.get());
+//                            imagenesAdd.add(futureTarget.get());
 //                        } else if (i == 5) {
-//                            ImagenesAdd.add(futureTarget.get());
+//                            imagenesAdd.add(futureTarget.get());
 //                        } else if (i == 6) {
-//                            ImagenesAdd.add(futureTarget.get());
+//                            imagenesAdd.add(futureTarget.get());
 //                        } else if (i == 7) {
-//                            ImagenesAdd.add(futureTarget.get());
+//                            imagenesAdd.add(futureTarget.get());
 //                        } else if (i == 8) {
-//                            ImagenesAdd.add(futureTarget.get());
+//                            imagenesAdd.add(futureTarget.get());
 //                        }
 //                    } catch (InterruptedException | ExecutionException e) {
 //                        e.printStackTrace();
@@ -3942,6 +3911,403 @@ public class WebScraping {
     }
     //endregion
 
+    //region PROCESO DE KAWAZAKI
+    private void llenarInfoKawasaki() {
+        nombreMoto.clear();
+        try {
+            //conexion
+            Document doc = Jsoup.connect(url)
+                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36")
+                    .header("Accept-Language", "es-ES,es;q=0.9")
+                    .header("Accept-Encoding", "gzip, deflate, br")
+                    .header("Referer", "https://www.google.com/")
+                    .header("Upgrade-Insecure-Requests", "1")
+                    .header("Cache-Control", "max-age=0")
+                    .timeout(10000) // Aumentar el timeout a 10 segundos
+                    .get();
+
+            //ficha tecnica
+            Elements DatosFichaTecnicaMotos = doc.select("div.offcanvas-body");
+            Elements DatosFichaTecnicaMotos2 = DatosFichaTecnicaMotos.select("div.mb-4");
+
+
+            for (Element item : DatosFichaTecnicaMotos2) {
+                // Extrae el texto del span y label
+                Elements listItems = DatosFichaTecnicaMotos.select("div. > li");
+
+            }
+            for (Element row : DatosFichaTecnicaMotos) {
+                // Obtener las celdas de la fila
+                Elements cells = row.select("li");
+                // Verificar si la fila tiene exactamente dos celdas
+                if (cells.size() == 2) {
+                    nombreMoto.add(cells.get(0).text());
+                    nombreMoto.add(cells.get(1).text());
+                }
+            }
+            Elements imagenesAdicionales = doc.select("a[data-fancybox=gallery]");
+            colorPrincipalDiv = doc.select("label.check");
+            for (Element label : colorPrincipalDiv) {
+                // Obtener las imagenes de cada color
+                imagenesColores1.add(label.attr("data-color"));
+            }
+
+
+//            if (catalogoPartes.size() >= 2) {
+//                Element catalogoPDF = catalogoPartes.get(1);
+//                String url = catalogoPDF.attr("href");
+//                guardarPDF(url);
+//            }
+
+
+            if (colorPrincipalDiv.size() >= 2) {
+
+                color = doc.select("div.front-end.box");
+                for (Element colores : color) {
+                    String style = colores.attr("style");
+
+
+                    int colorIndex = style.indexOf("background-color:#");
+
+                    String color = style.substring(colorIndex + 17, colorIndex + 24);
+                    coloresLista.add(color);
+//                    String[] parts = color.split("/");
+//                    String lastPart = parts[parts.length - 1]; // Obtener la última parte de la URL
+//                    String[] nameParts = lastPart.split("_"); // Dividir el nombre del archivo en partes separadas por "_"
+//                    String colorHexa = nameParts[nameParts.length - 1]; // El color debería estar en la última parte
+//                    colorHexa = colorHexa.split("\\.")[0]; // Eliminar la extensión del archivo (".png")
+//                    String colorName = getColorName(colorHexa);
+
+
+                }
+                for (int i = 0; i < imagenesColores1.size(); i++) {
+                    if (i == 0) {
+                        try {
+                            //convierto las url a imagenes
+                            FutureTarget<File> futureTarget = Glide.with(context)
+                                    .asFile()
+                                    .load(imagenesColores1.get(i))
+                                    .submit();
+                            imagen1 = futureTarget.get();
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
+
+                    } else if (i == 1) {
+                        try {
+                            FutureTarget<File> futureTarget = Glide.with(context)
+                                    .asFile()
+                                    .load(imagenesColores1.get(i))
+                                    .submit();
+                            files1.add(futureTarget.get());
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (i == 2) {
+                        try {
+                            FutureTarget<File> futureTarget = Glide.with(context)
+                                    .asFile()
+                                    .load(imagenesColores1.get(i))
+                                    .submit();
+                            files2.add(futureTarget.get());
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (i == 3) {
+                        try {
+                            FutureTarget<File> futureTarget = Glide.with(context)
+                                    .asFile()
+                                    .load(imagenesColores1.get(i))
+                                    .submit();
+                            files3.add(futureTarget.get());
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (i == 4) {
+                        try {
+                            FutureTarget<File> futureTarget = Glide.with(context)
+                                    .asFile()
+                                    .load(imagenesColores1.get(i))
+                                    .submit();
+                            files4.add(futureTarget.get());
+
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (i == 5) {
+                        try {
+                            FutureTarget<File> futureTarget = Glide.with(context)
+                                    .asFile()
+                                    .load(imagenesColores1.get(i))
+                                    .submit();
+                            files5.add(futureTarget.get());
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (i == 6) {
+                        try {
+                            FutureTarget<File> futureTarget = Glide.with(context)
+                                    .asFile()
+                                    .load(imagenesColores1.get(i))
+                                    .submit();
+                            files6.add(futureTarget.get());
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    imagenesColorPrincipal.clear();
+                    if (i == 0) {
+                        //guardarImagenesPrincipales(imagen1, null, null, null, null, null, null, null);
+                    }
+                }
+            }
+
+
+            if (imagenesAdicionales.size() >= 2) {
+                imagenesAdd.clear();
+                imagenesColores.clear();
+                for (int i = 0; i < imagenesAdicionales.size(); i++) {
+                    Element imagen = imagenesAdicionales.get(i);
+                    recuperarImagenes.add(imagen.attr("href"));
+                }
+                //obetener texto de imagenes:
+                Elements divItems = doc.select("div.items");
+                for (Element divItem : divItems) {
+                    Element h2Element = divItem.selectFirst("p");
+                    if (h2Element != null) {
+                        //OBTIENE EL TEXTO DE LAS IMAGENES
+                        String h2Text = h2Element.text();
+                        imagenesColores.add(h2Text);
+                    }
+                }
+                for (int i = 0; i < imagenesAdicionales.size(); i++) {
+                    try {
+                        //convierto las url a imagenes
+                        FutureTarget<File> futureTarget = Glide.with(context)
+                                .asFile()
+                                .load(recuperarImagenes.get(i))
+                                .submit();
+
+                        if (i == 0) {
+                            imagenesAdd.add(futureTarget.get());
+                        } else if (i == 1) {
+                            imagenesAdd.add(futureTarget.get());
+                        } else if (i == 2) {
+                            imagenesAdd.add(futureTarget.get());
+                        } else if (i == 3) {
+                            imagenesAdd.add(futureTarget.get());
+                        } else if (i == 4) {
+                            imagenesAdd.add(futureTarget.get());
+                        } else if (i == 5) {
+                            imagenesAdd.add(futureTarget.get());
+                        } else if (i == 6) {
+                            imagenesAdd.add(futureTarget.get());
+                        } else if (i == 7) {
+                            imagenesAdd.add(futureTarget.get());
+                        } else if (i == 8) {
+                            imagenesAdd.add(futureTarget.get());
+                        }
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                Elements divItems = doc.select("div.items");
+                imagenesColores.clear();
+                imagenesAdd.clear();
+
+                // Iterar sobre cada elemento div con la clase "items"
+                for (Element divItem : divItems) {
+                    // Obtener el elemento img dentro de cada div "items"
+                    Element imgElement = divItem.selectFirst("img");
+                    if (imgElement != null) {
+                        // Obtener la URL de la imagen
+                        String imgUrl = imgElement.attr("src");
+                        recuperarImagenes.add(imgUrl);
+                    }
+                    Element h2Element = divItem.selectFirst("p");
+                    if (h2Element != null) {
+                        //OBTIENE EL TEXTO DE LAS IMAGENES
+                        String h2Text = h2Element.text();
+                        imagenesColores.add(h2Text);
+                    }
+                }
+                for (int i = 0; i < recuperarImagenes.size(); i++) {
+                    try {
+                        //convierto las url a imagenes
+                        FutureTarget<File> futureTarget = Glide.with(context)
+                                .asFile()
+                                .load(recuperarImagenes.get(i))
+                                .submit();
+
+                        if (i == 0) {
+                            imagenesAdd.add(futureTarget.get());
+                        } else if (i == 1) {
+                            imagenesAdd.add(futureTarget.get());
+                        } else if (i == 2) {
+                            imagenesAdd.add(futureTarget.get());
+                        } else if (i == 3) {
+                            imagenesAdd.add(futureTarget.get());
+                        } else if (i == 4) {
+                            imagenesAdd.add(futureTarget.get());
+                        } else if (i == 5) {
+                            imagenesAdd.add(futureTarget.get());
+                        } else if (i == 6) {
+                            imagenesAdd.add(futureTarget.get());
+                        } else if (i == 7) {
+                            imagenesAdd.add(futureTarget.get());
+                        } else if (i == 8) {
+                            imagenesAdd.add(futureTarget.get());
+                        }
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            guardarImagenesPrincipales(imagen1, null, null, null, null, null, null, null);
+            //melo hasta aqui
+
+            Map<String, Object> updates = new HashMap<>();
+            for (int i = 0; i < nombreMoto.size(); i++) {
+                //quita los espacios, tildes, parentesis, puntos:, y lo coloca en minuscula
+                String textoSinEspacios = nombreMoto.get(i)
+                        .replaceAll("\\s+|\\p{InCombiningDiacriticalMarks}|\\(.*?\\)|:", "")
+                        .toLowerCase();
+                //quita las tildes
+                textoSinEspacios = Normalizer.normalize(textoSinEspacios, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+                updates.put(textoSinEspacios, nombreMoto.get(i + 1));
+                i++;
+            }
+            // problema con los datos a guardar de la ficha tecnica
+
+            updates.put("caracteristicasTexto", imagenesColores);
+            if (modelo.matches(".*[a-zA-Z].*")) {
+                updates.put("Modelo", modelo);
+                if (!modelo2.isEmpty()) {
+                    updates.put("Modelo2", modelo2);
+                }
+            } else {
+                updates.put("modelo", "Modelo " + modelo);
+                if (!modelo2.isEmpty()) {
+                    updates.put("modelo2", "Modelo" + modelo2);
+                }
+            }
+
+            updates.put("consumoPorGalon", consumoGasolina);
+            updates.put("visible", true);
+
+            mpostProvider.updatePost(id, updates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                }
+            });
+        } catch (IOException e) {
+            Log.e("MainActivity", "" + e.getMessage());
+        }
+    }
+
+    //saber el color aproximado
+//    public static String getColorName(String colorHexadeximal) {
+//        // Convertir el color hexadecimal a RGB
+//        int color = Color.parseColor(colorHexadeximal);
+//        int r = Color.red(color);
+//        int g = Color.green(color);
+//        int b = Color.blue(color);
+//
+//        // Asignar nombres aproximados basados en los valores RGB
+//        if (isBlack(r, g, b)) {
+//            return "Negro";
+//        } else if (isWhite(r, g, b)) {
+//            return "Blanco";
+//        } else if (isHueso(r, g, b)) {
+//            return "Blanco";
+//        } else if (isRed(r, g, b)) {
+//            return "Rojo";
+//        } else if (isGreen(r, g, b)) {
+//            return "Verde";
+//        } else if (isDarkGreen(r, g, b)) {
+//            return "Verde Oscuro";
+//        } else if (isBlue(r, g, b)) {
+//            return "Azul";
+//        } else if (isGold(r, g, b)) {
+//            return "Dorado";
+//        } else if (isDarkBlue(r, g, b)) {
+//            return "Azul Oscuro";
+//        } else if (isDarkRed(r, g, b)) {
+//            return "Rojo Oscuro";
+//        } else if (isPurple(r, g, b)) {
+//            return "Morado";
+//        } else if (isYellow(r, g, b)) {
+//            return "Amarillo";
+//        } else if (isSkyBlue(r, g, b)) {
+//            return "Celeste";
+//        }
+//        // Agregar más condiciones según sea necesario para otros colores
+//        // Si el color no coincide con ninguno de los nombres predefinidos, puedes devolver "Desconocido" o algo similar
+//        return "AZUL";
+//    }
+//
+//    private static boolean isBlack(int r, int g, int b) {
+//        return r <= 10 && g <= 10 && b <= 10;
+//    }
+//
+//    private static boolean isWhite(int r, int g, int b) {
+//        return r >= 240 && g >= 240 && b >= 240;
+//    }
+//
+//    private static boolean isHueso(int r, int g, int b) {
+//        return r >= 232 && g >= 232 && b >= 232;
+//    }
+//
+//    private static boolean isRed(int r, int g, int b) {
+//        return r >= 200 && g <= 100 && b <= 100;
+//    }
+//
+//    private static boolean isGreen(int r, int g, int b) {
+//        return r <= 100 && g >= 200 && b <= 100;
+//    }
+//
+//    private static boolean isDarkGreen(int r, int g, int b) {
+//        // Ajusta estos valores según los tonos de azul oscuro que desees reconocer
+//        return r <= 57 && g <= 90 && b >= 86;
+//    }
+//
+//    private static boolean isBlue(int r, int g, int b) {
+//        return r <= 100 && g <= 100 && b >= 200;
+//    }
+//
+//    private static boolean isGold(int r, int g, int b) {
+//        // Ajusta estos valores según los tonos de dorado que desees reconocer
+//        return r >= 160 && g >= 160 && g <= 220 && b <= 56;
+//    }
+//
+//    private static boolean isDarkBlue(int r, int g, int b) {
+//        // Ajusta estos valores según los tonos de azul oscuro que desees reconocer
+//        return r <= 30 && g <= 30 && b >= 100;
+//    }
+//
+//    private static boolean isDarkRed(int r, int g, int b) {
+//        // Ajusta estos valores según los tonos de rojo oscuro que desees reconocer
+//        return r >= 100 && g <= 30 && b <= 30;
+//    }
+//
+//    private static boolean isPurple(int r, int g, int b) {
+//        // Ajusta estos valores según los tonos de morado que desees reconocer
+//        return r >= 100 && g <= 30 && b >= 100;
+//    }
+//
+//    private static boolean isYellow(int r, int g, int b) {
+//        // Ajusta estos valores según los tonos de amarillo que desees reconocer
+//        return r >= 200 && g >= 200 && b <= 50;
+//    }
+//
+//    private static boolean isSkyBlue(int r, int g, int b) {
+//        // Ajustamos los valores para definir el color celeste
+//        return r >= 27 && g >= 180 && b >= 185;
+//    }
+
+
+//endregion
 }
 
 
