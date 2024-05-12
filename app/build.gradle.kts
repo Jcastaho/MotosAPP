@@ -59,6 +59,7 @@ dependencies {
     implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("org.jsoup:jsoup:1.17.2")
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation("io.github.florent37:shapeofview:1.4.7")
 
 
     implementation("com.google.firebase:firebase-firestore")
@@ -66,6 +67,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
     implementation("com.firebaseui:firebase-ui-firestore:8.0.2")
     implementation ("com.google.firebase:firebase-storage")
+    implementation("androidx.activity:activity:1.8.0")
 
 
     testImplementation("junit:junit:4.13.2")

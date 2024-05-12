@@ -24,6 +24,7 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -49,13 +50,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAuth = FirebaseAuth.getInstance();
-        mFirestore = FirebaseFirestore.getInstance();
-
-        //prueba();
-        sharedPreferences = this.getSharedPreferences("ingreso" , Context.MODE_PRIVATE);
-        //login();
-        ingresar();
+        iniciar();
     }
     @Override
     public boolean onSupportNavigateUp() {
@@ -64,65 +59,9 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    private void ingresar() {
-        sharedPreferences = this.getSharedPreferences("ingreso", Context.MODE_PRIVATE);
-        if (!sharedPreferences.getString("correo", "error").equals("error")) {
-            login();
-        } else {
-            createUser();
-        }
-    }
-    private void login() {
-        String usuario = sharedPreferences.getString("correo", "error");
-        String contraseña = sharedPreferences.getString("contra", "error");
-
-        if (!usuario.equals("error")) {
-            mAuth.signInWithEmailAndPassword(usuario, contraseña).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    // Inicio de sesión exitoso
-                    iniciar();
-                } else {
-                    // Manejar errores de inicio de sesión aquí
-                    // Por ejemplo, podrías mostrar un mensaje al usuario
-                }
-            });
-        } else {
-            // Si no hay usuario almacenado, inicia el flujo para crear uno nuevo
-        }
-    }
-
-    private void createUser(){
-        int length = 10;
-        String randomString = generarLetrayNumeroRandom(length);
-        if(nombreEquipo() == null){
-            email = randomString + "@gmail.com";
-            password = "654123";
-        }else {
-            email = nombreMarca() + nombreEquipo() + randomString + "@gmail.com";
-            password = "654123";
-        }
-        correo = email;
-        contra = password;
-        mAuth.createUserWithEmailAndPassword(correo, contra).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()){
-                    String id = mAuth.getCurrentUser().getUid();
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("email", correo);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("correo", correo);
-                    editor.putString("contra", contra);
-                    editor.commit();
-                    mFirestore.collection("Usuarios").document(id).set(map);
-                }else{
-                }
-                ingresar();
-            }
-        });
-    }
     public void iniciar(){
         binding = ActivityMainBinding.inflate(getLayoutInflater());
+        FirebaseApp.initializeApp(this);//borrar
         setContentView(binding.getRoot());
         setSupportActionBar(binding.appBarMain.toolbar);
         ActionBar actionBar = ((AppCompatActivity) this).getSupportActionBar();
