@@ -35,6 +35,7 @@
                 android:id="@+id/btnCancelar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/black"
                 android:text="cancelar"/>
         </LinearLayout>
     </LinearLayout>
@@ -67,6 +68,7 @@
             android:id="@+id/btnComparar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/black"
             android:text="comparar"/>
 
     </LinearLayout>
@@ -90,8 +92,5 @@
                 android:textColor="@color/black"/>
 
         </LinearLayout>
-
     </FrameLayout>
-
-
 </FrameLayout>

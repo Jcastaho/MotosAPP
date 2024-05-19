@@ -65,8 +65,6 @@ public class nav_mimotoideal extends Fragment {
     Button btnRespuesta2;
     Button btnRespuesta3;
     Button btnRespuesta4;
-    Button btnVerMas1;
-    Button btnVerMas2;
     ProgressBar progressBarMiMotoIdeal;
     LinearLayout contenedorRecycler;
     ScrollView sclPantalla;
@@ -109,8 +107,6 @@ public class nav_mimotoideal extends Fragment {
         txtTitulo1 = mview.findViewById(R.id.txtTitulo1);
         txtTitulo2 = mview.findViewById(R.id.txtTitulo2);
         txtTitulo3 = mview.findViewById(R.id.txtTitulo3);
-        btnVerMas1 = mview.findViewById(R.id.btnVerMas1);
-        btnVerMas2 = mview.findViewById(R.id.btnVerMas2);
         progressBarMiMotoIdeal = mview.findViewById(R.id.progressBarMiMotoIdeal);
         contenedorRecycler = mview.findViewById(R.id.contenedorRecycler);
         reciclerViewMiMoto1 = mview.findViewById(R.id.reciclerViewMiMoto1);
@@ -435,6 +431,7 @@ public class nav_mimotoideal extends Fragment {
             reciclerViewMiMoto2.setAdapter(adapter2);
             adapter2.startListening();
             reciclerViewMiMoto2.scrollToPosition(0);
+
         }
         if (filteredQuery.size() > 2) {
             txtTitulo3.setVisibility(View.VISIBLE);
@@ -444,6 +441,7 @@ public class nav_mimotoideal extends Fragment {
             adapter3.startListening();
             reciclerViewMiMoto3.scrollToPosition(0);
         }
+
         int tiempoMostrandoProgressBar = 800;
         if (sumadorClick==8){
             tiempoMostrandoProgressBar= 400;
@@ -457,6 +455,28 @@ public class nav_mimotoideal extends Fragment {
                     contenedorRecycler.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.transparent));
                     reciclerViewMiMoto1.setVisibility(View.VISIBLE);
                     reciclerViewMiMoto2.setVisibility(View.VISIBLE);
+                    if (reciclerViewMiMoto1.getAdapter() != null && reciclerViewMiMoto1.getAdapter().getItemCount() != 0) {
+                        txtTitulo1.setVisibility(View.VISIBLE);
+                    } else {
+                        txtTitulo1.setVisibility(View.GONE);
+                    }
+                    if (reciclerViewMiMoto2.getAdapter() != null && reciclerViewMiMoto2.getAdapter().getItemCount() != 0) {
+                        txtTitulo2.setVisibility(View.VISIBLE);
+                    } else {
+                        txtTitulo2.setVisibility(View.GONE);
+                    }
+                    if (reciclerViewMiMoto3.getAdapter() != null && reciclerViewMiMoto3.getAdapter().getItemCount() != 0) {
+                        txtTitulo3.setVisibility(View.VISIBLE);
+                    } else {
+                        txtTitulo3.setVisibility(View.GONE);
+                        if (respuestas.contains("Mayormente caminos de tierra/grava")) {
+                            txtTitulo2.setText("MOTOS QUE TE PUEDEN INTERESAR");
+                        }if (respuestas.contains("Variado (mezcla de asfalto, tierra y grava)")) {
+                            txtTitulo2.setText("MOTOS QUE TE PUEDEN INTERESAR");
+                        }
+                    }
+
+
                 }
             }, tiempoMostrandoProgressBar);
 
@@ -504,13 +524,9 @@ public class nav_mimotoideal extends Fragment {
                         .whereEqualTo("carpeta3", "TODOTERRENO");
                 queries.add(query1);
                 txtTitulo2.setText("MOTOS GRANDES / TODOTERRENO");
-                txtTitulo2.setVisibility(View.VISIBLE);
-                btnVerMas2.setVisibility(View.VISIBLE);
-            }else {
-                txtTitulo2.setVisibility(View.GONE);
-                btnVerMas2.setVisibility(View.GONE);
             }
         }
+
         if (1==1) {
 
             txtTitulo3.setText("MOTOS QUE TE PUEDEN INTERESAR");

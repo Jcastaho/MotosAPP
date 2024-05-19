@@ -56,15 +56,7 @@ public class GalleryFragment extends Fragment {
     String carpeta2 = "";
     String carpeta3 = "";
     String idImagen = "";
-    String documentId = "";
     String nombreMoto = "";
-
-
-//    FirebaseAuth mAuth;
-//    String Email="";
-//    String Password="";
-//    String correo="";
-//    String contra="";
 
     public GalleryFragment() {
         // Required empty public constructor
@@ -146,19 +138,6 @@ public class GalleryFragment extends Fragment {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        CollectionReference usuariosRef = mFirestore.collection("Motos");
-                        usuariosRef.whereEqualTo("id", post.getId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task2) {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task2.getResult()) {
-                                        documentId = document.getId();//obtengo el id del documento
-                                    }
-                                } else {
-                                    Log.d("Error al buscar documentos:", task2.getException().getMessage());
-                                }
-                            }
-                        });
                         Toast.makeText(getContext(), "Moto Guardada", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(getContext(), "Hubo un error al almacenar la moto", Toast.LENGTH_LONG).show();
@@ -177,19 +156,6 @@ public class GalleryFragment extends Fragment {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        CollectionReference usuariosRef = mFirestore.collection("Motos");
-                        usuariosRef.whereEqualTo("id", post.getId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task2) {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task2.getResult()) {
-                                        documentId = document.getId();//obtengo el id del documento
-                                    }
-                                } else {
-                                    Log.d("Error al buscar documentos:", task2.getException().getMessage());
-                                }
-                            }
-                        });
                         Toast.makeText(getContext(), "Moto Guardada", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(getContext(), "Hubo un error al almacenar la Moto", Toast.LENGTH_LONG).show();
@@ -209,19 +175,6 @@ public class GalleryFragment extends Fragment {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        CollectionReference usuariosRef = mFirestore.collection("Motos");
-                        usuariosRef.whereEqualTo("id", post.getId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task2) {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task2.getResult()) {
-                                        documentId = document.getId();//obtengo el id del documento
-                                    }
-                                } else {
-                                    Log.d("Error al buscar documentos:", task2.getException().getMessage());
-                                }
-                            }
-                        });
                         Toast.makeText(getContext(), "Moto Guardada", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(getContext(), "Hubo un error al almacenar la Moto", Toast.LENGTH_LONG).show();
@@ -240,19 +193,6 @@ public class GalleryFragment extends Fragment {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        CollectionReference usuariosRef = mFirestore.collection("Motos");
-                        usuariosRef.whereEqualTo("id", post.getId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task2) {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task2.getResult()) {
-                                        documentId = document.getId();//obtengo el id del documento
-                                    }
-                                } else {
-                                    Log.d("Error al buscar documentos:", task2.getException().getMessage());
-                                }
-                            }
-                        });
                         Toast.makeText(getContext(), "Moto Guardada", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(getContext(), "Hubo un error al almacenar la Moto", Toast.LENGTH_LONG).show();
@@ -271,19 +211,7 @@ public class GalleryFragment extends Fragment {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        CollectionReference usuariosRef = mFirestore.collection("Motos");
-                        usuariosRef.whereEqualTo("id", post.getId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task2) {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task2.getResult()) {
-                                        documentId = document.getId();//obtengo el id del documento
-                                    }
-                                } else {
-                                    Log.d("Error al buscar documentos:", task2.getException().getMessage());
-                                }
-                            }
-                        });
+
                         Toast.makeText(getContext(), "Moto Guardada", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(getContext(), "Hubo un error al almacenar la Moto", Toast.LENGTH_LONG).show();
@@ -302,19 +230,6 @@ public class GalleryFragment extends Fragment {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        CollectionReference usuariosRef = mFirestore.collection("Motos");
-                        usuariosRef.whereEqualTo("id", post.getId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task2) {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task2.getResult()) {
-                                        documentId = document.getId();//obtengo el id del documento
-                                    }
-                                } else {
-                                    Log.d("Error al buscar documentos:", task2.getException().getMessage());
-                                }
-                            }
-                        });
                         Toast.makeText(getContext(), "Moto Guardada", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(getContext(), "Hubo un error al almacenar la Moto", Toast.LENGTH_LONG).show();
@@ -333,19 +248,6 @@ public class GalleryFragment extends Fragment {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        CollectionReference usuariosRef = mFirestore.collection("Motos");
-                        usuariosRef.whereEqualTo("id", post.getId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task2) {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task2.getResult()) {
-                                        documentId = document.getId();//obtengo el id del documento
-                                    }
-                                } else {
-                                    Log.d("Error al buscar documentos:", task2.getException().getMessage());
-                                }
-                            }
-                        });
                         Toast.makeText(getContext(), "Moto Guardada", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(getContext(), "Hubo un error al almacenar la Moto", Toast.LENGTH_LONG).show();
@@ -427,14 +329,7 @@ public class GalleryFragment extends Fragment {
 //    }
 
     public void siguienteVentana(){
-        Bundle args = new Bundle();
-        args.putInt("colores", cantidadColores);
-        args.putString("carpeta1", carpeta1);
-        args.putString("carpeta2", carpeta2);
-        args.putString("carpeta3", carpeta3);
-        args.putString("idImagen", documentId);
-        args.putString("nombreMoto", nombreMoto);
         NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
-        navController.navigate(R.id.action_nav_gallery_to_aggImagenesFragment, args);
+        navController.navigate(R.id.action_nav_gallery_to_aggImagenesFragment);
     }
 }

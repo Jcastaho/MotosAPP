@@ -25,11 +25,13 @@ public class PostsAdapters extends FirestoreRecyclerAdapter<PostAuteco, PostsAda
     Context contexto;
     NavController navController;
     int homeONoVisibles;
-    public PostsAdapters(FirestoreRecyclerOptions<PostAuteco> options, Context context, NavController NavController, int HomeONoVisibles){
+    String busqueda;
+    public PostsAdapters(FirestoreRecyclerOptions<PostAuteco> options, Context context, NavController NavController, int HomeONoVisibles, String Busqueda){
         super(options);
         this.contexto = context;
         this.navController = NavController;
         this.homeONoVisibles = HomeONoVisibles;
+        this.busqueda = Busqueda;
     }
 
     @Override
@@ -45,7 +47,14 @@ public class PostsAdapters extends FirestoreRecyclerAdapter<PostAuteco, PostsAda
         holder.txtMarca.setText(post.getMarcaMoto());
         holder.txtNombreMoto.setText(post.getNombreMoto());
         if (post.getImagenes() != null && !post.getImagenes().isEmpty()) {
-            Picasso.get().load(post.getImagenes().get(0)).into(holder.imgMoto);
+            if (!post.getMarcaMoto().equals("AUTECO")){
+                Picasso.get().load(post.getImagenes().get(0)).fit().into(holder.imgMoto);
+                holder.imgMoto.setPadding(-1, -1, -1,-1);
+            }else {
+                Picasso.get().load(post.getImagenes().get(0)).into(holder.imgMoto);
+                holder.imgMoto.setPadding(-1, -1, -1,-1);
+            }
+
         }
         holder.ViewHolder.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,7 +62,13 @@ public class PostsAdapters extends FirestoreRecyclerAdapter<PostAuteco, PostsAda
                 Bundle args = new Bundle();
                 args.putString("idDocument", postId);
                 if (homeONoVisibles == 0){
-                    navController.navigate(R.id.action_nav_home_to_detallesMoto, args);
+                    if (!busqueda.isEmpty()){
+                        args.putBoolean("busquedas", true);
+                        navController.navigate(R.id.action_nav_home_to_detallesMoto, args);
+
+                    }else {
+                        navController.navigate(R.id.action_nav_home_to_detallesMoto, args);
+                    }
                 }else {
                     navController.navigate(R.id.action_motosNoVisibles_to_detallesMoto, args);
                 }

@@ -14,7 +14,7 @@
     android:layout_gravity="bottom|end"
     android:layout_margin="16dp"
     android:src="@drawable/ic_vs"
-    android:backgroundTint="@color/azul"/>
+    android:backgroundTint="@color/black"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -28,6 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:backgroundTint="@color/black"
             android:background="@drawable/rounded_linearlayout"
             android:gravity="center">
 
@@ -47,7 +48,7 @@
                 android:textStyle="bold"
                 android:textColor="@color/white"
                 android:textSize="16dp"
-                android:text="ENFRENTAMIENTO"
+                android:text="COMPARAR"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="14dp"
                 android:layout_marginBottom="14dp">
@@ -495,11 +496,11 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="10dp"
+                    android:textSize="11dp"
                     android:layout_margin="10dp"
                     android:textColor="@android:color/darker_gray"
                     android:gravity="center"
-                    android:text="La información mostrada se obtiene de las páginas oficiales del fabricante, te recomendamos verificar la información directamente en el sitio web oficial del fabricante"/>
+                    android:text="Esta información se obtiene de las páginas oficiales, le recomendamos verificar directamente en el sitio web del fabricante."/>
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

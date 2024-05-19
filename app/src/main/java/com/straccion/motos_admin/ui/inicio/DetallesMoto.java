@@ -18,6 +18,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 
 import androidx.core.content.ContextCompat;
@@ -47,6 +48,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -108,8 +112,6 @@ public class DetallesMoto extends Fragment {
     TextView nombreColor;
 
 
-
-
     TextView txtModelo;
     TextView txtModelo2;
     TextView txtNomMoto;
@@ -121,7 +123,6 @@ public class DetallesMoto extends Fragment {
     LinearLayout lnlDescuento;
     ViewPager2 viewImagenesAdd;
     Handler viewImagenHandler = new Handler();
-
 
     LinearLayout lnlDatos;
     SliderView mSliderView;
@@ -152,16 +153,17 @@ public class DetallesMoto extends Fragment {
     String modelo = "";
     String modelo2 = "";
     String DescripcionMoto = "";
-    String nombreImagenVs = "";
+    boolean busqueda = false;
     int precio = 0;
     int precio2 = 0;
     int nuevoValorDescuento = 0;
     boolean descuento;
     double numVisitas = 0;
-    String elemento="";
-    String archivo="";
-    int colorCirculos=0;
-    int cantArchivos =0;
+    double numBusquedas = 0;
+    String elemento = "";
+    String archivo = "";
+    int colorCirculos = 0;
+    int cantArchivos = 0;
 
 
     public DetallesMoto() {
@@ -180,6 +182,7 @@ public class DetallesMoto extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             idDocument = getArguments().getString("idDocument");
+            busqueda = getArguments().getBoolean("busquedas");
         }
     }
 
@@ -239,7 +242,7 @@ public class DetallesMoto extends Fragment {
         txtModelo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (modelo2 != ""){
+                if (modelo2 != "") {
                     DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
                     symbols.setGroupingSeparator('.');
                     symbols.setDecimalSeparator(',');
@@ -335,8 +338,8 @@ public class DetallesMoto extends Fragment {
                     @Override
                     public void onClick(View v) {
                         String nombreMoto = txtMoto2.getText().toString();
-                        if (!nombreMoto.isEmpty()){
-//animacion a las imagenes
+                        if (!nombreMoto.isEmpty()) {
+                            //animacion a las imagenes
                             ObjectAnimator animMoto1 = ObjectAnimator.ofFloat(imgMoto1, "translationX", 0f, 460f, 80);
                             animMoto1.setDuration(500);
 
@@ -384,7 +387,7 @@ public class DetallesMoto extends Fragment {
                                     navController.navigate(R.id.action_detallesMoto_to_nuevoCompararFragment, args);
                                 }
                             }, delayMillis);
-                        }else {
+                        } else {
                             Toast.makeText(getContext(), "Por favor seleccione una moto a comparar", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -456,7 +459,7 @@ public class DetallesMoto extends Fragment {
     private void downloadPdf(int identificador) {
         DownloadManager.Request descarga;
         DownloadManager manager = (DownloadManager) requireActivity().getSystemService(getContext().DOWNLOAD_SERVICE);
-        switch(identificador) {
+        switch (identificador) {
             case 0:
                 archivo = archivosPDF.get(identificador);
                 descarga = new DownloadManager.Request(Uri.parse(archivo));
@@ -514,9 +517,9 @@ public class DetallesMoto extends Fragment {
         }
     }
 
-    private void mostrarCards(){
+    private void mostrarCards() {
         cantArchivos = nombreArchivosPDF.size();
-        switch(cantArchivos) {
+        switch (cantArchivos) {
             case 0:
                 crdArchivo1.setVisibility(View.GONE);
                 crdArchivo2.setVisibility(View.GONE);
@@ -596,7 +599,7 @@ public class DetallesMoto extends Fragment {
         }
     }
 
-    private void instanceSlider(){
+    private void instanceSlider() {
         mSliderAdapter = new SliderAdapter(getContext(), mSliderItems);
         mSliderView.setSliderAdapter(mSliderAdapter);
         mSliderView.setIndicatorAnimation(IndicatorAnimationType.THIN_WORM);//animacion del punto
@@ -609,29 +612,20 @@ public class DetallesMoto extends Fragment {
         mSliderView.startAutoCycle();
 
         //CASO ESPECIAL PARA EL TAMAÑO DE ESTAS MOTOS
-        if (nombre.equals("FZ25ABS")){
-            modificarTamanoVistaMotos2();
+        if (fabricante.equals("SUZUKI") || fabricante.equals("HONDA")){
+            modificarTamanoVistaMotos();
         }
-        if (nombre.equals("SZRR")){
-            modificarTamanoVistaMotos2();
+        if (fabricante.equals("YAMAHA")){
+            modificarTamanoVistaMotos2(0);
         }
-        if (nombre.equals("YCZ")){
-            modificarTamanoVistaMotos2();
-        }
-        if (nombre.equals("XTZ150")){
-            modificarTamanoVistaMotos2();
-        }
-        if (nombre.equals("XTZ125")){
-            modificarTamanoVistaMotos2();
-        }
-        if (nombre.equals("XTZ 250")){
-            modificarTamanoVistaMotos2();
+        if (nombre.contains("FZ")){
+            modificarTamanoVistaMotos2(100);
         }
 
         //imagenes caractreristicas adicionales
-        if (listaTextoCaracteristicas == null || listaTextoCaracteristicas.isEmpty()){
+        if (listaTextoCaracteristicas == null || listaTextoCaracteristicas.isEmpty()) {
             mViewPagerAdapter = new ViewPagerAdapter(getContext(), viewPagerImagenes, viewImagenesAdd, null);
-        }else {
+        } else {
             mViewPagerAdapter = new ViewPagerAdapter(getContext(), viewPagerImagenes, viewImagenesAdd, listaTextoCaracteristicas);
         }
         viewImagenesAdd.setAdapter(mViewPagerAdapter);
@@ -661,9 +655,9 @@ public class DetallesMoto extends Fragment {
 
     }
 
-    private Runnable viewpagerRunnable = new Runnable(){
+    private Runnable viewpagerRunnable = new Runnable() {
         @Override
-        public void run(){
+        public void run() {
             viewImagenesAdd.setCurrentItem(viewImagenesAdd.getCurrentItem() + 1);
         }
     };
@@ -680,12 +674,12 @@ public class DetallesMoto extends Fragment {
         viewImagenHandler.postDelayed(viewpagerRunnable, 2000);
     }
 
-    private void getPost(){
+    private void getPost() {
         mSliderItems.clear();
         mPostProvider.getPostById(idDocument).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()){
+                if (documentSnapshot.exists()) {
                     if (documentSnapshot.contains("imagenes")) {
                         listaImagenes = (List<String>) documentSnapshot.get("imagenes");
                         for (String imagen : listaImagenes) {
@@ -743,7 +737,6 @@ public class DetallesMoto extends Fragment {
                         if (modelo2Objeto != null && !modelo2Objeto.toString().isEmpty()) {
                             modelo2 = modelo2Objeto.toString();
                         }
-                        //modelo2 = documentSnapshot.get("modelo2").toString();
                     }
                     if (documentSnapshot.contains("descripcion")) {
                         DescripcionMoto = documentSnapshot.get("descripcion").toString();
@@ -769,21 +762,24 @@ public class DetallesMoto extends Fragment {
                     if (documentSnapshot.contains("vistas")) {
                         numVisitas = Double.parseDouble(documentSnapshot.get("vistas").toString());
                     }
+                    if (documentSnapshot.contains("busquedas")) {
+                        numBusquedas = Double.parseDouble(documentSnapshot.get("busquedas").toString());
+                    }
                     instanceSlider();
                     actualizarVistas();
                 }
-                if (nombreArchivosPDF==null || nombreArchivosPDF.isEmpty()){
+                if (nombreArchivosPDF == null || nombreArchivosPDF.isEmpty()) {
                     cdvManuales.setVisibility(View.GONE);
                 }
                 txtModelo.setText(modelo);
                 txtFabricanteMoto.setText(fabricante);
-                if (modelo2 != ""){
+                if (modelo2 != "") {
                     txtModelo2.setVisibility(View.VISIBLE);
                     txtModelo2.setText(modelo2);
                     txtModelo.setTextColor(Color.BLUE);
                 }
                 txtNomMoto.setText(nombre);
-                if (DescripcionMoto.isEmpty()){
+                if (DescripcionMoto.isEmpty()) {
                     txtDescripcionMoto.setVisibility(View.GONE);
                     txtTituloDescripcionMoto.setVisibility(View.GONE);
                 }
@@ -797,23 +793,24 @@ public class DetallesMoto extends Fragment {
                 DecimalFormat formato = new DecimalFormat("#,###", symbols);
                 String numeroFormato = formato.format(nuevoValorDescuento);
                 txtPrecio.setText("$" + numeroFormato);
-                if (descuento){
+                if (descuento) {
                     String Formato = formato.format(precio);
                     lnlDescuento.setVisibility(View.VISIBLE);
-                    txtprecioAnterior.setText("$"+Formato);
+                    txtprecioAnterior.setText("$" + Formato);
                     txtprecioAnterior.setPaintFlags(txtprecioAnterior.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                }else {
+                } else {
                     lnlDescuento.setVisibility(View.GONE);
                 }
             }
         });
     }
-    private void color(List<String> ArrayColores, int cont){
-        elemento= ArrayColores.get(cont).toUpperCase();
-        if (elemento.startsWith("#")){
+
+    private void color(List<String> ArrayColores, int cont) {
+        elemento = ArrayColores.get(cont).toUpperCase();
+        if (elemento.startsWith("#")) {
             colorCirculos = Color.parseColor(elemento);
             lnlTextoColores.setVisibility(View.GONE);
-        }else {
+        } else {
             Map<String, Integer> colorMap = new HashMap<>();
             colorMap.put("ROJO", R.color.red);
             colorMap.put("ROJA", R.color.red);
@@ -841,6 +838,7 @@ public class DetallesMoto extends Fragment {
             colorMap.put("NEGRO NEBULOSA - CAMALEÓN", R.color.morado);
 
             colorMap.put("AZUL PETROLEO - GRIS DORADO", R.color.azulPetroleo);
+            colorMap.put("AZUL PETROLEO", R.color.azulPetroleo);
             colorMap.put("AZUL PETRÓLEO - GRIS DORADO", R.color.azulPetroleo);
             colorMap.put("AZUL MATE/NEGRO NEB - GRIS", R.color.azulPetroleo);
             colorMap.put("AZUL PETRÓLEO - GRIS ROJO", R.color.azulPetroleo);
@@ -887,29 +885,28 @@ public class DetallesMoto extends Fragment {
         }
 
 
-
-
     }
-    private void colores(List<String> ArrayColores){
+
+    private void colores(List<String> ArrayColores) {
         CardView cardView = mview.findViewById(R.id.crdColores);
         LinearLayout linearLayout = mview.findViewById(R.id.lnlColores);
 
         int contador = 0;
 
         int baseSize = 100; // Tamaño base de los círculos
-        int circleSize=100;
+        int circleSize = 100;
 
         for (String color : ArrayColores) {
 
-            if (!ArrayColores.get(contador).equals("")){
+            if (!ArrayColores.get(contador).equals("")) {
                 View colorCircle = new View(getContext());
 
                 color(ArrayColores, contador);
                 colorCircle.setId(contador);
                 contador++;
-                if(ArrayColores.size() <= 5){
+                if (ArrayColores.size() <= 5) {
                     circleSize = baseSize;
-                }else if(ArrayColores.size() <= 7){
+                } else if (ArrayColores.size() <= 7) {
                     circleSize = baseSize - 10;
                 }
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(circleSize, circleSize);
@@ -924,7 +921,7 @@ public class DetallesMoto extends Fragment {
                 ShapeDrawable shapeDrawable = new ShapeDrawable(new OvalShape());
                 shapeDrawable.getPaint().setColor(colorCirculos);
 
-                if (colorCirculos == -1){
+                if (colorCirculos == -1) {
                     shapeDrawable.getPaint().setStrokeWidth(3);
                     shapeDrawable.getPaint().setStrokeCap(Paint.Cap.ROUND);
                     shapeDrawable.getPaint().setStrokeJoin(Paint.Join.ROUND);
@@ -944,10 +941,11 @@ public class DetallesMoto extends Fragment {
         }
 
     }
-    private void mostrarColores(int id){
+
+    private void mostrarColores(int id) {
         mSliderItems.clear();
-        int controlador=0;
-        switch(id) {
+        int controlador = 0;
+        switch (id) {
             case 0:
                 for (String imagen : listaImagenes) {
                     SliderItem item = new SliderItem();
@@ -961,7 +959,7 @@ public class DetallesMoto extends Fragment {
                     SliderItem item = new SliderItem();
                     item.setImageurl(imagen);
                     mSliderItems.add(item);
-                    controlador=1;
+                    controlador = 1;
                     nombreColor.setText(colores.get(1));
                 }
                 break;
@@ -970,7 +968,7 @@ public class DetallesMoto extends Fragment {
                     SliderItem item = new SliderItem();
                     item.setImageurl(imagen);
                     mSliderItems.add(item);
-                    controlador=2;
+                    controlador = 2;
                     nombreColor.setText(colores.get(2));
                 }
                 break;
@@ -979,7 +977,7 @@ public class DetallesMoto extends Fragment {
                     SliderItem item = new SliderItem();
                     item.setImageurl(imagen);
                     mSliderItems.add(item);
-                    controlador=3;
+                    controlador = 3;
                     nombreColor.setText(colores.get(3));
                 }
                 break;
@@ -988,7 +986,7 @@ public class DetallesMoto extends Fragment {
                     SliderItem item = new SliderItem();
                     item.setImageurl(imagen);
                     mSliderItems.add(item);
-                    controlador=4;
+                    controlador = 4;
                     nombreColor.setText(colores.get(4));
                 }
                 break;
@@ -997,7 +995,7 @@ public class DetallesMoto extends Fragment {
                     SliderItem item = new SliderItem();
                     item.setImageurl(imagen);
                     mSliderItems.add(item);
-                    controlador=5;
+                    controlador = 5;
                     nombreColor.setText(colores.get(5));
                 }
                 break;
@@ -1006,34 +1004,15 @@ public class DetallesMoto extends Fragment {
                     SliderItem item = new SliderItem();
                     item.setImageurl(imagen);
                     mSliderItems.add(item);
-                    controlador=6;
+                    controlador = 6;
                     nombreColor.setText(colores.get(6));
                 }
                 break;
         }
-
-        //vuelve mas pequeña la vista de las motos, hay que modificarla segun el color
-        if (nombre.equals("TVS SPORT 100 ELS") && (controlador == 1 || controlador == 2)) {
-            modificarTamanoVistaMotos();
-        } else if (nombre.equals("FZ25ABS") && (controlador == 0 || controlador == 1 || controlador == 2)) {
-            modificarTamanoVistaMotos2();
-        }else {
-            tamanoAnteriorVistaMotos();
-        }
-
-
         instanceSlider();
     }
 
-    private void tamanoAnteriorVistaMotos(){
-        int anteriorHeight = (int) getResources().getDimension(R.dimen.anterior_height);
-        mSliderView.getLayoutParams().height = anteriorHeight;
-        mSliderView.requestLayout();
-        frameContenedor.getLayoutParams().height = anteriorHeight;
-        frameContenedor.requestLayout();
-        nestedScrollView.requestLayout();
-    }
-    private void modificarTamanoVistaMotos(){
+    private void modificarTamanoVistaMotos() {
         int newHeight = (int) getResources().getDimension(R.dimen.new_height);
         mSliderView.getLayoutParams().height = newHeight;
         mSliderView.requestLayout();
@@ -1041,15 +1020,17 @@ public class DetallesMoto extends Fragment {
         frameContenedor.requestLayout();
         nestedScrollView.requestLayout();
     }
-    private void modificarTamanoVistaMotos2(){
-        int newHeight = (int) getResources().getDimension(R.dimen.new_height2);
+
+    private void modificarTamanoVistaMotos2(int agg) {
+        int newHeight = (int) getResources().getDimension(R.dimen.new_height2) + agg;
         mSliderView.getLayoutParams().height = newHeight;
         mSliderView.requestLayout();
         frameContenedor.getLayoutParams().height = newHeight;
         frameContenedor.requestLayout();
         nestedScrollView.requestLayout();
     }
-    private void mostrarManuales(){
+
+    private void mostrarManuales() {
         if (lnlInformacionAdd1.getVisibility() == View.VISIBLE) {
             lnlInformacionAdd1.setVisibility(View.GONE);
         } else {
@@ -1057,17 +1038,20 @@ public class DetallesMoto extends Fragment {
         }
     }
 
-    private void actualizarVistas(){
+    private void actualizarVistas() {
         numVisitas = numVisitas + 1;
         Map<String, Object> updates = new HashMap<>();
         updates.put("vistas", numVisitas);
+        if (busqueda) {
+            numBusquedas = numBusquedas + 1;
+            updates.put("busquedas", numBusquedas);
+        }
         mPostProvider.updatePost(idDocument, updates).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
             }
         });
     }
-
 
 
 }

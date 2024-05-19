@@ -68,10 +68,19 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
         view.ViewHolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (textoImagen == null){
-                    mostrarImagenAmpliada(viewPagerItem.getImageurl(), "");
+
+                if (textoImagen != null){
+                    if (textoImagen.size()>cantidad){
+                        if (textoImagen.get(cantidad) == null || textoImagen.get(cantidad).isEmpty()){
+                            mostrarImagenAmpliada(viewPagerItem.getImageurl(), "");
+                        }else {
+                            mostrarImagenAmpliada(viewPagerItem.getImageurl(), textoImagen.get(cantidad));
+                        }
+                    }else {
+                        mostrarImagenAmpliada(viewPagerItem.getImageurl(), "");
+                    }
                 }else {
-                    mostrarImagenAmpliada(viewPagerItem.getImageurl(), textoImagen.get(cantidad));
+                    mostrarImagenAmpliada(viewPagerItem.getImageurl(), "");
                 }
 
             }

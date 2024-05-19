@@ -2,11 +2,9 @@ package com.straccion.motos_admin.ui.addmotos;
 
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +12,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -28,11 +23,8 @@ import com.straccion.motos_admin.R;
 import com.straccion.motos_admin.providers.ImageProvider;
 import com.straccion.motos_admin.providers.PostProvider;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class AggImagenesFragment extends Fragment {
@@ -58,13 +50,6 @@ public class AggImagenesFragment extends Fragment {
     int consumo =0;
     String id ="";
     List<String> nombreMotoSin = new ArrayList<>();
-
-//    List<String> caracteristicas = new ArrayList<>();
-//    double calificacion =0;
-//    double cilindraje =0;
-//    int controlador = 0;
-//    int posicion = 0;
-
 
     public AggImagenesFragment() {
 
@@ -107,11 +92,14 @@ public class AggImagenesFragment extends Fragment {
         btnActualizarPrecios.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(getContext(), "Por favor espere", Toast.LENGTH_LONG).show();
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+
                         WebScraping mWebScraping = new WebScraping(getContext());
                         mWebScraping.direccionamientoxFabricantePrecios();
+
 
                         getActivity().runOnUiThread(new Runnable() {
                             @Override

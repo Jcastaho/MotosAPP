@@ -101,7 +101,6 @@ public class WebScraping {
     List<String> urls = new ArrayList<>();
     Context context;
     List<File> imagenesAdd = new ArrayList<>();
-
     File imagen1 = new File("");
     File imagen2 = new File("");
     File imagen3 = new File("");
@@ -195,7 +194,6 @@ public class WebScraping {
 
             url.add("https://www.incolmotos-yamaha.com.co/vehiculo/xsr900/11127/");
 
-            url.add("https://www.incolmotos-yamaha.com.co/vehiculo/yzfr1-2023/25510/");
             url.add("https://www.incolmotos-yamaha.com.co/vehiculo/yzfr15v3/23945/");
             url.add("https://www.incolmotos-yamaha.com.co/vehiculo/yzf690/19528/");
 
@@ -253,6 +251,7 @@ public class WebScraping {
             Log.e("MainActivity", "Error al obtener el nombre de la moto: " + e.getMessage());
         }
     }
+
     private void preciosHERO() {
         try {
             List<String> url = new ArrayList<>();
@@ -264,7 +263,7 @@ public class WebScraping {
 
             for (int i = 0; i < url.size(); i++) {
                 doc = Jsoup.connect(url.get(i)).get();
-                if (!url.get(i).equals("https://heromotos.com.co/trabajo/eco-t/")){
+                if (!url.get(i).equals("https://heromotos.com.co/trabajo/eco-t/")) {
                     Element seccion0 = doc.select("div.elementor-container.elementor-column-gap-default").get(4);
                     // Extrae los elementos h2 y h3 dentro del quinto div
                     Elements elementosH2 = seccion0.select("h2");
@@ -278,7 +277,7 @@ public class WebScraping {
                         String textoParaQuitar = h3.text().replace("Precio desde ", "");
                         precioMoto.add(textoParaQuitar.replace("*", ""));
                     }
-                }else {//esta moto toca asi por que no tiene precio
+                } else {//esta moto toca asi por que no tiene precio
                     Element seccionPrecio = doc.select("div.elementor-widget-wrap.elementor-element-populated").get(6);
                     Elements elementosH5 = seccionPrecio.select("h5");
                     int indice = nombresMotos.indexOf("ECO T");
@@ -294,6 +293,7 @@ public class WebScraping {
             Log.e("MainActivity", "Error al obtener el nombre de la moto: " + e.getMessage());
         }
     }
+
     private void preciosSUZUKI() {
         try {
             List<String> url = new ArrayList<>();
@@ -322,17 +322,15 @@ public class WebScraping {
                         // Obtén el texto del elemento <h5>
                         if (pElement.hasClass("text-uppercase text-center")) {
                             nombresMotos.add(pElement.text());
-                        }
-                        else if (pElement.hasClass("precio")) {
+                        } else if (pElement.hasClass("precio")) {
                             // Agregar a la lista de elementos con clase 'precio-antes'
-                            info = pElement.text().replace(" IVA Incluido","");
-                            precioMoto.add(info.replace(",","."));
-                        }
-                        else if (pElement.hasClass("precio-antes")) {
+                            info = pElement.text().replace(" IVA Incluido", "");
+                            precioMoto.add(info.replace(",", "."));
+                        } else if (pElement.hasClass("precio-antes")) {
                             // Agregar a la lista de elementos con clase 'precio'
                             int ultimoDato = nombresMotos.size() - 1;
-                            info = pElement.text().replace(" IVA Incluido","");
-                            precioMoto.add(info.replace(",","."));
+                            info = pElement.text().replace(" IVA Incluido", "");
+                            precioMoto.add(info.replace(",", "."));
                             String ultimoNombreMoto = nombresMotos.get(ultimoDato);
                             nombresMotos.add(ultimoNombreMoto);
                             motosConDescuentoIndice.add(precioMoto.size());
@@ -391,7 +389,7 @@ public class WebScraping {
                 if (NombreMotoYPrecio != null) {
                     if (PreciosMoto != null) {
                         String infoPrecio = PreciosMoto.text();
-                        precioMoto.add(infoPrecio.replace(",","."));
+                        precioMoto.add(infoPrecio.replace(",", "."));
                         for (Element h1Element : NombreMotoYPrecio) {
                             nombresMotos.add(h1Element.text());
                         }
@@ -401,9 +399,55 @@ public class WebScraping {
         } catch (IOException e) {
             Log.e("MainActivity", "Error al obtener el nombre de la moto: " + e.getMessage());
         }
+    }
+    private void preciosBAJAJ() {
+        try {
+            List<String> url = new ArrayList<>();
+            List<Integer> motosConDescuentoIndice = new ArrayList<>();
+
+            url.add("https://colombia.globalbajaj.com/es-CO/BRANDS/Boxer/Boxer-S");
+            url.add("https://colombia.globalbajaj.com/es-CO/BRANDS/Boxer/Boxer-S-Pro");
+            url.add("https://colombia.globalbajaj.com/es-CO/BRANDS/Boxer/Boxer-CT100-KS");
+            url.add("https://colombia.globalbajaj.com/es-CO/BRANDS/Boxer/Boxer-Carguera");
+            url.add("https://colombia.globalbajaj.com/es-CO/BRANDS/Boxer/BOXER-CT-100-ES");
+            url.add("https://colombia.globalbajaj.com/es-CO/BRANDS/Boxer/Boxer-CT100ES-Titanium");
+            url.add("https://colombia.globalbajaj.com/es-CO/BRANDS/Boxer/Boxer-CT-125");
+            url.add("https://colombia.globalbajaj.com/es-CO/BRANDS/Discover/Discover-125-ST-R");
+            url.add("https://colombia.globalbajaj.com/es-CO/BRANDS/Discover/Discover-125-ST-R-Pro");
+            url.add("https://colombia.globalbajaj.com/es-CO/BRANDS/Platino/platino-125");
+            url.add("https://colombia.globalbajaj.com/es-CO/BRANDS/Pulsar/Pulsar-NS-125");
+            url.add("https://colombia.globalbajaj.com/es-CO/BRANDS/Pulsar/Pulsar-150-Neon");
+            url.add("https://colombia.globalbajaj.com/es-CO/BRANDS/Pulsar/Pulsar-180-Neon-FI");
+            url.add("https://colombia.globalbajaj.com/es-CO/BRANDS/Pulsar/Pulsar-N160");
+            url.add("https://colombia.globalbajaj.com/es-CO/BRANDS/Pulsar/Pulsar-NS160-FI");
+            url.add("https://colombia.globalbajaj.com/es-CO/BRANDS/Pulsar/Pulsar-NS160-FI-ABS");
+            url.add("https://colombia.globalbajaj.com/es-CO/BRANDS/Pulsar/Pulsar-NS200-FI");
+            url.add("https://colombia.globalbajaj.com/es-CO/BRANDS/Pulsar/Pulsar-N250");
+            url.add("https://colombia.globalbajaj.com/es-CO/BRANDS/Pulsar/Pulsar-NS-200-FI-ABS");
+            url.add("https://colombia.globalbajaj.com/es-CO/BRANDS/Pulsar/Pulsar-RS-200");
+            url.add("https://colombia.globalbajaj.com/es-CO/BRANDS/Dominar/Dominar-250");
+            url.add("https://colombia.globalbajaj.com/es-CO/BRANDS/Dominar/Dominar-D400");
+
+            for (int i = 0; i < url.size(); i++) {
+                doc = Jsoup.connect(url.get(i)).get();
+
+                Elements NombreMotoYPrecio = doc.select("div.variant-banner-text");
+                Elements NombreMotoYPrecio2 = doc.select("div.newsheader");
+
+                if (NombreMotoYPrecio != null) {
+                    Element h1Element = NombreMotoYPrecio.select("div.variant-banner-text h1").first();
+                    nombresMotos.add(h1Element.text());
+
+                    Element pElemen = NombreMotoYPrecio.select("div.variant-banner-text p").first();
+                    String infoPrecio = pElemen.text();
+                    precioMoto.add(infoPrecio.replace(" COP*",""));
+                }
+            }
+        } catch (IOException e) {
+            Log.e("MainActivity", "Error al obtener el nombre de la moto: " + e.getMessage());
+        }
         guardarPreciosenFirebase();
     }
-
 
     private void guardarPreciosenFirebase() {
         mpostProvider.getAll2().addSnapshotListener((querySnapshot, error) -> {
@@ -458,10 +502,10 @@ public class WebScraping {
                             precioConvertido2 = Integer.parseInt(precioMoto.get(indices.get(1)).replaceAll("\\D", ""));
                             int mayor = Math.max(precioConvertido2, precioConvertido);
                             int menor = Math.min(precioConvertido2, precioConvertido);
-                            if (marcaMoto.equals("SUZUKI")){
+                            if (marcaMoto.equals("SUZUKI")) {
                                 precioConvertido = menor;
                                 precioConvertido2 = mayor;
-                            }else {
+                            } else {
                                 precioConvertido = mayor;
                                 precioConvertido2 = menor;
                             }
@@ -501,8 +545,7 @@ public class WebScraping {
                             if (precio2 != precioConvertido2) {
                                 Precio2AActualizar4.put("precio2", precioConvertido2);
                             }
-                        }
-                        else if (marcaMoto == "SUZUKI"){
+                        } else if (marcaMoto == "SUZUKI") {
 
                         }
                     }
@@ -540,7 +583,7 @@ public class WebScraping {
                             }
                         });
                     }
-
+                    Toast.makeText(context, "Proceso finalizado", Toast.LENGTH_SHORT).show();
                 }
                 ;
             }
@@ -558,6 +601,7 @@ public class WebScraping {
         preciosHERO();
         preciosSUZUKI();
         preciosHONDA();
+        preciosBAJAJ();
     }
 
     public void direccionamientoxFabricante(String fabricante) {
@@ -567,11 +611,11 @@ public class WebScraping {
             llenarInfoYamaha();
         } else if (fabricante.equals("HERO")) {
             llenarInfoHERO();
-        }else if (fabricante.equals("SUZUKI")) {
+        } else if (fabricante.equals("SUZUKI")) {
             llenarInfoSUZUKI();
-        }else if (fabricante.equals("HONDA")) {
+        } else if (fabricante.equals("HONDA")) {
             llenarInfoHONDA();
-        }else if (fabricante.equals("KAWASAKI")) {
+        } else if (fabricante.equals("BAJAJ")) {
             llenarInfoBAJAJ();
         }
     }
@@ -2711,7 +2755,7 @@ public class WebScraping {
 
                 int indice = h4.indexOf("delanteros");
                 //esto es por que hay unas motos que tienen <P> en lugar de H4
-                if(h5.size() != h4.size()){
+                if (h5.size() != h4.size()) {
                     for (Element pElement : pElements) {
                         String dato = pElement.text();
 
@@ -2774,12 +2818,11 @@ public class WebScraping {
                             "Violeta", "Magenta", "Plateado", "Dorado", "Rosa", "Celeste",
                             "Carmesi", "VerdeOscuro", "VerdeClaro", "VerdeLima", "AzulCielo",
 
-                            // Puedes agregar más colores según tus necesidades
                     };
 
                     // Combina todos los colores en un patrón de expresión regular
                     String colorPattern = String.join("|", colores);
-                    Pattern pattern = Pattern.compile("_(?:" + colorPattern + ")(?:_("+ colorPattern +"))*");
+                    Pattern pattern = Pattern.compile("_(?:" + colorPattern + ")(?:_(" + colorPattern + "))*");
 
 
                     // Itera sobre cada nombre de archivo
@@ -2979,7 +3022,6 @@ public class WebScraping {
             Document doc = Jsoup.connect(url).get();
 
 
-
             Elements descripcionPagina = doc.select("div.descripcion.col-md-12.col-sm-12.col-xs-12");
             Elements extraerModelo = doc.select("div.legal.col-md-12.col-sm-12.col-xs-12");
             Elements FichaTecnica = doc.select("div.col-md-12.col-sm-12.col-xs-12.cont-items.d-f.f-w-w");
@@ -3049,7 +3091,7 @@ public class WebScraping {
                 Elements imgElements = extraerImagenesAdd.first().select("img");
                 for (Element imgElement : imgElements) {
                     String inicioPag = "http://www.suzuki.com.co";
-                    if (!imgElement.text().contains(inicioPag)){
+                    if (!imgElement.text().contains(inicioPag)) {
                         recuperarImagenes.add(inicioPag + imgElement.attr("src"));
                     }
                 }
@@ -3096,7 +3138,7 @@ public class WebScraping {
                 for (Element imgElement : imgElements) {
                     //imagenes
                     String inicioPag = "http://www.suzuki.com.co";
-                    if (!imgElement.text().contains(inicioPag)){
+                    if (!imgElement.text().contains(inicioPag)) {
                         imagenesColores1.add(inicioPag + imgElement.attr("src"));
                     }
                 }
@@ -3272,10 +3314,9 @@ public class WebScraping {
             Elements descripcionMoto = doc.select("div.boxBanner");
 
             //motos que tienen otros diseños
-            if (fichaTecnica.isEmpty()){
+            if (fichaTecnica.isEmpty()) {
                 fichaTecnica = doc.select("section.technical-specifications");
             }
-
 
 
             if (fichaTecnica != null) {
@@ -3283,7 +3324,7 @@ public class WebScraping {
                 Elements h3Elements = fichaTecnica.select("P");
 
                 //paginas con otro diseño
-                if (h3Elements.isEmpty()){
+                if (h3Elements.isEmpty()) {
                     Elements divElementTitutlo = fichaTecnica.select("div.col.subtitle");
                     Elements divElementDescripcion = fichaTecnica.select("div.col.result");
                     for (Element divElement : divElementTitutlo) {
@@ -3307,11 +3348,11 @@ public class WebScraping {
                         nombreMoto.add(titulo.get(i));
                         nombreMoto.add(contenido.get(i));
                     }
-                }else { // paginas normales
+                } else { // paginas normales
                     for (int i = 0; i < h3Elements.size(); i++) {
                         // Obtén el elemento actual de h3Elements
                         Element pElements = h3Elements.get(i);
-                        Element pElements2 = h3Elements.get(i+1);
+                        Element pElements2 = h3Elements.get(i + 1);
 
                         //SE NORMALIZA EL TEXTO DEL TITULO:
                         String textoNormalizado = Normalizer.normalize(pElements.text(), Normalizer.Form.NFD);
@@ -3335,8 +3376,8 @@ public class WebScraping {
             //Como esta moto tiene los colores en la ficha tecnica, es mas facil
             int posicion = nombreMoto.indexOf("colores");
 
-            if (posicion != -1){
-                String[] palabrasArray = nombreMoto.get(posicion+1).split(",");
+            if (posicion != -1) {
+                String[] palabrasArray = nombreMoto.get(posicion + 1).split(",");
                 for (String palabra : palabrasArray) {
                     // Eliminar espacios en blanco al principio y al final de cada palabra
                     palabra = palabra.trim();
@@ -3469,7 +3510,7 @@ public class WebScraping {
                     if (hElement != null) {
                         //OBTIENE EL TITULO DE LAS IMAGENES
                         String h2Text = hElement.text();
-                        if (h2Text != ""){
+                        if (h2Text != "") {
                             imagenesColores.add(h2Text);
                         }
                     }
@@ -3492,7 +3533,7 @@ public class WebScraping {
                         String pText = p2Element.text();
                         // Si el texto no está vacío, agregarlo a imagenesColores
                         if (!pText.isEmpty()) {
-                            if (contador <= clon.size()){
+                            if (contador <= clon.size()) {
                                 imagenesColores.add(clon.get(contador) + "\n" + pText);
                                 contador++;
                             }
@@ -3550,7 +3591,7 @@ public class WebScraping {
                 updates.put(textoSinEspacios, nombreMoto.get(i + 1));
                 i++;
             }
-            if (!descripcion.isEmpty()){
+            if (!descripcion.isEmpty()) {
                 updates.put("descripcion", descripcion);
             }
             updates.put("consumoPorGalon", consumoGasolina);
@@ -3612,8 +3653,6 @@ public class WebScraping {
         String descripcion = "";
 
         try {
-            //conexion
-
             Document doc = Jsoup.connect(url)
                     .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36")
                     .header("Accept-Language", "es-ES,es;q=0.9")
@@ -3625,13 +3664,12 @@ public class WebScraping {
                     .get();
 
 
-
             Elements FichaTecnicaExtraer = doc.select("div.col-lg-12");
             Element FichaTecnica = FichaTecnicaExtraer.get(1);
             Elements listaItems = FichaTecnica.select("ul > li");
-            Element imagenesAdd = FichaTecnicaExtraer.get(0);
-
-
+            Element imagenesAddi = FichaTecnicaExtraer.get(0);
+            Elements imagenesPrincipales = doc.select("div.newsheader");
+            Elements imagenesPrincipales2 = doc.select("div._spin_block");
 
             if (listaItems != null) {
                 for (Element item : listaItems) {
@@ -3645,209 +3683,314 @@ public class WebScraping {
                     }
                 }
             }
-            if (imagenesAdd != null) {
-                Elements imagenesAdicionales = imagenesAdd.select("div.col-lg-7.tech_feature_img");
+
+            if (imagenesAddi != null) {
+                Elements imagenesAdicionales = imagenesAddi.select("div.col-lg-7.tech_feature_img");
                 Elements imgElements = imagenesAdicionales.select("img");
 
-                contador = 4;
-                for (int i = 1; i < contador; i++) {
+                for (int i = 0; i < imgElements.size(); i++) {
                     Element imagen = imgElements.get(i);
                     String urlmod = imagen.attr("src");
                     String urlSinParametros = urlmod.replaceAll("\\.png\\?.*", ".png");
-                    int totalCaracteres = urlSinParametros.length();
-                    // Obtener el substring antes de la posición
-                    String primeraParteString = urlSinParametros.substring(0, totalCaracteres-5);
+                    recuperarImagenes.add(urlSinParametros);
+                }
 
-                    // Obtener el substring después de la posición
-                    String segundaParteString = urlSinParametros.substring(totalCaracteres-4);
-                    String urlConNuevoNumero = primeraParteString + i + segundaParteString;
+            }
+            //imagenes adicionales
+            for (int i = 0; i < recuperarImagenes.size(); i++) {
+                try {
+                    //convierto las url a imagenes
+                    FutureTarget<File> futureTarget = Glide.with(context)
+                            .asFile()
+                            .load(recuperarImagenes.get(i))
+                            .submit();
 
-                    recuperarImagenes.add(urlConNuevoNumero);
+                    if (i == 0) {
+                        imagenesAdd.add(futureTarget.get());
+                    } else if (i == 1) {
+                        imagenesAdd.add(futureTarget.get());
+                    } else if (i == 2) {
+                        imagenesAdd.add(futureTarget.get());
+                    } else if (i == 3) {
+                        imagenesAdd.add(futureTarget.get());
+                    } else if (i == 4) {
+                        imagenesAdd.add(futureTarget.get());
+                    } else if (i == 5) {
+                        imagenesAdd.add(futureTarget.get());
+                    } else if (i == 6) {
+                        imagenesAdd.add(futureTarget.get());
+                    } else if (i == 7) {
+                        imagenesAdd.add(futureTarget.get());
+                    } else if (i == 8) {
+                        imagenesAdd.add(futureTarget.get());
+                    }
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
                 }
             }
-//            if (FichaTecnica2 != null) {
-//                // Selecciona el elemento <h5> dentro del div
-//                Elements pElements = FichaTecnica.select("p");
-//                Elements liElements = FichaTecnica2.select("li");
-//
-//                for (Element h3Element : pElements) {
-//                    String textoNormalizado = Normalizer.normalize(h3Element.text(), Normalizer.Form.NFD);
-//                    textoNormalizado = textoNormalizado.replaceAll("[^\\p{ASCII}]", "");
-//
-//                    // Eliminar signos de puntuación
-//                    textoNormalizado = textoNormalizado.replaceAll("[\\p{Punct}]", "");
-//
-//                    // Convertir a minúsculas para comparación insensible a mayúsculas
-//                    textoNormalizado = textoNormalizado.toLowerCase();
-//                    titulo.add(textoNormalizado);
-//                }
-//                for (Element liElement : liElements) {
-//                    String textoNormalizado = Normalizer.normalize(liElement.text(), Normalizer.Form.NFD);
-//                    textoNormalizado = textoNormalizado.replaceAll("[^\\p{ASCII}]", "");
-//
-//                    // Eliminar signos de puntuación
-//                    textoNormalizado = textoNormalizado.replaceAll("[\\p{Punct}]", "");
-//
-//                    // Convertir a minúsculas para comparación insensible a mayúsculas
-//                    textoNormalizado = textoNormalizado.toLowerCase();
-//                    contenido.add(textoNormalizado);
-//                }
-//            }
+            if (imagenesPrincipales2 != null) {
+                Elements imgElements = imagenesPrincipales2.select("div[src]");
+                List<Integer> cantidad = new ArrayList<>();
+                //saber la cantidad de imagenes por cada div
+                // Iterar sobre los elementos div seleccionados
+                for (Element div : imagenesPrincipales2) {
+                    // Seleccionar todos los elementos div hijos
+                    Elements innerDivs = div.select("div");
 
-            nombreMoto.clear();
-            for (int i = 0; i < titulo.size(); i++) {
-                nombreMoto.add(titulo.get(i));
-                nombreMoto.add(contenido.get(i));
-            }
+                    // Contar cuántos elementos div hay dentro de cada elemento div
+                    cantidad.add(innerDivs.size());
+                }
 
-//            recuperarImagenes.clear();
-//            if (!extraerImagenesAdd.isEmpty()) {
-//                imagenesAdd.clear();
-//                imagenesColores.clear();
-//                //obtener las imagenes adicionales
-//                Elements imgElements = extraerImagenesAdd.first().select("img");
-//                for (Element imgElement : imgElements) {
-//                    String inicioPag = "http://www.suzuki.com.co";
-//                    if (!imgElement.text().contains(inicioPag)){
-//                        recuperarImagenes.add(inicioPag + imgElement.attr("src"));
-//                    }
-//                }
-//                for (int i = 0; i < recuperarImagenes.size(); i++) {
-//                    try {
-//                        //convierto las url a imagenes
-//                        FutureTarget<File> futureTarget = Glide.with(context)
-//                                .asFile()
-//                                .load(recuperarImagenes.get(i))
-//                                .submit();
-//
-//                        if (i == 0) {
-//                            imagenesAdd.add(futureTarget.get());
-//                        } else if (i == 1) {
-//                            imagenesAdd.add(futureTarget.get());
-//                        } else if (i == 2) {
-//                            imagenesAdd.add(futureTarget.get());
-//                        } else if (i == 3) {
-//                            imagenesAdd.add(futureTarget.get());
-//                        } else if (i == 4) {
-//                            imagenesAdd.add(futureTarget.get());
-//                        } else if (i == 5) {
-//                            imagenesAdd.add(futureTarget.get());
-//                        } else if (i == 6) {
-//                            imagenesAdd.add(futureTarget.get());
-//                        } else if (i == 7) {
-//                            imagenesAdd.add(futureTarget.get());
-//                        } else if (i == 8) {
-//                            imagenesAdd.add(futureTarget.get());
-//                        }
-//                    } catch (InterruptedException | ExecutionException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//
-//            imagenesColores1.clear();
-//            if (ExtraerImagenesColores != null) {
-//                // Selecciona el elemento <h5> dentro del div
-//                Elements imgElements = ExtraerImagenesColores.select("img.img-responsive");
-//                Elements liElements = ExtraerImagenesColores.select("li");
-//
-//
-//                for (Element imgElement : imgElements) {
-//                    //imagenes
-//                    String inicioPag = "http://www.suzuki.com.co";
-//                    if (!imgElement.text().contains(inicioPag)){
-//                        imagenesColores1.add(inicioPag + imgElement.attr("src"));
-//                    }
-//                }
-//                for (Element liElement : liElements) {
-//                    String style = liElement.attr("style");
-//                    // Extraer el color hexadecimal del atributo 'style'
-//                    String hexColor = style.replaceAll("background-color: ", "").trim();
-//                    coloresLista.add(hexColor);
-//                }
-//            }
 
-            for (int i = 0; i < imagenesColores1.size(); i++) {
-                if (i == 0) {
-                    try {
-                        //convierto las url a imagenes
-                        FutureTarget<File> futureTarget = Glide.with(context)
-                                .asFile()
-                                .load(imagenesColores1.get(i))
-                                .submit();
-                        imagen1 = futureTarget.get();
-                        guardarImagenesPrincipales(imagen1, null, null, null, null, null, null, null);
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
+                //color princiopal y colores
+                for (int i = 0; i < imgElements.size(); i++) {
+                    Element imagen = imgElements.get(i);
+                    String urlmod = imagen.attr("src");
+                    String urlSinParametros = urlmod.replaceAll("\\.png\\?.*", ".png");
+                    if (!urlmod.equals(urlSinParametros)) {
+                        imagenesColorPrincipal.add(urlSinParametros);
+                    }
+                }
+
+                //coloresnombre
+                for (Element spinBlock : imagenesPrincipales2) {
+                    String dataPath = spinBlock.attr("data-path");
+                    System.out.println("data-path: " + dataPath);
+                    // Encontrar la última aparición del carácter "/"
+                    int lastIndex = dataPath.lastIndexOf("/", dataPath.lastIndexOf("/") - 1);
+
+                    // Obtener el color a partir de la URL
+                    String color = dataPath.substring(lastIndex + 1);
+
+                    // Imprimir el color
+                    coloresLista.add(color.replace("/", "").toUpperCase());
+                }
+
+
+                //organizar:
+
+                Map<String, List<String>> urlsPorColor = new HashMap<>();
+
+                int indiceUrl = 0;
+
+                for (int i = 0; i < coloresLista.size(); i++) {
+                    String color = coloresLista.get(i);
+                    int cantidadImagenes = cantidad.get(i) - 1;
+
+                    // Creamos una lista para almacenar las URLs de este color
+                    List<String> urlsDelColor = new ArrayList<>();
+
+                    // Agregamos las URLs correspondientes a este color
+                    for (int j = 0; j < cantidadImagenes; j++) {
+                        urlsDelColor.add(imagenesColorPrincipal.get(indiceUrl));
+                        indiceUrl++;
                     }
 
-                } else if (i == 1) {
-                    try {
-                        FutureTarget<File> futureTarget = Glide.with(context)
-                                .asFile()
-                                .load(imagenesColores1.get(i))
-                                .submit();
-                        files1.add(futureTarget.get());
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                } else if (i == 2) {
-                    try {
-                        FutureTarget<File> futureTarget = Glide.with(context)
-                                .asFile()
-                                .load(imagenesColores1.get(i))
-                                .submit();
-                        files2.add(futureTarget.get());
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                } else if (i == 3) {
-                    try {
-                        FutureTarget<File> futureTarget = Glide.with(context)
-                                .asFile()
-                                .load(imagenesColores1.get(i))
-                                .submit();
-                        files3.add(futureTarget.get());
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                } else if (i == 4) {
-                    try {
-                        FutureTarget<File> futureTarget = Glide.with(context)
-                                .asFile()
-                                .load(imagenesColores1.get(i))
-                                .submit();
-                        files4.add(futureTarget.get());
+                    // Agregamos la lista de URLs al HashMap
+                    urlsPorColor.put(color, urlsDelColor);
+                }
 
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
+                contador = 0;
+                for (Map.Entry<String, List<String>> entry : urlsPorColor.entrySet()) {
+                    String color = entry.getKey(); // Obtener el color
+                    List<String> urls = entry.getValue(); // Obtener la lista de URLs para el color dado
+
+                    // Iterar sobre las URLs para el color actual
+                    for (String url : urls) {
+                        // Procesar cada URL usando Glide
+                        try {
+                            FutureTarget<File> futureTarget = Glide.with(context)
+                                    .asFile()
+                                    .load(url)
+                                    .submit();
+                            if (contador == 0){
+                                files1.add(futureTarget.get());
+                            }else if (contador == 1){
+                                files2.add(futureTarget.get());
+                            }else if (contador == 3){
+                                files3.add(futureTarget.get());
+                            }else if (contador == 4){
+                                files4.add(futureTarget.get());
+                            }else if (contador == 5){
+                                files5.add(futureTarget.get());
+                            }else if (contador == 6){
+                                files6.add(futureTarget.get());
+                            }
+
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
                     }
-                } else if (i == 5) {
-                    try {
-                        FutureTarget<File> futureTarget = Glide.with(context)
-                                .asFile()
-                                .load(imagenesColores1.get(i))
-                                .submit();
-                        files5.add(futureTarget.get());
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                } else if (i == 6) {
-                    try {
-                        FutureTarget<File> futureTarget = Glide.with(context)
-                                .asFile()
-                                .load(imagenesColores1.get(i))
-                                .submit();
-                        files6.add(futureTarget.get());
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
+                    contador = contador+1;
                 }
                 imagenesColorPrincipal.clear();
+                imagenesColorPrincipal.addAll(urlsPorColor.get(coloresLista.get(0)));
+                for (int i = 0; i < imagenesColorPrincipal.size(); i++) {
+                    if (i == 0) {
+                        try {
+                            //convierto las url a imagenes
+                            FutureTarget<File> futureTarget = Glide.with(context)
+                                    .asFile()
+                                    .load(imagenesColorPrincipal.get(i))
+                                    .submit();
+                            imagen1 = futureTarget.get();
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (i == 1) {
+                        try {
+                            FutureTarget<File> futureTarget = Glide.with(context)
+                                    .asFile()
+                                    .load(imagenesColorPrincipal.get(i))
+                                    .submit();
+                            imagen2 = futureTarget.get();
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (i == 2) {
+                        try {
+                            FutureTarget<File> futureTarget = Glide.with(context)
+                                    .asFile()
+                                    .load(imagenesColorPrincipal.get(i))
+                                    .submit();
+                            imagen3 = futureTarget.get();
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (i == 3) {
+                        try {
+                            FutureTarget<File> futureTarget = Glide.with(context)
+                                    .asFile()
+                                    .load(imagenesColorPrincipal.get(i))
+                                    .submit();
+                            imagen4 = futureTarget.get();
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (i == 4) {
+                        try {
+                            FutureTarget<File> futureTarget = Glide.with(context)
+                                    .asFile()
+                                    .load(imagenesColorPrincipal.get(i))
+                                    .submit();
+                            imagen5 = futureTarget.get();
+
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (i == 5) {
+                        try {
+                            FutureTarget<File> futureTarget = Glide.with(context)
+                                    .asFile()
+                                    .load(imagenesColorPrincipal.get(i))
+                                    .submit();
+                            imagen6 = futureTarget.get();
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (i == 6) {
+                        try {
+                            FutureTarget<File> futureTarget = Glide.with(context)
+                                    .asFile()
+                                    .load(imagenesColorPrincipal.get(i))
+                                    .submit();
+                            imagen7 = futureTarget.get();
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                guardarImagenesPrincipales(imagen1, imagen2, imagen3, imagen4, imagen5, imagen6, imagen7, null);
+            } else {
+                if (imagenesPrincipales != null) {
+                    Elements imgElements = imagenesPrincipales.select("img");
+
+                    for (int i = 0; i < imgElements.size(); i++) {
+                        Element imagen = imgElements.get(i);
+                        String urlmod = imagen.attr("src");
+                        String urlSinParametros = urlmod.replaceAll("\\.png\\?.*", ".png");
+                        if (!urlmod.equals(urlSinParametros)) {
+                            imagenesColorPrincipal.add(urlSinParametros);
+                        }
+                    }
+                    for (int i = 0; i < imagenesColorPrincipal.size(); i++) {
+                        if (i == 0) {
+                            try {
+                                //convierto las url a imagenes
+                                FutureTarget<File> futureTarget = Glide.with(context)
+                                        .asFile()
+                                        .load(imagenesColorPrincipal.get(i))
+                                        .submit();
+                                imagen1 = futureTarget.get();
+                            } catch (InterruptedException | ExecutionException e) {
+                                e.printStackTrace();
+                            }
+                        } else if (i == 1) {
+                            try {
+                                FutureTarget<File> futureTarget = Glide.with(context)
+                                        .asFile()
+                                        .load(imagenesColorPrincipal.get(i))
+                                        .submit();
+                                imagen2 = futureTarget.get();
+                            } catch (InterruptedException | ExecutionException e) {
+                                e.printStackTrace();
+                            }
+                        } else if (i == 2) {
+                            try {
+                                FutureTarget<File> futureTarget = Glide.with(context)
+                                        .asFile()
+                                        .load(imagenesColorPrincipal.get(i))
+                                        .submit();
+                                imagen3 = futureTarget.get();
+                            } catch (InterruptedException | ExecutionException e) {
+                                e.printStackTrace();
+                            }
+                        } else if (i == 3) {
+                            try {
+                                FutureTarget<File> futureTarget = Glide.with(context)
+                                        .asFile()
+                                        .load(imagenesColorPrincipal.get(i))
+                                        .submit();
+                                imagen4 = futureTarget.get();
+                            } catch (InterruptedException | ExecutionException e) {
+                                e.printStackTrace();
+                            }
+                        } else if (i == 4) {
+                            try {
+                                FutureTarget<File> futureTarget = Glide.with(context)
+                                        .asFile()
+                                        .load(imagenesColorPrincipal.get(i))
+                                        .submit();
+                                imagen5 = futureTarget.get();
+
+                            } catch (InterruptedException | ExecutionException e) {
+                                e.printStackTrace();
+                            }
+                        } else if (i == 5) {
+                            try {
+                                FutureTarget<File> futureTarget = Glide.with(context)
+                                        .asFile()
+                                        .load(imagenesColorPrincipal.get(i))
+                                        .submit();
+                                imagen6 = futureTarget.get();
+                            } catch (InterruptedException | ExecutionException e) {
+                                e.printStackTrace();
+                            }
+                        } else if (i == 6) {
+                            try {
+                                FutureTarget<File> futureTarget = Glide.with(context)
+                                        .asFile()
+                                        .load(imagenesColorPrincipal.get(i))
+                                        .submit();
+                                imagen7 = futureTarget.get();
+                            } catch (InterruptedException | ExecutionException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    guardarImagenesPrincipales(imagen1, imagen2, imagen3, imagen4, imagen5, imagen6, imagen7, null);
+                }
             }
-
-
-            //ficha tecnica
             Map<String, Object> updates = new HashMap<>();
             for (int i = 0; i < nombreMoto.size(); i++) {
                 //quita los espacios, tildes, parentesis, puntos:, y lo coloca en minuscula
@@ -3861,9 +4004,9 @@ public class WebScraping {
                 updates.put(textoSinEspacios, nombreMoto.get(i + 1));
                 i++;
             }
-
-            updates.put("modelo", modelo);
-            updates.put("descripcion", descripcion);
+            if (!descripcion.isEmpty()) {
+                updates.put("descripcion", descripcion);
+            }
             updates.put("consumoPorGalon", consumoGasolina);
             updates.put("visible", true);
             mpostProvider.updatePost(id, updates).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -3904,410 +4047,18 @@ public class WebScraping {
                     });
                 }
             });
-        } catch (IOException e) {
+
+
+
+
+        } catch (
+                IOException e) {
             Log.e("MainActivity", "" + e.getMessage());
-        }
 
-    }
-    //endregion
-
-    //region PROCESO DE KAWAZAKI
-    private void llenarInfoKawasaki() {
-        nombreMoto.clear();
-        try {
-            //conexion
-            Document doc = Jsoup.connect(url)
-                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36")
-                    .header("Accept-Language", "es-ES,es;q=0.9")
-                    .header("Accept-Encoding", "gzip, deflate, br")
-                    .header("Referer", "https://www.google.com/")
-                    .header("Upgrade-Insecure-Requests", "1")
-                    .header("Cache-Control", "max-age=0")
-                    .timeout(10000) // Aumentar el timeout a 10 segundos
-                    .get();
-
-            //ficha tecnica
-            Elements DatosFichaTecnicaMotos = doc.select("div.offcanvas-body");
-            Elements DatosFichaTecnicaMotos2 = DatosFichaTecnicaMotos.select("div.mb-4");
-
-
-            for (Element item : DatosFichaTecnicaMotos2) {
-                // Extrae el texto del span y label
-                Elements listItems = DatosFichaTecnicaMotos.select("div. > li");
-
-            }
-            for (Element row : DatosFichaTecnicaMotos) {
-                // Obtener las celdas de la fila
-                Elements cells = row.select("li");
-                // Verificar si la fila tiene exactamente dos celdas
-                if (cells.size() == 2) {
-                    nombreMoto.add(cells.get(0).text());
-                    nombreMoto.add(cells.get(1).text());
-                }
-            }
-            Elements imagenesAdicionales = doc.select("a[data-fancybox=gallery]");
-            colorPrincipalDiv = doc.select("label.check");
-            for (Element label : colorPrincipalDiv) {
-                // Obtener las imagenes de cada color
-                imagenesColores1.add(label.attr("data-color"));
-            }
-
-
-//            if (catalogoPartes.size() >= 2) {
-//                Element catalogoPDF = catalogoPartes.get(1);
-//                String url = catalogoPDF.attr("href");
-//                guardarPDF(url);
-//            }
-
-
-            if (colorPrincipalDiv.size() >= 2) {
-
-                color = doc.select("div.front-end.box");
-                for (Element colores : color) {
-                    String style = colores.attr("style");
-
-
-                    int colorIndex = style.indexOf("background-color:#");
-
-                    String color = style.substring(colorIndex + 17, colorIndex + 24);
-                    coloresLista.add(color);
-//                    String[] parts = color.split("/");
-//                    String lastPart = parts[parts.length - 1]; // Obtener la última parte de la URL
-//                    String[] nameParts = lastPart.split("_"); // Dividir el nombre del archivo en partes separadas por "_"
-//                    String colorHexa = nameParts[nameParts.length - 1]; // El color debería estar en la última parte
-//                    colorHexa = colorHexa.split("\\.")[0]; // Eliminar la extensión del archivo (".png")
-//                    String colorName = getColorName(colorHexa);
-
-
-                }
-                for (int i = 0; i < imagenesColores1.size(); i++) {
-                    if (i == 0) {
-                        try {
-                            //convierto las url a imagenes
-                            FutureTarget<File> futureTarget = Glide.with(context)
-                                    .asFile()
-                                    .load(imagenesColores1.get(i))
-                                    .submit();
-                            imagen1 = futureTarget.get();
-                        } catch (InterruptedException | ExecutionException e) {
-                            e.printStackTrace();
-                        }
-
-                    } else if (i == 1) {
-                        try {
-                            FutureTarget<File> futureTarget = Glide.with(context)
-                                    .asFile()
-                                    .load(imagenesColores1.get(i))
-                                    .submit();
-                            files1.add(futureTarget.get());
-                        } catch (InterruptedException | ExecutionException e) {
-                            e.printStackTrace();
-                        }
-                    } else if (i == 2) {
-                        try {
-                            FutureTarget<File> futureTarget = Glide.with(context)
-                                    .asFile()
-                                    .load(imagenesColores1.get(i))
-                                    .submit();
-                            files2.add(futureTarget.get());
-                        } catch (InterruptedException | ExecutionException e) {
-                            e.printStackTrace();
-                        }
-                    } else if (i == 3) {
-                        try {
-                            FutureTarget<File> futureTarget = Glide.with(context)
-                                    .asFile()
-                                    .load(imagenesColores1.get(i))
-                                    .submit();
-                            files3.add(futureTarget.get());
-                        } catch (InterruptedException | ExecutionException e) {
-                            e.printStackTrace();
-                        }
-                    } else if (i == 4) {
-                        try {
-                            FutureTarget<File> futureTarget = Glide.with(context)
-                                    .asFile()
-                                    .load(imagenesColores1.get(i))
-                                    .submit();
-                            files4.add(futureTarget.get());
-
-                        } catch (InterruptedException | ExecutionException e) {
-                            e.printStackTrace();
-                        }
-                    } else if (i == 5) {
-                        try {
-                            FutureTarget<File> futureTarget = Glide.with(context)
-                                    .asFile()
-                                    .load(imagenesColores1.get(i))
-                                    .submit();
-                            files5.add(futureTarget.get());
-                        } catch (InterruptedException | ExecutionException e) {
-                            e.printStackTrace();
-                        }
-                    } else if (i == 6) {
-                        try {
-                            FutureTarget<File> futureTarget = Glide.with(context)
-                                    .asFile()
-                                    .load(imagenesColores1.get(i))
-                                    .submit();
-                            files6.add(futureTarget.get());
-                        } catch (InterruptedException | ExecutionException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    imagenesColorPrincipal.clear();
-                    if (i == 0) {
-                        //guardarImagenesPrincipales(imagen1, null, null, null, null, null, null, null);
-                    }
-                }
-            }
-
-
-            if (imagenesAdicionales.size() >= 2) {
-                imagenesAdd.clear();
-                imagenesColores.clear();
-                for (int i = 0; i < imagenesAdicionales.size(); i++) {
-                    Element imagen = imagenesAdicionales.get(i);
-                    recuperarImagenes.add(imagen.attr("href"));
-                }
-                //obetener texto de imagenes:
-                Elements divItems = doc.select("div.items");
-                for (Element divItem : divItems) {
-                    Element h2Element = divItem.selectFirst("p");
-                    if (h2Element != null) {
-                        //OBTIENE EL TEXTO DE LAS IMAGENES
-                        String h2Text = h2Element.text();
-                        imagenesColores.add(h2Text);
-                    }
-                }
-                for (int i = 0; i < imagenesAdicionales.size(); i++) {
-                    try {
-                        //convierto las url a imagenes
-                        FutureTarget<File> futureTarget = Glide.with(context)
-                                .asFile()
-                                .load(recuperarImagenes.get(i))
-                                .submit();
-
-                        if (i == 0) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 1) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 2) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 3) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 4) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 5) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 6) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 7) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 8) {
-                            imagenesAdd.add(futureTarget.get());
-                        }
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } else {
-                Elements divItems = doc.select("div.items");
-                imagenesColores.clear();
-                imagenesAdd.clear();
-
-                // Iterar sobre cada elemento div con la clase "items"
-                for (Element divItem : divItems) {
-                    // Obtener el elemento img dentro de cada div "items"
-                    Element imgElement = divItem.selectFirst("img");
-                    if (imgElement != null) {
-                        // Obtener la URL de la imagen
-                        String imgUrl = imgElement.attr("src");
-                        recuperarImagenes.add(imgUrl);
-                    }
-                    Element h2Element = divItem.selectFirst("p");
-                    if (h2Element != null) {
-                        //OBTIENE EL TEXTO DE LAS IMAGENES
-                        String h2Text = h2Element.text();
-                        imagenesColores.add(h2Text);
-                    }
-                }
-                for (int i = 0; i < recuperarImagenes.size(); i++) {
-                    try {
-                        //convierto las url a imagenes
-                        FutureTarget<File> futureTarget = Glide.with(context)
-                                .asFile()
-                                .load(recuperarImagenes.get(i))
-                                .submit();
-
-                        if (i == 0) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 1) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 2) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 3) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 4) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 5) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 6) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 7) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 8) {
-                            imagenesAdd.add(futureTarget.get());
-                        }
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            guardarImagenesPrincipales(imagen1, null, null, null, null, null, null, null);
-            //melo hasta aqui
-
-            Map<String, Object> updates = new HashMap<>();
-            for (int i = 0; i < nombreMoto.size(); i++) {
-                //quita los espacios, tildes, parentesis, puntos:, y lo coloca en minuscula
-                String textoSinEspacios = nombreMoto.get(i)
-                        .replaceAll("\\s+|\\p{InCombiningDiacriticalMarks}|\\(.*?\\)|:", "")
-                        .toLowerCase();
-                //quita las tildes
-                textoSinEspacios = Normalizer.normalize(textoSinEspacios, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-                updates.put(textoSinEspacios, nombreMoto.get(i + 1));
-                i++;
-            }
-            // problema con los datos a guardar de la ficha tecnica
-
-            updates.put("caracteristicasTexto", imagenesColores);
-            if (modelo.matches(".*[a-zA-Z].*")) {
-                updates.put("Modelo", modelo);
-                if (!modelo2.isEmpty()) {
-                    updates.put("Modelo2", modelo2);
-                }
-            } else {
-                updates.put("modelo", "Modelo " + modelo);
-                if (!modelo2.isEmpty()) {
-                    updates.put("modelo2", "Modelo" + modelo2);
-                }
-            }
-
-            updates.put("consumoPorGalon", consumoGasolina);
-            updates.put("visible", true);
-
-            mpostProvider.updatePost(id, updates).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                }
-            });
-        } catch (IOException e) {
-            Log.e("MainActivity", "" + e.getMessage());
         }
     }
-
-    //saber el color aproximado
-//    public static String getColorName(String colorHexadeximal) {
-//        // Convertir el color hexadecimal a RGB
-//        int color = Color.parseColor(colorHexadeximal);
-//        int r = Color.red(color);
-//        int g = Color.green(color);
-//        int b = Color.blue(color);
-//
-//        // Asignar nombres aproximados basados en los valores RGB
-//        if (isBlack(r, g, b)) {
-//            return "Negro";
-//        } else if (isWhite(r, g, b)) {
-//            return "Blanco";
-//        } else if (isHueso(r, g, b)) {
-//            return "Blanco";
-//        } else if (isRed(r, g, b)) {
-//            return "Rojo";
-//        } else if (isGreen(r, g, b)) {
-//            return "Verde";
-//        } else if (isDarkGreen(r, g, b)) {
-//            return "Verde Oscuro";
-//        } else if (isBlue(r, g, b)) {
-//            return "Azul";
-//        } else if (isGold(r, g, b)) {
-//            return "Dorado";
-//        } else if (isDarkBlue(r, g, b)) {
-//            return "Azul Oscuro";
-//        } else if (isDarkRed(r, g, b)) {
-//            return "Rojo Oscuro";
-//        } else if (isPurple(r, g, b)) {
-//            return "Morado";
-//        } else if (isYellow(r, g, b)) {
-//            return "Amarillo";
-//        } else if (isSkyBlue(r, g, b)) {
-//            return "Celeste";
-//        }
-//        // Agregar más condiciones según sea necesario para otros colores
-//        // Si el color no coincide con ninguno de los nombres predefinidos, puedes devolver "Desconocido" o algo similar
-//        return "AZUL";
-//    }
-//
-//    private static boolean isBlack(int r, int g, int b) {
-//        return r <= 10 && g <= 10 && b <= 10;
-//    }
-//
-//    private static boolean isWhite(int r, int g, int b) {
-//        return r >= 240 && g >= 240 && b >= 240;
-//    }
-//
-//    private static boolean isHueso(int r, int g, int b) {
-//        return r >= 232 && g >= 232 && b >= 232;
-//    }
-//
-//    private static boolean isRed(int r, int g, int b) {
-//        return r >= 200 && g <= 100 && b <= 100;
-//    }
-//
-//    private static boolean isGreen(int r, int g, int b) {
-//        return r <= 100 && g >= 200 && b <= 100;
-//    }
-//
-//    private static boolean isDarkGreen(int r, int g, int b) {
-//        // Ajusta estos valores según los tonos de azul oscuro que desees reconocer
-//        return r <= 57 && g <= 90 && b >= 86;
-//    }
-//
-//    private static boolean isBlue(int r, int g, int b) {
-//        return r <= 100 && g <= 100 && b >= 200;
-//    }
-//
-//    private static boolean isGold(int r, int g, int b) {
-//        // Ajusta estos valores según los tonos de dorado que desees reconocer
-//        return r >= 160 && g >= 160 && g <= 220 && b <= 56;
-//    }
-//
-//    private static boolean isDarkBlue(int r, int g, int b) {
-//        // Ajusta estos valores según los tonos de azul oscuro que desees reconocer
-//        return r <= 30 && g <= 30 && b >= 100;
-//    }
-//
-//    private static boolean isDarkRed(int r, int g, int b) {
-//        // Ajusta estos valores según los tonos de rojo oscuro que desees reconocer
-//        return r >= 100 && g <= 30 && b <= 30;
-//    }
-//
-//    private static boolean isPurple(int r, int g, int b) {
-//        // Ajusta estos valores según los tonos de morado que desees reconocer
-//        return r >= 100 && g <= 30 && b >= 100;
-//    }
-//
-//    private static boolean isYellow(int r, int g, int b) {
-//        // Ajusta estos valores según los tonos de amarillo que desees reconocer
-//        return r >= 200 && g >= 200 && b <= 50;
-//    }
-//
-//    private static boolean isSkyBlue(int r, int g, int b) {
-//        // Ajustamos los valores para definir el color celeste
-//        return r >= 27 && g >= 180 && b >= 185;
-//    }
-
-
 //endregion
+
 }
 
 

@@ -81,7 +81,7 @@ public class MotosNoVisibles extends Fragment {
 
         NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
 
-        mPostsAdapters = new PostsAdapters(options, getContext(), navController, 1);
+        mPostsAdapters = new PostsAdapters(options, getContext(), navController, 1,"");
         mRecyclerView.setAdapter(mPostsAdapters);
         mPostsAdapters.startListening();
 

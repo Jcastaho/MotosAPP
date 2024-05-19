@@ -64,6 +64,9 @@ public class PostProvider {
     public Query getAll3(){
         return mCollection.whereEqualTo("visible", false);
     }
+    public Query getAllDescuento(){
+        return mCollection.whereEqualTo("visible", true).orderBy("prioridad", Query.Direction.DESCENDING).whereEqualTo("descuento", true).orderBy("descuento");
+    }
     public Query getAllVacias(){
         return mCollection.whereEqualTo("cilindraje", null);
     }

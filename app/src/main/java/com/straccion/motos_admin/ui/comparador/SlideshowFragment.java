@@ -56,36 +56,13 @@ public class SlideshowFragment extends Fragment {
     int controlador_Imagenes3 = 0;
     String marcaMoto = "";
 
-    ImageView imgComprarMoto1;
-    ImageView imgComprarMoto2;
-    ImageView imgComprarMoto3;
+    ImageView imgComprarMoto1, imgComprarMoto2, imgComprarMoto3;
 
-    TextView txtCilindrajeMoto1;
-    TextView txtMotorMoto1;
-    TextView txtTorqueMoto1;
-    TextView txtAlimentacionMoto1;
-    TextView txtRefrigeracionValor1;
-    TextView txtTransmisionMoto1;
-    TextView txtSuspensionDelanValor1;
-    TextView txtSuspensionTrasValor1;
-    TextView txtFrenoDelanValor1;
-    TextView txtFrenoTrasMoto1;
-    TextView txtTanqueMoto1;
-    TextView txtPesoMoto1;
-    TextView txtPrecioValor1;
-    TextView txtCilindrajevalor1;
-    TextView txtMotorvalor1;
-    TextView txtTorqueValor1;
-    TextView txtAlimentacionValor1;
-    TextView txtRefrigeracionMoto1;
-    TextView txtTransmisionValor1;
-    TextView txtSuspensionDelanMoto1;
-    TextView txtSuspensionTrasMoto1;
-    TextView txtFrenoDelanMoto1;
-    TextView txtFrenoTrasValor1;
-    TextView txtTanqueValor1;
-    TextView txtPesoValor1;
-    TextView txtPrecioMoto1;
+    TextView txtCilindrajeMoto1, txtMotorMoto1, txtTorqueMoto1, txtAlimentacionMoto1, txtRefrigeracionValor1, txtTransmisionMoto1, txtSuspensionDelanValor1,
+            txtSuspensionTrasValor1, txtFrenoDelanValor1, txtFrenoTrasMoto1, txtTanqueMoto1, txtPesoMoto1, txtPrecioValor1, txtCilindrajevalor1, txtMotorvalor1,
+            txtTorqueValor1, txtAlimentacionValor1, txtRefrigeracionMoto1, txtTransmisionValor1, txtSuspensionDelanMoto1, txtSuspensionTrasMoto1, txtFrenoDelanMoto1,
+            txtFrenoTrasValor1, txtTanqueValor1, txtPesoValor1, txtPrecioMoto1;
+
 
     TextView txtCilindrajeMoto2;
     TextView txtMotorMoto2;
@@ -325,15 +302,15 @@ public class SlideshowFragment extends Fragment {
                     if (position != -1) {
                         String imagePath = imagenesList.get(position);
                         if (contadorImgView == 1) {
-                            Picasso.get().load(imagePath).into(imgComprarMoto1);
+                            Picasso.get().load(imagePath).fit().into(imgComprarMoto1);
                             mostrarTextos(1);
                             mostrarDatos(position, contadorImgView, id);
                         } else if (contadorImgView == 2) {
-                            Picasso.get().load(imagePath).into(imgComprarMoto2);
+                            Picasso.get().load(imagePath).fit().into(imgComprarMoto2);
                             mostrarTextos(2);
                             mostrarDatos(position, contadorImgView, id);
                         } else if (contadorImgView == 3) {
-                            Picasso.get().load(imagePath).into(imgComprarMoto3);
+                            Picasso.get().load(imagePath).fit().into(imgComprarMoto3);
                             mostrarTextos(3);
                             mostrarDatos(position, contadorImgView, id);
                         }

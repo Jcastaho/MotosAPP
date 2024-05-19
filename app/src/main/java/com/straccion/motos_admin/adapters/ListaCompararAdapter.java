@@ -49,7 +49,7 @@ public class ListaCompararAdapter extends FirestoreRecyclerAdapter<PostAuteco, L
 
         holder.txtNombreMoto.setText(post.getNombreMoto());
         if (post.getImagenes() != null && !post.getImagenes().isEmpty()) {
-            Picasso.get().load(post.getImagenes().get(0)).into(holder.imgMoto);
+            Picasso.get().load(post.getImagenes().get(0)).fit().into(holder.imgMoto);
         }
         holder.ViewHolder.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +57,7 @@ public class ListaCompararAdapter extends FirestoreRecyclerAdapter<PostAuteco, L
                 String imagen2 = post.getImagenes().get(0);
                 dialog2.dismiss();
                 postIdSeleccionado = document.getId();
-                Picasso.get().load(imagen2).into(imgMoto2);
+                Picasso.get().load(imagen2).fit().into(imgMoto2);
                 txtMoto2.setText(post.getNombreMoto());
                 txtMoto2.setVisibility(View.VISIBLE);
             }
