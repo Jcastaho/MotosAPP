@@ -678,10 +678,10 @@ public class NuevoCompararFragment extends Fragment {
                                     peso1 = buscarNumero(peso);
                                     txtPeso1.setText(peso1 + " KG");
                                 }
-//                                if (documentSnapshot.contains("sistemadealimentaciondecombustible")) {
-//                                    sistemaAlimentacion1 = documentSnapshot.get("sistemadealimentaciondecombustible").toString();
-//                                    Fi1 = ABSoSisAlimen(sistemaAlimentacion1);
-//                                }
+                                if (documentSnapshot.contains("sistemadealimentacion")) {
+                                    sistemaAlimentacion1 = documentSnapshot.get("sistemadealimentacion").toString();
+                                    Fi1 = ABSoSisAlimen(sistemaAlimentacion1);
+                                }
                                 if (documentSnapshot.contains("consumoPorGalon")) {
                                     consumoPorGalon1 = Integer.parseInt(documentSnapshot.get("consumoPorGalon").toString());
                                 }
@@ -1138,10 +1138,10 @@ public class NuevoCompararFragment extends Fragment {
                                     peso2 = buscarNumero(peso);
                                     txtPeso2.setText(peso2 + " KG");
                                 }
-//                                if (documentSnapshot.contains("sistemadealimentaciondecombustible")) {
-//                                    sistemaAlimentacion1 = documentSnapshot.get("sistemadealimentaciondecombustible").toString();
-//                                    Fi1 = ABSoSisAlimen(sistemaAlimentacion1);
-//                                }
+                                if (documentSnapshot.contains("sistemadealimentacion")) {
+                                    sistemaAlimentacion1 = documentSnapshot.get("sistemadealimentacion").toString();
+                                    Fi2 = ABSoSisAlimen(sistemaAlimentacion1);
+                                }
                                 if (documentSnapshot.contains("consumoPorGalon")) {
                                     consumoPorGalon2 = Integer.parseInt(documentSnapshot.get("consumoPorGalon").toString());
                                 }
@@ -1158,6 +1158,93 @@ public class NuevoCompararFragment extends Fragment {
                                 }
                                 if (documentSnapshot.contains("tipodearranque")) {
                                     arranque2 = documentSnapshot.get("tipodearranque").toString();
+                                    arranqueElectrico2 = tipoArranque(arranque2);
+                                }
+                                if (documentSnapshot.contains("nuevoValorDescuento")) {
+                                    valor2 = Integer.parseInt(documentSnapshot.get("nuevoValorDescuento").toString());
+                                }
+                            }
+                            if (fabricante.equals("BAJAJ")){
+                                if (documentSnapshot.contains("nombreMoto")) {
+                                    nombre2 = documentSnapshot.get("nombreMoto").toString();
+                                    txtNombreMoto2.setText(nombre2);
+                                    btnMotoNombre2.setText(nombre2);
+                                    ABS2 = ABSoSisAlimen(nombre2);
+                                }
+                                if (documentSnapshot.contains("carpeta3")) {
+                                    especialidad2 = documentSnapshot.get("carpeta3").toString();
+                                }
+                                if (documentSnapshot.contains("frenodelantero")) {
+                                    String TipoFreno = documentSnapshot.get("frenodelantero").toString();
+                                    boolean disco = tipoDeFreno(TipoFreno);
+                                    if (disco){
+                                        frenodelantero2 = "Disco";
+                                    }else {
+                                        frenodelantero2 = "Tambor";
+                                    }
+                                    if (!ABS2){
+                                        ABS2 = ABSoSisAlimen(TipoFreno);
+                                    }
+                                }
+                                if (documentSnapshot.contains("frenotrasero")) {
+                                    String TipoFreno = documentSnapshot.get("frenotrasero").toString();
+                                    boolean disco = tipoDeFreno(TipoFreno);
+                                    ABSLlantaTrasera2 = ABSoSisAlimen(TipoFreno); // abs en la llanta trasera
+                                    if (disco){
+                                        frenotrasero2 = "Disco";
+                                    }else {
+                                        frenotrasero2 = "Tambor";
+                                    }
+                                    if (!ABS2){
+                                        ABS2 = ABSoSisAlimen(TipoFreno);
+                                    }
+                                }
+                                if (documentSnapshot.contains("potenciamaxima")) {
+                                    potencia = documentSnapshot.get("potenciamaxima").toString();
+                                    potencia2 = buscarNumero(potencia);
+                                    txtPotencia2.setText(potencia2 + " HP");
+                                }
+                                if (documentSnapshot.contains("cilindrada")) {
+                                    cilindraje2 = documentSnapshot.get("cilindrada").toString();
+                                    cilindrajeValor2 = buscarNumero(cilindraje2);
+                                    Pattern patron = Pattern.compile(".*[a-zA-Z].*");
+                                    Matcher matcher = patron.matcher(cilindraje2);
+                                    if (matcher.find()) {
+                                        txtCilindraje2.setText(cilindraje2.toUpperCase());
+                                    } else {
+                                        txtCilindraje2.setText(cilindraje2 + " CC");
+                                    }
+                                }
+                                if (documentSnapshot.contains("torquemaximo")) {
+                                    torque = documentSnapshot.get("torquemaximo").toString();
+                                    torque2 = buscarNumero(torque);
+                                    txtTorque2.setText(torque2 + " Nm");
+                                }
+                                if (documentSnapshot.contains("pesoenseco")) {
+                                    peso = documentSnapshot.get("pesoenseco").toString();
+                                    peso2 = buscarNumero(peso);
+                                    txtPeso2.setText(peso2 + " KG");
+                                }
+                                if (documentSnapshot.contains("sistemadealimentacion")) {
+                                    sistemaAlimentacion1 = documentSnapshot.get("sistemadealimentacion").toString();
+                                    Fi2 = ABSoSisAlimen(sistemaAlimentacion1);
+                                }
+                                if (documentSnapshot.contains("consumoPorGalon")) {
+                                    consumoPorGalon2 = Integer.parseInt(documentSnapshot.get("consumoPorGalon").toString());
+                                }
+                                if (documentSnapshot.contains("velocidadMaxima")) {
+                                    double dato = Double.parseDouble(documentSnapshot.get("velocidadMaxima").toString());
+                                    velocidadMaxima2 = (int) dato;
+                                    txtVelMaxima2.setText(velocidadMaxima2 + " KM/H");
+                                }
+                                if (documentSnapshot.contains("imagenes")) {
+                                    listaImagenes = (List<String>) documentSnapshot.get("imagenes");
+                                    String imagen = listaImagenes.get(0);
+                                    Picasso.get().load(imagen).into(imgMoto2);
+                                    imgMoto2.setPadding(18,18,18,18);
+                                }
+                                if (documentSnapshot.contains("arranque")) {
+                                    arranque2 = documentSnapshot.get("arranque").toString();
                                     arranqueElectrico2 = tipoArranque(arranque2);
                                 }
                                 if (documentSnapshot.contains("nuevoValorDescuento")) {
@@ -1580,6 +1667,12 @@ public class NuevoCompararFragment extends Fragment {
                 txtOption14.setText("✔  Ideal para todo tipo de terreno");
             }else if (especialidad2.equals("URBANA")){
                 txtOption14.setText("✔  Ideal para zonas urbanas");
+            }else if (especialidad2.equals("SEMIAUTOMATICAS")){
+                txtOption14.setText("✔  Ideal para zonas urbanas");
+            }else if (especialidad2.equals("AUTOMATICAS")){
+                txtOption14.setText("✔  Ideal para zonas urbanas");
+            }else if (especialidad2.equals("ADVENTURE")){
+                txtOption14.setText("✔  Ideal para viajar");
             }else if (especialidad2.equals("DEPORTIVA")){
                 txtOption14.setText("✔  Óptima para la conducción deportiva en entornos urbanos");
             }else {
@@ -1631,7 +1724,6 @@ public class NuevoCompararFragment extends Fragment {
         }).start();
     }
     private boolean ABSoSisAlimen(String args) {
-
         Pattern patron = Pattern.compile("Inyección|electrónica|fi|full|ABS|IBS", Pattern.CASE_INSENSITIVE);
 
         // Buscar coincidencias en el texto

@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.paging.PagedList;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,6 +32,7 @@ import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.ObservableSnapshotArray;
+import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -418,6 +420,8 @@ public class nav_mimotoideal extends Fragment {
         }else if (respuestas.contains("Moderadamente importante")) {
             economica = "regular";
         }
+
+
         FirestoreRecyclerOptions<PostAuteco> options = new FirestoreRecyclerOptions.Builder<PostAuteco>().setQuery(filteredQuery.get(0), PostAuteco.class).build();
         NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
         mPostsAdapters = new FiltrosMiMotoAdapter(options, getContext(), navController, economica);
@@ -460,7 +464,7 @@ public class nav_mimotoideal extends Fragment {
                     } else {
                         txtTitulo1.setVisibility(View.GONE);
                     }
-                    if (reciclerViewMiMoto2.getAdapter() != null && reciclerViewMiMoto2.getAdapter().getItemCount() != 0) {
+                    if (reciclerViewMiMoto2.getAdapter() != null || reciclerViewMiMoto2.getAdapter().getItemCount() != 0) {
                         txtTitulo2.setVisibility(View.VISIBLE);
                     } else {
                         txtTitulo2.setVisibility(View.GONE);
@@ -475,8 +479,6 @@ public class nav_mimotoideal extends Fragment {
                             txtTitulo2.setText("MOTOS QUE TE PUEDEN INTERESAR");
                         }
                     }
-
-
                 }
             }, tiempoMostrandoProgressBar);
 
@@ -581,4 +583,5 @@ public class nav_mimotoideal extends Fragment {
         }
         return queries;
     }
+
 }

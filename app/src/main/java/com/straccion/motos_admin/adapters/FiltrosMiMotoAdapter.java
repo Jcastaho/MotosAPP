@@ -56,7 +56,8 @@ import java.util.List;
                     holder.txtMarca.setText(post.getMarcaMoto());
                     holder.txtNombreMoto.setText(post.getNombreMoto());
                     if (post.getImagenes() != null && !post.getImagenes().isEmpty()) {
-                        Picasso.get().load(post.getImagenes().get(0)).into(holder.imgMoto);
+                        Picasso.get().load(post.getImagenes().get(0)).fit().into(holder.imgMoto);
+                        holder.imgMoto.setPadding(-1, -1, -1,-1);
                     }
                     holder.ViewHolder.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -74,7 +75,8 @@ import java.util.List;
                 holder.txtMarca.setText(post.getMarcaMoto());
                 holder.txtNombreMoto.setText(post.getNombreMoto());
                 if (post.getImagenes() != null && !post.getImagenes().isEmpty()) {
-                    Picasso.get().load(post.getImagenes().get(0)).into(holder.imgMoto);
+                    Picasso.get().load(post.getImagenes().get(0)).fit().into(holder.imgMoto);
+                    holder.imgMoto.setPadding(-1, -1, -1,-1);
                 }
                 holder.ViewHolder.setOnClickListener(new View.OnClickListener() {
                     @Override

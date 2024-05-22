@@ -1,6 +1,8 @@
 package com.straccion.motos_admin.ui.addmotos;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.nfc.Tag;
@@ -17,6 +19,7 @@ import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.FutureTarget;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -52,6 +55,7 @@ import java.net.URL;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -183,6 +187,7 @@ public class WebScraping {
             url.add("https://www.incolmotos-yamaha.com.co/vehiculo/mt09tracer-gt/7412/");
             url.add("https://www.incolmotos-yamaha.com.co/vehiculo/mt03a/2349/");
             url.add("https://www.incolmotos-yamaha.com.co/vehiculo/mt09a-2/2317/");
+            url.add("https://www.incolmotos-yamaha.com.co/vehiculo/mtn1000dx/21394/");
 
             url.add("https://www.incolmotos-yamaha.com.co/vehiculo/tmaxtechmax/22567/");
             url.add("https://www.incolmotos-yamaha.com.co/vehiculo/gpd155a/15956/");
@@ -356,7 +361,6 @@ public class WebScraping {
             url.add("https://motos.honda.com.co/motos-honda/motos-sport/CB-190-R-Tricolor");
             url.add("https://motos.honda.com.co/motos-honda/motos-sport/CB-190-REPSOL");
             url.add("https://motos.honda.com.co/motos-honda/motos-sport/CB-300F");
-            url.add("https://motos.honda.com.co/motos-honda/motos-sport/CB-1000R");
             url.add("https://motos.honda.com.co/motos-honda/super-sport/CBR-650R");
             url.add("https://motos.honda.com.co/motos-honda/todo-terreno/XR-150L");
             url.add("https://motos.honda.com.co/motos-honda/todo-terreno/XR-190L");
@@ -365,9 +369,8 @@ public class WebScraping {
             url.add("https://motos.honda.com.co/motos-honda/scooter-y-semiautomatica/DIO-LED-STD");
             url.add("https://motos.honda.com.co/motos-honda/scooter-y-semiautomatica/WAVE-110S");
             url.add("https://motos.honda.com.co/motos-honda/scooter-y-semiautomatica/DIO-LED-DLX");
-            url.add("https://motos.honda.com.co/motos-honda/scooter-y-semiautomatica/pcx-160?q=motos-honda/scooter-y-semiautomatica/PCX-150");
-            url.add("https://motos.honda.com.co/motos-honda/scooter-y-semiautomatica/pcx-160?q=motos-honda/scooter-y-semiautomatica/PCX-150-DLX");
             url.add("https://motos.honda.com.co/motos-honda/scooter-y-semiautomatica/PCX-160");
+            url.add("https://motos.honda.com.co/motos-honda/scrambler/CB-350D");
             url.add("https://motos.honda.com.co/motos-honda/NAVI/NAVI");
             url.add("https://motos.honda.com.co/motos-honda/NAVI/navi-mix");
             url.add("https://motos.honda.com.co/motos-honda/NAVI/NAVI-RALLY");
@@ -375,10 +378,7 @@ public class WebScraping {
             url.add("https://motos.honda.com.co/motos-honda/aventura/NX-500");
             url.add("https://motos.honda.com.co/motos-honda/aventura/CB-500X");
             url.add("https://motos.honda.com.co/motos-honda/aventura/NC-750XD");
-            url.add("https://motos.honda.com.co/motos-honda/aventura/AFRICA-TWIN-CRF-1100L");
-            url.add("https://motos.honda.com.co/motos-honda/aventura/africa-twin-adventure-sports");
-            url.add("https://motos.honda.com.co/motos-honda/aventura/AFRICA-TWIN-ADVENTURE-SPORTS-SE");
-            url.add("https://motos.honda.com.co/motos-honda/custom/CMX-500");
+            url.add("https://motos.honda.com.co/motos-honda/aventura/x-adv");
 
             for (int i = 0; i < url.size(); i++) {
                 doc = Jsoup.connect(url.get(i)).get();
@@ -400,6 +400,7 @@ public class WebScraping {
             Log.e("MainActivity", "Error al obtener el nombre de la moto: " + e.getMessage());
         }
     }
+
     private void preciosBAJAJ() {
         try {
             List<String> url = new ArrayList<>();
@@ -440,7 +441,7 @@ public class WebScraping {
 
                     Element pElemen = NombreMotoYPrecio.select("div.variant-banner-text p").first();
                     String infoPrecio = pElemen.text();
-                    precioMoto.add(infoPrecio.replace(" COP*",""));
+                    precioMoto.add(infoPrecio.replace(" COP*", ""));
                 }
             }
         } catch (IOException e) {
@@ -450,145 +451,152 @@ public class WebScraping {
     }
 
     private void guardarPreciosenFirebase() {
-        mpostProvider.getAll2().addSnapshotListener((querySnapshot, error) -> {
-            if (error != null) {
-                // Manejar el error
-                return;
-            }
-
-            if (querySnapshot != null) {
-                // Iterar sobre cada documento obtenido de la base de datos
-                for (DocumentSnapshot document : querySnapshot.getDocuments()) {
-                    Map<String, Object> DescuentosAActualizar1 = new HashMap<>();
-                    Map<String, Object> ValorDesAActualizar2 = new HashMap<>();
-                    Map<String, Object> PrecioAActualizar3 = new HashMap<>();
-                    Map<String, Object> Precio2AActualizar4 = new HashMap<>();
-                    // Obtener el nombre y precio de la moto del documento
-                    String idMoto = document.getId();
-                    String marcaMoto = document.getString("marcaMoto");
-                    String nombreMoto = document.getString("nombreMoto");
-                    double nuevoValorDescuento = document.getDouble("nuevoValorDescuento");
-                    double precio = document.getDouble("precio");
-                    double precio2 = 0;
-                    if (document.contains("precio2")) {
-                        precio2 = document.getDouble("precio2"); // para los que tienen dos modelos diferentes
-                    }
-                    boolean descuento = document.getBoolean("descuento");
-
-                    // Buscar el índice correspondiente en la lista nombresMotos
-                    List<Integer> indices = new ArrayList<>();
-                    String nombreBuscado = nombreMoto.replace(" ", "").replace("-", "");//elinmino espacios
-
-                    for (int i = 0; i < nombresMotos.size(); i++) {
-                        String nombreLista = nombresMotos.get(i).replace(" ", "").toUpperCase();//elinmino espacios
-                        nombreLista = nombreLista.replace("-", "");
-                        // Normaliza la cadena para eliminar tildes y caracteres diacríticos
-                        nombreLista = Normalizer.normalize(nombreLista, Normalizer.Form.NFD);
-                        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-                        nombreLista = pattern.matcher(nombreLista).replaceAll("");
-                        if (nombreLista.contains(nombreBuscado)) {
-                            indices.add(i);
-                        }
-                    }
-
-                    // Verificar si el nombre de la moto existe en la lista nombresMotos
-                    if (!indices.isEmpty()) {
-                        // Obtener el precio almacenado en la lista precioMoto
-                        int precioConvertido = 0;
-                        int precioConvertido2 = 0;
-
-                        if (indices.size() == 2) {
-                            precioConvertido = Integer.parseInt(precioMoto.get(indices.get(0)).replaceAll("\\D", ""));
-                            precioConvertido2 = Integer.parseInt(precioMoto.get(indices.get(1)).replaceAll("\\D", ""));
-                            int mayor = Math.max(precioConvertido2, precioConvertido);
-                            int menor = Math.min(precioConvertido2, precioConvertido);
-                            if (marcaMoto.equals("SUZUKI")) {
-                                precioConvertido = menor;
-                                precioConvertido2 = mayor;
-                            } else {
-                                precioConvertido = mayor;
-                                precioConvertido2 = menor;
-                            }
-
-                        } else {
-                            precioConvertido = Integer.parseInt(precioMoto.get(indices.get(0)).replaceAll("\\D", ""));
-                        }
-
-
-                        // Comparar los precios
-                        if (nuevoValorDescuento != precioConvertido) {
-                            if (nuevoValorDescuento > precioConvertido) {
-                                DescuentosAActualizar1.put("descuento", true);
-                                ValorDesAActualizar2.put("nuevoValorDescuento", precioConvertido);
-                                PrecioAActualizar3.put("precio", (int) nuevoValorDescuento);
-                                if (precio == 0) {
-                                    PrecioAActualizar3.put("precio", precioConvertido);
-                                }
-                            } else {
-                                if (descuento) {
-                                    DescuentosAActualizar1.put("descuento", false);
-                                }
-                                if (nuevoValorDescuento == 0) {
-                                    ValorDesAActualizar2.put("nuevoValorDescuento", precioConvertido);
-                                }
-                                if (precio == 0) {
-                                    PrecioAActualizar3.put("precio", precioConvertido);
-                                } else {
-                                    ValorDesAActualizar2.put("nuevoValorDescuento", precioConvertido);
-                                    PrecioAActualizar3.put("precio", (int) precioConvertido);
-                                }
-                            }
-                        }
-
-                        //precio 2
-                        if (precioConvertido2 != 0) {
-                            if (precio2 != precioConvertido2) {
-                                Precio2AActualizar4.put("precio2", precioConvertido2);
-                            }
-                        } else if (marcaMoto == "SUZUKI") {
-
-                        }
-                    }
-
-
-                    if (!ValorDesAActualizar2.isEmpty()) {
-                        mpostProvider.updateMasive1(idMoto, ValorDesAActualizar2).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-
-                            }
-                        });
-                    }
-                    if (!DescuentosAActualizar1.isEmpty()) {
-                        mpostProvider.updateMasive2(idMoto, DescuentosAActualizar1).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-
-                            }
-                        });
-                    }
-                    if (!PrecioAActualizar3.isEmpty()) {
-                        mpostProvider.updateMasive3(idMoto, PrecioAActualizar3).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-
-                            }
-                        });
-                    }
-                    if (!Precio2AActualizar4.isEmpty()) {
-                        mpostProvider.updateMasive4(idMoto, Precio2AActualizar4).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-
-                            }
-                        });
-                    }
-                    Toast.makeText(context, "Proceso finalizado", Toast.LENGTH_SHORT).show();
+        try {
+            mpostProvider.getAll2().addSnapshotListener((querySnapshot, error) -> {
+                if (error != null) {
+                    // Manejar el error
+                    return;
                 }
-                ;
-            }
-        });
 
+                if (querySnapshot != null) {
+                    // Iterar sobre cada documento obtenido de la base de datos
+                    for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                        Map<String, Object> DescuentosAActualizar1 = new HashMap<>();
+                        Map<String, Object> ValorDesAActualizar2 = new HashMap<>();
+                        Map<String, Object> PrecioAActualizar3 = new HashMap<>();
+                        Map<String, Object> Precio2AActualizar4 = new HashMap<>();
+                        // Obtener el nombre y precio de la moto del documento
+                        String idMoto = document.getId();
+                        String marcaMoto = document.getString("marcaMoto");
+                        String nombreMoto = document.getString("nombreMoto");
+                        double nuevoValorDescuento = document.getDouble("nuevoValorDescuento");
+                        double precio = document.getDouble("precio");
+                        double precio2 = 0;
+                        if (document.contains("precio2")) {
+                            precio2 = document.getDouble("precio2"); // para los que tienen dos modelos diferentes
+                        }
+                        boolean descuento = document.getBoolean("descuento");
+
+                        // Buscar el índice correspondiente en la lista nombresMotos
+                        List<Integer> indices = new ArrayList<>();
+                        String nombreBuscado = nombreMoto.replace(" ", "").replace("-", "");//elinmino espacios
+
+                        for (int i = 0; i < nombresMotos.size(); i++) {
+                            String nombreLista = nombresMotos.get(i).replace(" ", "").toUpperCase();//elinmino espacios
+                            nombreLista = nombreLista.replace("-", "");
+                            // Normaliza la cadena para eliminar tildes y caracteres diacríticos
+                            nombreLista = Normalizer.normalize(nombreLista, Normalizer.Form.NFD);
+                            Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+                            nombreLista = pattern.matcher(nombreLista).replaceAll("");
+                            if (nombreLista.contains(nombreBuscado)) {
+                                indices.add(i);
+                            }
+                        }
+
+                        // Verificar si el nombre de la moto existe en la lista nombresMotos
+                        if (!indices.isEmpty()) {
+                            // Obtener el precio almacenado en la lista precioMoto
+                            int precioConvertido = 0;
+                            int precioConvertido2 = 0;
+
+                            if (indices.size() == 2) {
+                                precioConvertido = Integer.parseInt(precioMoto.get(indices.get(0)).replaceAll("\\D", ""));
+                                precioConvertido2 = Integer.parseInt(precioMoto.get(indices.get(1)).replaceAll("\\D", ""));
+                                int mayor = Math.max(precioConvertido2, precioConvertido);
+                                int menor = Math.min(precioConvertido2, precioConvertido);
+                                if (marcaMoto.equals("SUZUKI")) {
+                                    precioConvertido = menor;
+                                    precioConvertido2 = mayor;
+                                } else {
+                                    precioConvertido = mayor;
+                                    precioConvertido2 = menor;
+                                }
+
+                            } else {
+                                try {
+                                    precioConvertido = Integer.parseInt(precioMoto.get(indices.get(0)).replaceAll("\\D", ""));
+                                } catch (NumberFormatException e) {
+                                    // En caso de que la conversión falle, asigna un valor predeterminado de 0
+                                    precioConvertido = 0;
+                                }
+                            }
+
+
+                            // Comparar los precios
+                            if (nuevoValorDescuento != precioConvertido) {
+                                if (nuevoValorDescuento > precioConvertido) {
+                                    DescuentosAActualizar1.put("descuento", true);
+                                    ValorDesAActualizar2.put("nuevoValorDescuento", precioConvertido);
+                                    PrecioAActualizar3.put("precio", (int) nuevoValorDescuento);
+                                    if (precio == 0) {
+                                        PrecioAActualizar3.put("precio", precioConvertido);
+                                    }
+                                } else {
+                                    if (descuento) {
+                                        DescuentosAActualizar1.put("descuento", false);
+                                    }
+                                    if (nuevoValorDescuento == 0) {
+                                        ValorDesAActualizar2.put("nuevoValorDescuento", precioConvertido);
+                                    }
+                                    if (precio == 0) {
+                                        PrecioAActualizar3.put("precio", precioConvertido);
+                                    } else {
+                                        ValorDesAActualizar2.put("nuevoValorDescuento", precioConvertido);
+                                        PrecioAActualizar3.put("precio", (int) precioConvertido);
+                                    }
+                                }
+                            }
+
+                            //precio 2
+                            if (precioConvertido2 != 0) {
+                                if (precio2 != precioConvertido2) {
+                                    Precio2AActualizar4.put("precio2", precioConvertido2);
+                                }
+                            } else if (marcaMoto == "SUZUKI") {
+
+                            }
+                        }
+
+
+                        if (!ValorDesAActualizar2.isEmpty()) {
+                            mpostProvider.updateMasive1(idMoto, ValorDesAActualizar2).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+
+                                }
+                            });
+                        }
+                        if (!DescuentosAActualizar1.isEmpty()) {
+                            mpostProvider.updateMasive2(idMoto, DescuentosAActualizar1).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+
+                                }
+                            });
+                        }
+                        if (!PrecioAActualizar3.isEmpty()) {
+                            mpostProvider.updateMasive3(idMoto, PrecioAActualizar3).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+
+                                }
+                            });
+                        }
+                        if (!Precio2AActualizar4.isEmpty()) {
+                            mpostProvider.updateMasive4(idMoto, Precio2AActualizar4).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+
+                                }
+                            });
+                        }
+                    }
+                    ;
+                }
+            });
+        } catch (Exception e) {
+            Log.e("error", "Error al actualizar datos en Firebase", e);
+        }
     }
 
     //endregion
@@ -1424,7 +1432,12 @@ public class WebScraping {
                     coloresLista.remove(1);
                     coloresLista.add(1, color + 1);
                 }
-                guardaColores1(files1, 1, coloresLista.get(1));
+                if (!files1.isEmpty()){
+                    guardaColores1(files1, 1, coloresLista.get(1));
+                }else {
+                    progressBar.setVisibility(View.GONE);
+                    btnURL.setVisibility(View.VISIBLE);
+                }
             } else {
                 progressBar.setVisibility(View.GONE);
                 btnURL.setVisibility(View.VISIBLE);
@@ -1435,7 +1448,15 @@ public class WebScraping {
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     if (coloresLista.size() > 1) {
-                        guardaColores1(files1, 1, coloresLista.get(1));
+                        if (!files1.isEmpty()){
+                            guardaColores1(files1, 1, coloresLista.get(1));
+                        }else {
+                            progressBar.setVisibility(View.GONE);
+                            btnURL.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        progressBar.setVisibility(View.GONE);
+                        btnURL.setVisibility(View.VISIBLE);
                     }
                 } else {
                     Toast.makeText(context, "Hubo un error al almacenar la imagen", Toast.LENGTH_LONG).show();
@@ -1630,12 +1651,17 @@ public class WebScraping {
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     if (files2.size() > 0) {
-                        if (coloresLista.get(1).equals(coloresLista.get(2))) {
-                            String color = coloresLista.get(2);
-                            coloresLista.remove(2);
-                            coloresLista.add(2, color + 2);
+                        if (coloresLista.get(0).equals(coloresLista.get(1))) {
+                            String color = coloresLista.get(1);
+                            coloresLista.remove(1);
+                            coloresLista.add(1, color + 2);
                         }
-                        guardaColores2(files2, 2, coloresLista.get(2));
+                        if (!files2.isEmpty()){
+                            guardaColores2(files2, 2, coloresLista.get(2));
+                        }else {
+                            progressBar.setVisibility(View.GONE);
+                            btnURL.setVisibility(View.VISIBLE);
+                        }
                     } else {
                         progressBar.setVisibility(View.GONE);
                         btnURL.setVisibility(View.VISIBLE);
@@ -1833,7 +1859,12 @@ public class WebScraping {
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     if (files3.size() > 0) {
-                        guardaColores3(files3, 3, coloresLista.get(3));
+                        if (!files3.isEmpty()){
+                            guardaColores3(files3, 3, coloresLista.get(3));
+                        }else {
+                            progressBar.setVisibility(View.GONE);
+                            btnURL.setVisibility(View.VISIBLE);
+                        }
                     } else {
                         progressBar.setVisibility(View.GONE);
                         btnURL.setVisibility(View.VISIBLE);
@@ -2228,12 +2259,205 @@ public class WebScraping {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    if (files4.size() > 0) {
-                        //guardaColores5(files5, 5, coloresLista.get(5));
+                    if (files5.size() > 0) {
+                        guardaColores5(files5, 5, coloresLista.get(5));
                     } else {
                         progressBar.setVisibility(View.GONE);
                         btnURL.setVisibility(View.VISIBLE);
                     }
+                } else {
+                    Toast.makeText(context, "Hubo un error al almacenar la imagen", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+    private void guardaColores5(List<File> colores, int posicion, String nombreColor) {
+        List<String> contador = Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8");
+        mImageProvider.save2(context, colores.get(0), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(0)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                if (task.isSuccessful()) {
+                    mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri1) {
+                            final String url1 = uri1.toString();
+                            if (colores.size() > 1 && colores.get(1) != null && colores.get(1).exists()) {
+                                mImageProvider.save2(context, colores.get(1), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(1)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task2) {
+                                        if (task2.isSuccessful()) {
+                                            mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                @Override
+                                                public void onSuccess(Uri uri2) {
+                                                    final String url2 = uri2.toString();
+                                                    if (colores.size() > 2 && colores.get(2) != null && colores.get(2).exists()) {
+                                                        mImageProvider.save2(context, colores.get(2), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(2)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task3) {
+                                                                if (task3.isSuccessful()) {
+                                                                    mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                                        @Override
+                                                                        public void onSuccess(Uri uri3) {
+                                                                            final String url3 = uri3.toString();
+                                                                            if (colores.size() > 3 && colores.get(3) != null && colores.get(3).exists()) {
+                                                                                mImageProvider.save2(context, colores.get(3), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(3)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                    @Override
+                                                                                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task4) {
+                                                                                        if (task4.isSuccessful()) {
+                                                                                            mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                                                                @Override
+                                                                                                public void onSuccess(Uri uri4) {
+                                                                                                    final String url4 = uri4.toString();
+                                                                                                    if (colores.size() > 4 && colores.get(4) != null && colores.get(4).exists()) {
+                                                                                                        mImageProvider.save2(context, colores.get(4), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(4)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                            @Override
+                                                                                                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task5) {
+                                                                                                                if (task5.isSuccessful()) {
+                                                                                                                    mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                                                                                        @Override
+                                                                                                                        public void onSuccess(Uri uri5) {
+                                                                                                                            final String url5 = uri5.toString();
+                                                                                                                            if (colores.size() > 5 && colores.get(5) != null && colores.get(5).exists()) {
+                                                                                                                                mImageProvider.save2(context, colores.get(5), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(5)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                                                    @Override
+                                                                                                                                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task6) {
+                                                                                                                                        if (task6.isSuccessful()) {
+                                                                                                                                            mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                                                                                                                @Override
+                                                                                                                                                public void onSuccess(Uri uri6) {
+                                                                                                                                                    final String url6 = uri6.toString();
+                                                                                                                                                    if (colores.size() > 6 && colores.get(6) != null && colores.get(6).exists()) {
+                                                                                                                                                        mImageProvider.save2(context, colores.get(6), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(6)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                                                                            @Override
+                                                                                                                                                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task7) {
+                                                                                                                                                                if (task7.isSuccessful()) {
+                                                                                                                                                                    mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                                                                                                                                        @Override
+                                                                                                                                                                        public void onSuccess(Uri uri7) {
+                                                                                                                                                                            final String url7 = uri7.toString();
+                                                                                                                                                                            if (colores.size() > 7 && colores.get(7) != null && colores.get(7).exists()) {
+                                                                                                                                                                                mImageProvider.save2(context, colores.get(7), carpeta1, carpeta2, carpeta3, nombreImagen, nombreImagen + "_" + nombreColor + contador.get(7)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                                                                                                                    @Override
+                                                                                                                                                                                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task8) {
+                                                                                                                                                                                        if (task8.isSuccessful()) {
+                                                                                                                                                                                            mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                                                                                                                                                                @Override
+                                                                                                                                                                                                public void onSuccess(Uri uri8) {
+                                                                                                                                                                                                    final String url8 = uri8.toString();
+                                                                                                                                                                                                    guardarColor5(url1, url2, url3, url4, url5, url6, url7, url8, posicion);
+                                                                                                                                                                                                }
+                                                                                                                                                                                            });
+                                                                                                                                                                                        }
+                                                                                                                                                                                    }
+                                                                                                                                                                                });
+                                                                                                                                                                            } else {
+                                                                                                                                                                                guardarColor5(url1, url2, url3, url4, url5, url6, url7, null, posicion);
+                                                                                                                                                                            }
+                                                                                                                                                                        }
+                                                                                                                                                                    });
+                                                                                                                                                                }
+                                                                                                                                                            }
+                                                                                                                                                        });
+                                                                                                                                                    } else {
+                                                                                                                                                        guardarColor5(url1, url2, url3, url4, url5, url6, null, null, posicion);
+                                                                                                                                                    }
+                                                                                                                                                }
+                                                                                                                                            });
+                                                                                                                                        }
+                                                                                                                                    }
+                                                                                                                                });
+                                                                                                                            } else {
+                                                                                                                                guardarColor5(url1, url2, url3, url4, url5, null, null, null, posicion);
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    });
+                                                                                                                }
+                                                                                                            }
+                                                                                                        });
+                                                                                                    } else {
+                                                                                                        guardarColor5(url1, url2, url3, url4, null, null, null, null, posicion);
+                                                                                                    }
+                                                                                                }
+                                                                                            });
+                                                                                        }
+                                                                                    }
+                                                                                });
+                                                                            } else {
+                                                                                guardarColor5(url1, url2, url3, null, null, null, null, null, posicion);
+                                                                            }
+                                                                        }
+                                                                    });
+                                                                }
+                                                            }
+                                                        });
+                                                    } else {
+                                                        guardarColor5(url1, url2, null, null, null, null, null, null, posicion);
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            } else {
+                                guardarColor5(url1, null, null, null, null, null, null, null, posicion);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void guardarColor5(String url1, String url2, String url3, String url4, String url5, String url6, String url7, String url8, int posicion) {
+        urls.clear();
+        String imagenColores = "";
+        if (posicion == 1) {
+            imagenColores = "imagenesColores1";
+        } else if (posicion == 2) {
+            imagenColores = "imagenesColores2";
+        } else if (posicion == 3) {
+            imagenColores = "imagenesColores3";
+        } else if (posicion == 4) {
+            imagenColores = "imagenesColores4";
+        } else if (posicion == 5) {
+            imagenColores = "imagenesColores5";
+        } else if (posicion == 6) {
+            imagenColores = "imagenesColores6";
+        }
+        Map<String, Object> updates = new HashMap<>();
+        updates.clear();
+        imagenesColores.clear();
+        if (url1 != null) {
+            imagenesColores.add(url1);
+        }
+        if (url2 != null) {
+            imagenesColores.add(url2);
+        }
+        if (url3 != null) {
+            imagenesColores.add(url3);
+        }
+        if (url4 != null) {
+            imagenesColores.add(url4);
+        }
+        if (url5 != null) {
+            imagenesColores.add(url5);
+        }
+        if (url6 != null) {
+            imagenesColores.add(url6);
+        }
+        if (url7 != null) {
+            imagenesColores.add(url7);
+        }
+        if (url8 != null) {
+            imagenesColores.add(url8);
+        }
+        updates.put(imagenColores, imagenesColores);
+        mpostProvider.updatePost3(id, updates).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    progressBar.setVisibility(View.GONE);
+                    btnURL.setVisibility(View.VISIBLE);
                 } else {
                     Toast.makeText(context, "Hubo un error al almacenar la imagen", Toast.LENGTH_LONG).show();
                 }
@@ -2261,14 +2485,6 @@ public class WebScraping {
                 // Obtener las imagenes de cada color
                 imagenesColores1.add(label.attr("data-color"));
             }
-
-
-//            if (catalogoPartes.size() >= 2) {
-//                Element catalogoPDF = catalogoPartes.get(1);
-//                String url = catalogoPDF.attr("href");
-//                guardarPDF(url);
-//            }
-
             if (descripcionMotos.size() >= 1) {
                 for (Element element : descripcionMotos) {
                     // Obtener el año
@@ -2294,9 +2510,14 @@ public class WebScraping {
                     }
                 }
             }
-            if (colorPrincipalDiv.size() >= 2) {
+            if (colorPrincipalDiv.size() >= 1) {
 
                 color = doc.select("div.front-end.box");
+                if (color.isEmpty()) {
+                    for (int i = 0; i < colorPrincipalDiv.size(); i++) {
+                        coloresLista.add("#00000" + i);
+                    }
+                }
                 for (Element colores : color) {
                     String style = colores.attr("style");
 
@@ -2305,13 +2526,6 @@ public class WebScraping {
 
                     String color = style.substring(colorIndex + 17, colorIndex + 24);
                     coloresLista.add(color);
-//                    String[] parts = color.split("/");
-//                    String lastPart = parts[parts.length - 1]; // Obtener la última parte de la URL
-//                    String[] nameParts = lastPart.split("_"); // Dividir el nombre del archivo en partes separadas por "_"
-//                    String colorHexa = nameParts[nameParts.length - 1]; // El color debería estar en la última parte
-//                    colorHexa = colorHexa.split("\\.")[0]; // Eliminar la extensión del archivo (".png")
-//                    String colorName = getColorName(colorHexa);
-
 
                 }
                 for (int i = 0; i < imagenesColores1.size(); i++) {
@@ -2400,8 +2614,15 @@ public class WebScraping {
                 Elements cells = row.select("td");
                 // Verificar si la fila tiene exactamente dos celdas
                 if (cells.size() == 2) {
-                    nombreMoto.add(cells.get(0).text());
-                    nombreMoto.add(cells.get(1).text());
+                    if (!cells.get(0).text().equals("")) {
+                        nombreMoto.add(cells.get(0).text());
+                        nombreMoto.add(cells.get(1).text());
+                    }
+                }
+                //eliminar datos vacios
+                Iterator<String> iterator = nombreMoto.iterator();
+                while (iterator.hasNext()) {
+                    String value = iterator.next();
                 }
             }
 
@@ -2548,107 +2769,6 @@ public class WebScraping {
         }
     }
 
-    //saber el color aproximado
-//    public static String getColorName(String colorHexadeximal) {
-//        // Convertir el color hexadecimal a RGB
-//        int color = Color.parseColor(colorHexadeximal);
-//        int r = Color.red(color);
-//        int g = Color.green(color);
-//        int b = Color.blue(color);
-//
-//        // Asignar nombres aproximados basados en los valores RGB
-//        if (isBlack(r, g, b)) {
-//            return "Negro";
-//        } else if (isWhite(r, g, b)) {
-//            return "Blanco";
-//        } else if (isHueso(r, g, b)) {
-//            return "Blanco";
-//        } else if (isRed(r, g, b)) {
-//            return "Rojo";
-//        } else if (isGreen(r, g, b)) {
-//            return "Verde";
-//        } else if (isDarkGreen(r, g, b)) {
-//            return "Verde Oscuro";
-//        } else if (isBlue(r, g, b)) {
-//            return "Azul";
-//        } else if (isGold(r, g, b)) {
-//            return "Dorado";
-//        } else if (isDarkBlue(r, g, b)) {
-//            return "Azul Oscuro";
-//        } else if (isDarkRed(r, g, b)) {
-//            return "Rojo Oscuro";
-//        } else if (isPurple(r, g, b)) {
-//            return "Morado";
-//        } else if (isYellow(r, g, b)) {
-//            return "Amarillo";
-//        } else if (isSkyBlue(r, g, b)) {
-//            return "Celeste";
-//        }
-//        // Agregar más condiciones según sea necesario para otros colores
-//        // Si el color no coincide con ninguno de los nombres predefinidos, puedes devolver "Desconocido" o algo similar
-//        return "AZUL";
-//    }
-//
-//    private static boolean isBlack(int r, int g, int b) {
-//        return r <= 10 && g <= 10 && b <= 10;
-//    }
-//
-//    private static boolean isWhite(int r, int g, int b) {
-//        return r >= 240 && g >= 240 && b >= 240;
-//    }
-//
-//    private static boolean isHueso(int r, int g, int b) {
-//        return r >= 232 && g >= 232 && b >= 232;
-//    }
-//
-//    private static boolean isRed(int r, int g, int b) {
-//        return r >= 200 && g <= 100 && b <= 100;
-//    }
-//
-//    private static boolean isGreen(int r, int g, int b) {
-//        return r <= 100 && g >= 200 && b <= 100;
-//    }
-//
-//    private static boolean isDarkGreen(int r, int g, int b) {
-//        // Ajusta estos valores según los tonos de azul oscuro que desees reconocer
-//        return r <= 57 && g <= 90 && b >= 86;
-//    }
-//
-//    private static boolean isBlue(int r, int g, int b) {
-//        return r <= 100 && g <= 100 && b >= 200;
-//    }
-//
-//    private static boolean isGold(int r, int g, int b) {
-//        // Ajusta estos valores según los tonos de dorado que desees reconocer
-//        return r >= 160 && g >= 160 && g <= 220 && b <= 56;
-//    }
-//
-//    private static boolean isDarkBlue(int r, int g, int b) {
-//        // Ajusta estos valores según los tonos de azul oscuro que desees reconocer
-//        return r <= 30 && g <= 30 && b >= 100;
-//    }
-//
-//    private static boolean isDarkRed(int r, int g, int b) {
-//        // Ajusta estos valores según los tonos de rojo oscuro que desees reconocer
-//        return r >= 100 && g <= 30 && b <= 30;
-//    }
-//
-//    private static boolean isPurple(int r, int g, int b) {
-//        // Ajusta estos valores según los tonos de morado que desees reconocer
-//        return r >= 100 && g <= 30 && b >= 100;
-//    }
-//
-//    private static boolean isYellow(int r, int g, int b) {
-//        // Ajusta estos valores según los tonos de amarillo que desees reconocer
-//        return r >= 200 && g >= 200 && b <= 50;
-//    }
-//
-//    private static boolean isSkyBlue(int r, int g, int b) {
-//        // Ajustamos los valores para definir el color celeste
-//        return r >= 27 && g >= 180 && b >= 185;
-//    }
-
-
 //endregion
 
     //region PROCESO DE HERO
@@ -2737,6 +2857,9 @@ public class WebScraping {
                     if (words[0].equals("*los")) {
                         palabra = words[0];
                     }
+                    if (words[0].equals("envia")) {
+                        palabra = words[0];
+                    }
                 }
 
                 borrarpalabrasHero(h5, palabra);
@@ -2773,6 +2896,30 @@ public class WebScraping {
 
 
             nombreMoto.clear();
+            if (h5.size() != h4.size()) {
+                for (int i = 0; i < h5.size(); i++) {
+                    if (h5.get(i).contains("mostrados")) {
+                        h5.remove(i);
+                        break;
+                    }
+                    if (h5.get(i).contains("accesorios")) {
+                        h5.remove(i);
+                        break;
+                    }
+                }
+            }
+            if (h5.size() != h4.size()) {
+                for (int i = 0; i < h4.size(); i++) {
+                    if (h4.get(i).contains("mostrados")) {
+                        h4.remove(i);
+                        break;
+                    }
+                    if (h4.get(i).contains("accesorios")) {
+                        h4.remove(i);
+                        break;
+                    }
+                }
+            }
             for (int i = 0; i < h5.size(); i++) {
                 nombreMoto.add(h4.get(i));
                 nombreMoto.add(h5.get(i));
@@ -2809,43 +2956,20 @@ public class WebScraping {
                 for (Element image : imagenes) {
                     // Obtén el atributo "src" para obtener la URL de la imagen
                     imagenesColores1.add(image.attr("src"));
-                    imagenesColores2.add(image.attr("alt"));
+                    imagenesColores2.add(image.attr("alt").replaceAll("[^a-zA-Z]", "").toUpperCase());
 
 
-                    String[] colores = {
-                            "Negro", "Negra", "Gris", "Rojo", "Roja", "Azul", "Lima", "Verde", "Amarillo",
-                            "Marrón", "Blanco", "Blanca", "Naranja", "Morado", "Turquesa", "Cian",
-                            "Violeta", "Magenta", "Plateado", "Dorado", "Rosa", "Celeste",
-                            "Carmesi", "VerdeOscuro", "VerdeClaro", "VerdeLima", "AzulCielo",
-
-                    };
-
-                    // Combina todos los colores en un patrón de expresión regular
-                    String colorPattern = String.join("|", colores);
-                    Pattern pattern = Pattern.compile("_(?:" + colorPattern + ")(?:_(" + colorPattern + "))*");
-
-
-                    // Itera sobre cada nombre de archivo
-                    for (String fileName : imagenesColores2) {
-                        // Encuentra coincidencias de colores usando la expresión regular
-                        Matcher matcher = pattern.matcher(fileName);
-                        if (matcher.find()) {
-                            String foundColors = matcher.group(0).substring(1); // Quitar el primer guion bajo
-                            String[] colorMatches = foundColors.split("_");
-                            String colornew = "";
-                            for (String color : colorMatches) {
-                                colornew = colornew + "-" + color;
-                            }
-                            coloresLista.add(colornew.toUpperCase().substring(1));
-                        } else {
-                            // Si no se encuentra coincidencia, asume color negro como predeterminado
-                            contador++;
-                            coloresLista.add("NEGRO" + contador);
-                        }
-                        imagenesColores2.clear();
-                    }
                     contador = 0;
                 }
+            }
+            coloresLista.clear();
+            List<String> coloresActualizados = new ArrayList<>();
+            coloresActualizados.addAll(imagenesColores2);
+            String nom = nombreImagen.replaceAll("\\s", "").toUpperCase();
+            for (int i = 0; i < coloresActualizados.size(); i++) {
+                String elemento = coloresActualizados.get(i);
+                String elementoSinEcoDelux = elemento.replace(nom, "");
+                coloresLista.add(elementoSinEcoDelux);
             }
             for (int i = 0; i < imagenesColores1.size(); i++) {
                 if (i == 0) {
@@ -2856,7 +2980,6 @@ public class WebScraping {
                                 .load(imagenesColores1.get(i))
                                 .submit();
                         imagen1 = futureTarget.get();
-                        guardarImagenesPrincipales(imagen1, null, null, null, null, null, null, null);
                     } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
                     }
@@ -2925,7 +3048,7 @@ public class WebScraping {
                 }
                 imagenesColorPrincipal.clear();
             }
-
+            guardarImagenesPrincipales(imagen1, null, null, null, null, null, null, null);
 
             //ficha tecnica
             Map<String, Object> updates = new HashMap<>();
@@ -3019,7 +3142,15 @@ public class WebScraping {
         String descripcion = "";
         try {
             //conexion
-            Document doc = Jsoup.connect(url).get();
+            Document doc = Jsoup.connect(url)
+                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36")
+                    .header("Accept-Language", "es-ES,es;q=0.9")
+                    .header("Accept-Encoding", "gzip, deflate, br")
+                    .header("Referer", "https://www.google.com/")
+                    .header("Upgrade-Insecure-Requests", "1")
+                    .header("Cache-Control", "max-age=0")
+                    .timeout(10000) // Aumentar el timeout a 10 segundos
+                    .get();
 
 
             Elements descripcionPagina = doc.select("div.descripcion.col-md-12.col-sm-12.col-xs-12");
@@ -3090,207 +3221,118 @@ public class WebScraping {
                 //obtener las imagenes adicionales
                 Elements imgElements = extraerImagenesAdd.first().select("img");
                 for (Element imgElement : imgElements) {
-                    String inicioPag = "http://www.suzuki.com.co";
+                    String inicioPag = "http://suzuki.com.co";
                     if (!imgElement.text().contains(inicioPag)) {
                         recuperarImagenes.add(inicioPag + imgElement.attr("src"));
                     }
                 }
-                for (int i = 0; i < recuperarImagenes.size(); i++) {
-                    try {
-                        //convierto las url a imagenes
-                        FutureTarget<File> futureTarget = Glide.with(context)
-                                .asFile()
-                                .load(recuperarImagenes.get(i))
-                                .submit();
 
-                        if (i == 0) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 1) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 2) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 3) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 4) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 5) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 6) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 7) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 8) {
-                            imagenesAdd.add(futureTarget.get());
+
+                imagenesColores1.clear();
+                if (ExtraerImagenesColores != null) {
+                    // Selecciona el elemento <h5> dentro del div
+                    Elements imgElements2 = ExtraerImagenesColores.select("img.img-responsive");
+                    Elements liElements = ExtraerImagenesColores.select("li");
+
+
+                    for (Element imgElement : imgElements2) {
+                        //imagenes
+                        String inicioPag = "http://www.suzuki.com.co";
+                        if (!imgElement.text().contains(inicioPag)) {
+                            imagenesColores1.add(inicioPag + imgElement.attr("src"));
                         }
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
+                    }
+                    for (Element liElement : liElements) {
+                        String style = liElement.attr("style");
+                        // Extraer el color hexadecimal del atributo 'style'
+                        String hexColor = style.replaceAll("background-color: ", "").trim();
+                        coloresLista.add(hexColor);
                     }
                 }
-            }
-
-            imagenesColores1.clear();
-            if (ExtraerImagenesColores != null) {
-                // Selecciona el elemento <h5> dentro del div
-                Elements imgElements = ExtraerImagenesColores.select("img.img-responsive");
-                Elements liElements = ExtraerImagenesColores.select("li");
-
-
-                for (Element imgElement : imgElements) {
-                    //imagenes
-                    String inicioPag = "http://www.suzuki.com.co";
-                    if (!imgElement.text().contains(inicioPag)) {
-                        imagenesColores1.add(inicioPag + imgElement.attr("src"));
+                Map<String, Object> updates = new HashMap<>();
+                for (int i = 0; i < imagenesColores1.size(); i++) {
+                    List<String> listaDeUnElemento = Collections.singletonList(imagenesColores1.get(i));
+                    if (i == 0) {
+                        updates.put("imagenes", listaDeUnElemento);
+                    } else if (i == 1) {
+                        updates.put("imagenesColores1", listaDeUnElemento);
+                    } else if (i == 2) {
+                        updates.put("imagenesColores2", listaDeUnElemento);
+                    } else if (i == 3) {
+                        updates.put("imagenesColores3", listaDeUnElemento);
+                    } else if (i == 4) {
+                        updates.put("imagenesColores4", listaDeUnElemento);
+                    } else if (i == 5) {
+                        updates.put("imagenesColores5", listaDeUnElemento);
                     }
                 }
-                for (Element liElement : liElements) {
-                    String style = liElement.attr("style");
-                    // Extraer el color hexadecimal del atributo 'style'
-                    String hexColor = style.replaceAll("background-color: ", "").trim();
-                    coloresLista.add(hexColor);
+
+
+                //ficha tecnica
+
+                for (int i = 0; i < nombreMoto.size(); i++) {
+                    //quita los espacios, tildes, parentesis, puntos:, y lo coloca en minuscula
+                    String textoSinEspacios = nombreMoto.get(i)
+                            .replaceAll("\\s+|\\p{InCombiningDiacriticalMarks}|\\(.*?\\)|:", "")
+                            .toLowerCase();
+                    //quita las tildes
+                    textoSinEspacios = Normalizer.normalize(textoSinEspacios, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+                    textoSinEspacios = textoSinEspacios.replace(".", "");
+                    textoSinEspacios = textoSinEspacios.replace("/", "");
+                    updates.put(textoSinEspacios, nombreMoto.get(i + 1));
+                    i++;
                 }
-            }
-
-            for (int i = 0; i < imagenesColores1.size(); i++) {
-                if (i == 0) {
-                    try {
-                        //convierto las url a imagenes
-                        FutureTarget<File> futureTarget = Glide.with(context)
-                                .asFile()
-                                .load(imagenesColores1.get(i))
-                                .submit();
-                        imagen1 = futureTarget.get();
-                        guardarImagenesPrincipales(imagen1, null, null, null, null, null, null, null);
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
-
-                } else if (i == 1) {
-                    try {
-                        FutureTarget<File> futureTarget = Glide.with(context)
-                                .asFile()
-                                .load(imagenesColores1.get(i))
-                                .submit();
-                        files1.add(futureTarget.get());
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                } else if (i == 2) {
-                    try {
-                        FutureTarget<File> futureTarget = Glide.with(context)
-                                .asFile()
-                                .load(imagenesColores1.get(i))
-                                .submit();
-                        files2.add(futureTarget.get());
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                } else if (i == 3) {
-                    try {
-                        FutureTarget<File> futureTarget = Glide.with(context)
-                                .asFile()
-                                .load(imagenesColores1.get(i))
-                                .submit();
-                        files3.add(futureTarget.get());
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                } else if (i == 4) {
-                    try {
-                        FutureTarget<File> futureTarget = Glide.with(context)
-                                .asFile()
-                                .load(imagenesColores1.get(i))
-                                .submit();
-                        files4.add(futureTarget.get());
-
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                } else if (i == 5) {
-                    try {
-                        FutureTarget<File> futureTarget = Glide.with(context)
-                                .asFile()
-                                .load(imagenesColores1.get(i))
-                                .submit();
-                        files5.add(futureTarget.get());
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                } else if (i == 6) {
-                    try {
-                        FutureTarget<File> futureTarget = Glide.with(context)
-                                .asFile()
-                                .load(imagenesColores1.get(i))
-                                .submit();
-                        files6.add(futureTarget.get());
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                }
-                imagenesColorPrincipal.clear();
-            }
-
-
-            //ficha tecnica
-            Map<String, Object> updates = new HashMap<>();
-            for (int i = 0; i < nombreMoto.size(); i++) {
-                //quita los espacios, tildes, parentesis, puntos:, y lo coloca en minuscula
-                String textoSinEspacios = nombreMoto.get(i)
-                        .replaceAll("\\s+|\\p{InCombiningDiacriticalMarks}|\\(.*?\\)|:", "")
-                        .toLowerCase();
-                //quita las tildes
-                textoSinEspacios = Normalizer.normalize(textoSinEspacios, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-                textoSinEspacios = textoSinEspacios.replace(".", "");
-                textoSinEspacios = textoSinEspacios.replace("/", "");
-                updates.put(textoSinEspacios, nombreMoto.get(i + 1));
-                i++;
-            }
-
-            updates.put("modelo", modelo);
-            updates.put("descripcion", descripcion);
-            updates.put("consumoPorGalon", consumoGasolina);
-            updates.put("visible", true);
-            mpostProvider.updatePost(id, updates).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    //eliminar datos de auteco
-                    Query query = mpostProvider.buscarPorNombreMoto(nombreImagen);
-                    query.get().addOnCompleteListener(task2 -> {
-                        if (task2.isSuccessful()) {
-                            QuerySnapshot querySnapshot = task2.getResult();
-                            if (!querySnapshot.isEmpty()) {
-                                // Obtiene el primer documento de los resultados
-                                DocumentSnapshot document = querySnapshot.getDocuments().get(0);
-
-                                List<String> camposNulos = new ArrayList<>();
-
-                                // Verifica campos nulos en el documento
-                                Map<String, Object> data = document.getData();
-                                if (data != null) {
-                                    for (Map.Entry<String, Object> entry : document.getData().entrySet()) {
-                                        String nombreCampo = entry.getKey();
-                                        Object valor = entry.getValue();
-
-                                        // Verificar si el valor es null
-                                        if (valor == null) {
-                                            camposNulos.add(nombreCampo);
-                                        }
-                                    }
+                updates.put("caracteristicasImagenes", recuperarImagenes);
+                updates.put("colores", coloresLista);
+                updates.put("modelo", modelo);
+                updates.put("descripcion", descripcion);
+                updates.put("consumoPorGalon", consumoGasolina);
+                updates.put("visible", true);
+                mpostProvider.updatePost(id, updates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        //eliminar datos de auteco
+                        Query query = mpostProvider.buscarPorNombreMoto(nombreImagen);
+                        query.get().addOnCompleteListener(task2 -> {
+                            if (task2.isSuccessful()) {
+                                QuerySnapshot querySnapshot = task2.getResult();
+                                if (!querySnapshot.isEmpty()) {
+                                    // Obtiene el primer documento de los resultados
+//                                    DocumentSnapshot document = querySnapshot.getDocuments().get(0);
+//
+//                                    List<String> camposNulos = new ArrayList<>();
+//
+//                                    // Verifica campos nulos en el documento
+//                                    Map<String, Object> data = document.getData();
+//                                    if (data != null) {
+//                                        for (Map.Entry<String, Object> entry : document.getData().entrySet()) {
+//                                            String nombreCampo = entry.getKey();
+//                                            Object valor = entry.getValue();
+//
+//                                            // Verificar si el valor es null
+//                                            if (valor == null) {
+//                                                camposNulos.add(nombreCampo);
+//                                            }
+//                                        }
+//                                    }
+                                    progressBar.setVisibility(View.GONE);
+                                    btnURL.setVisibility(View.VISIBLE);
+//                                    mpostProvider.eliminarDatosFichaTecnica(id, camposNulos).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                        @Override
+//                                        public void onComplete(@NonNull Task<Void> task) {
+//
+//                                        }
+//                                    });
                                 }
-                                mpostProvider.eliminarDatosFichaTecnica(id, camposNulos).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-
-                                    }
-                                });
                             }
-                        }
-                    });
-                }
-            });
+                        });
+                    }
+                });
+            }
+
         } catch (IOException e) {
             Log.e("MainActivity", "" + e.getMessage());
         }
-
     }
     //endregion
 
@@ -3337,6 +3379,9 @@ public class WebScraping {
                         textoNormalizado = textoNormalizado.toLowerCase();
                         // Eliminar espacios
                         textoNormalizado = textoNormalizado.replaceAll("\\s", "");
+                        if (textoNormalizado.equals("colores")) {
+                            textoNormalizado = "color";
+                        }
                         titulo.add(textoNormalizado);
                     }
                     for (Element divElement2 : divElementDescripcion) {
@@ -3365,6 +3410,9 @@ public class WebScraping {
                         // Eliminar espacios
                         textoNormalizado = textoNormalizado.replaceAll("\\s", "");
 
+                        if (textoNormalizado.equals("colores")) {
+                            textoNormalizado = "color";
+                        }
                         nombreMoto.add(textoNormalizado);
                         nombreMoto.add(pElements2.text());
                         i++;
@@ -3374,17 +3422,20 @@ public class WebScraping {
 
             }
             //Como esta moto tiene los colores en la ficha tecnica, es mas facil
-            int posicion = nombreMoto.indexOf("colores");
+            int posicion = nombreMoto.indexOf("color");
 
             if (posicion != -1) {
-                String[] palabrasArray = nombreMoto.get(posicion + 1).split(",");
+                String cadena = nombreMoto.get(posicion + 1);
+                String cadenaNormalizada = cadena.replace(" y ", ",").replace(" ", "");
+                String[] palabrasArray = cadenaNormalizada.split(",");
                 for (String palabra : palabrasArray) {
                     // Eliminar espacios en blanco al principio y al final de cada palabra
                     palabra = palabra.trim();
+                    palabra = palabra.replaceAll("\\s", "");
 
                     // Verificar si la palabra no está vacía (puede haber una coma final)
                     if (!palabra.isEmpty()) {
-                        coloresLista.add(palabra.toUpperCase());
+                        coloresLista.add(palabra.trim().toUpperCase());
                     }
                 }
             }
@@ -3410,87 +3461,6 @@ public class WebScraping {
                     //aqui estan tanto el pincipal como los demas colores
                 }
             }
-
-
-            //IMAGENES DE MOTO
-            for (int i = 0; i < imagenesColorPrincipal.size(); i++) {
-                if (i == 0) {
-                    try {
-                        //convierto las url a imagenes
-                        FutureTarget<File> futureTarget = Glide.with(context)
-                                .asFile()
-                                .load(imagenesColorPrincipal.get(i))
-                                .submit();
-                        imagen1 = futureTarget.get();
-                        guardarImagenesPrincipales(imagen1, null, null, null, null, null, null, null);
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
-
-                } else if (i == 1) {
-                    try {
-                        FutureTarget<File> futureTarget = Glide.with(context)
-                                .asFile()
-                                .load(imagenesColorPrincipal.get(i))
-                                .submit();
-                        files1.add(futureTarget.get());
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                } else if (i == 2) {
-                    try {
-                        FutureTarget<File> futureTarget = Glide.with(context)
-                                .asFile()
-                                .load(imagenesColorPrincipal.get(i))
-                                .submit();
-                        files2.add(futureTarget.get());
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                } else if (i == 3) {
-                    try {
-                        FutureTarget<File> futureTarget = Glide.with(context)
-                                .asFile()
-                                .load(imagenesColorPrincipal.get(i))
-                                .submit();
-                        files3.add(futureTarget.get());
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                } else if (i == 4) {
-                    try {
-                        FutureTarget<File> futureTarget = Glide.with(context)
-                                .asFile()
-                                .load(imagenesColorPrincipal.get(i))
-                                .submit();
-                        files4.add(futureTarget.get());
-
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                } else if (i == 5) {
-                    try {
-                        FutureTarget<File> futureTarget = Glide.with(context)
-                                .asFile()
-                                .load(imagenesColorPrincipal.get(i))
-                                .submit();
-                        files5.add(futureTarget.get());
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                } else if (i == 6) {
-                    try {
-                        FutureTarget<File> futureTarget = Glide.with(context)
-                                .asFile()
-                                .load(imagenesColorPrincipal.get(i))
-                                .submit();
-                        files6.add(futureTarget.get());
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
 
             if (!imagenesAdicionales.isEmpty()) {
                 imagenesAdd.clear();
@@ -3544,39 +3514,180 @@ public class WebScraping {
                 // IMAGENES ADD
                 contador = 0;
                 for (int i = 0; i < recuperarImagenes.size(); i++) {
+                    if (i == 0) {
+                        try {
+                            //convierto las url a imagenes
+                            FutureTarget<File> futureTarget = Glide.with(context)
+                                    .asFile()
+                                    .load(recuperarImagenes.get(i))
+                                    .submit();
+                            imagenesAdd.add(futureTarget.get());
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
+
+                    } else if (i == 1) {
+                        try {
+                            FutureTarget<File> futureTarget = Glide.with(context)
+                                    .asFile()
+                                    .load(recuperarImagenes.get(i))
+                                    .submit();
+                            imagenesAdd.add(futureTarget.get());
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (i == 2) {
+                        try {
+                            FutureTarget<File> futureTarget = Glide.with(context)
+                                    .asFile()
+                                    .load(recuperarImagenes.get(i))
+                                    .submit();
+                            imagenesAdd.add(futureTarget.get());
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (i == 3) {
+                        try {
+                            FutureTarget<File> futureTarget = Glide.with(context)
+                                    .asFile()
+                                    .load(recuperarImagenes.get(i))
+                                    .submit();
+                            imagenesAdd.add(futureTarget.get());
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (i == 4) {
+                        try {
+                            FutureTarget<File> futureTarget = Glide.with(context)
+                                    .asFile()
+                                    .load(recuperarImagenes.get(i))
+                                    .submit();
+                            imagenesAdd.add(futureTarget.get());
+
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (i == 5) {
+                        try {
+                            FutureTarget<File> futureTarget = Glide.with(context)
+                                    .asFile()
+                                    .load(recuperarImagenes.get(i))
+                                    .submit();
+                            imagenesAdd.add(futureTarget.get());
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (i == 6) {
+                        try {
+                            FutureTarget<File> futureTarget = Glide.with(context)
+                                    .asFile()
+                                    .load(recuperarImagenes.get(i))
+                                    .submit();
+                            imagenesAdd.add(futureTarget.get());
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    }else if (i == 7) {
+                        try {
+                            FutureTarget<File> futureTarget = Glide.with(context)
+                                    .asFile()
+                                    .load(recuperarImagenes.get(i))
+                                    .submit();
+                            imagenesAdd.add(futureTarget.get());
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    }else if (i == 8) {
+                        try {
+                            FutureTarget<File> futureTarget = Glide.with(context)
+                                    .asFile()
+                                    .load(recuperarImagenes.get(i))
+                                    .submit();
+                            imagenesAdd.add(futureTarget.get());
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+            //IMAGENES DE MOTO
+            for (int i = 0; i < imagenesColorPrincipal.size(); i++) {
+                if (i == 0) {
                     try {
                         //convierto las url a imagenes
                         FutureTarget<File> futureTarget = Glide.with(context)
                                 .asFile()
-                                .load(recuperarImagenes.get(i))
+                                .load(imagenesColorPrincipal.get(i))
                                 .submit();
+                        imagen1 = futureTarget.get();
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                    }
 
-                        if (i == 0) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 1) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 2) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 3) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 4) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 5) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 6) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 7) {
-                            imagenesAdd.add(futureTarget.get());
-                        } else if (i == 8) {
-                            imagenesAdd.add(futureTarget.get());
-                        }
+                } else if (i == 1) {
+                    try {
+                        FutureTarget<File> futureTarget = Glide.with(context)
+                                .asFile()
+                                .load(imagenesColorPrincipal.get(i))
+                                .submit();
+                        files1.add(futureTarget.get());
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                } else if (i == 2) {
+                    try {
+                        FutureTarget<File> futureTarget = Glide.with(context)
+                                .asFile()
+                                .load(imagenesColorPrincipal.get(i))
+                                .submit();
+                        files2.add(futureTarget.get());
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                } else if (i == 3) {
+                    try {
+                        FutureTarget<File> futureTarget = Glide.with(context)
+                                .asFile()
+                                .load(imagenesColorPrincipal.get(i))
+                                .submit();
+                        files3.add(futureTarget.get());
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                } else if (i == 4) {
+                    try {
+                        FutureTarget<File> futureTarget = Glide.with(context)
+                                .asFile()
+                                .load(imagenesColorPrincipal.get(i))
+                                .submit();
+                        files4.add(futureTarget.get());
+
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                } else if (i == 5) {
+                    try {
+                        FutureTarget<File> futureTarget = Glide.with(context)
+                                .asFile()
+                                .load(imagenesColorPrincipal.get(i))
+                                .submit();
+                        files5.add(futureTarget.get());
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                } else if (i == 6) {
+                    try {
+                        FutureTarget<File> futureTarget = Glide.with(context)
+                                .asFile()
+                                .load(imagenesColorPrincipal.get(i))
+                                .submit();
+                        files6.add(futureTarget.get());
                     } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
                     }
                 }
             }
             guardarImagenesPrincipales(imagen1, null, null, null, null, null, null, null);
-
             //ficha tecnica
             Map<String, Object> updates = new HashMap<>();
             for (int i = 0; i < nombreMoto.size(); i++) {
@@ -3590,6 +3701,9 @@ public class WebScraping {
                 textoSinEspacios = textoSinEspacios.replace("/", "");
                 updates.put(textoSinEspacios, nombreMoto.get(i + 1));
                 i++;
+            }
+            if (!imagenesColores.isEmpty()){
+                updates.put("caracteristicasTexto", imagenesColores);
             }
             if (!descripcion.isEmpty()) {
                 updates.put("descripcion", descripcion);
@@ -3683,6 +3797,24 @@ public class WebScraping {
                     }
                 }
             }
+            if (nombreMoto.isEmpty()){
+                FichaTecnica = FichaTecnicaExtraer.get(0);
+                listaItems = FichaTecnica.select("ul > li");
+                imagenesAddi = FichaTecnicaExtraer.get(1);
+                if (listaItems != null) {
+                    for (Element item : listaItems) {
+                        String texto = item.text();
+                        String[] partes = texto.split(":");
+                        if (partes.length > 1) {
+                            String nombreCampo = partes[0].trim().toLowerCase().replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+                            String valorCampo = partes[1].trim();
+                            nombreMoto.add(nombreCampo);
+                            nombreMoto.add(valorCampo);
+                        }
+                    }
+                }
+
+            }
 
             if (imagenesAddi != null) {
                 Elements imagenesAdicionales = imagenesAddi.select("div.col-lg-7.tech_feature_img");
@@ -3728,7 +3860,7 @@ public class WebScraping {
                     e.printStackTrace();
                 }
             }
-            if (imagenesPrincipales2 != null) {
+            if (!imagenesPrincipales2.isEmpty()) {
                 Elements imgElements = imagenesPrincipales2.select("div[src]");
                 List<Integer> cantidad = new ArrayList<>();
                 //saber la cantidad de imagenes por cada div
@@ -3803,17 +3935,17 @@ public class WebScraping {
                                     .asFile()
                                     .load(url)
                                     .submit();
-                            if (contador == 0){
+                            if (contador == 1) {
                                 files1.add(futureTarget.get());
-                            }else if (contador == 1){
+                            } else if (contador == 2) {
                                 files2.add(futureTarget.get());
-                            }else if (contador == 3){
+                            } else if (contador == 3) {
                                 files3.add(futureTarget.get());
-                            }else if (contador == 4){
+                            } else if (contador == 4) {
                                 files4.add(futureTarget.get());
-                            }else if (contador == 5){
+                            } else if (contador == 5) {
                                 files5.add(futureTarget.get());
-                            }else if (contador == 6){
+                            } else if (contador == 6) {
                                 files6.add(futureTarget.get());
                             }
 
@@ -3821,7 +3953,7 @@ public class WebScraping {
                             e.printStackTrace();
                         }
                     }
-                    contador = contador+1;
+                    contador = contador + 1;
                 }
                 imagenesColorPrincipal.clear();
                 imagenesColorPrincipal.addAll(urlsPorColor.get(coloresLista.get(0)));
@@ -4047,8 +4179,6 @@ public class WebScraping {
                     });
                 }
             });
-
-
 
 
         } catch (

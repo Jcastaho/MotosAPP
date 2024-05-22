@@ -597,18 +597,7 @@ public class SlideshowFragment extends Fragment {
                                         txtPesoValor3.setText(documentSnapshot.getString("peso"));
                                     }
                                 }
-                                if (!documentSnapshot.contains("refrigeracion")) {
-                                    if (contadorimgView == 1){
-                                        txtRefrigeracionMoto1.setVisibility(View.GONE);
-                                        txtRefrigeracionValor1.setVisibility(View.GONE);
-                                    } else if (contadorimgView == 2) {
-                                        txtRefrigeracionMoto2.setVisibility(View.GONE);
-                                        txtRefrigeracionValor2.setVisibility(View.GONE);
-                                    }else if (contadorimgView == 3) {
-                                        txtRefrigeracionMoto3.setVisibility(View.GONE);
-                                        txtRefrigeracionValor3.setVisibility(View.GONE);
-                                    }
-                                }
+
                                 if (documentSnapshot.contains("nuevoValorDescuento")) {
                                     int precio = Integer.parseInt(documentSnapshot.get("nuevoValorDescuento").toString());
                                     DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
@@ -1029,6 +1018,146 @@ public class SlideshowFragment extends Fragment {
                                         txtPesoValor3.setText(documentSnapshot.getString("pesoenseco"));
                                     }
                                 }
+                                if (documentSnapshot.contains("nuevoValorDescuento")) {
+                                    int precio = Integer.parseInt(documentSnapshot.get("nuevoValorDescuento").toString());
+                                    DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+                                    symbols.setGroupingSeparator('.');
+                                    symbols.setDecimalSeparator(',');
+                                    DecimalFormat formato = new DecimalFormat("#,###", symbols);
+                                    String numeroFormato = formato.format(precio);
+                                    if (contadorimgView == 1){
+                                        txtPrecioValor1.setText("$" + numeroFormato);
+                                    } else if (contadorimgView == 2) {
+                                        txtPrecioValor2.setText("$" + numeroFormato);
+                                    }else if (contadorimgView == 3) {
+                                        txtPrecioValor3.setText("$" + numeroFormato);
+                                    }
+                                }
+                                break;
+                            case "BAJAJ":
+                                if (documentSnapshot.contains("cilindrada")) {
+                                    String dato = documentSnapshot.getString("cilindrada");
+                                    if (contadorimgView == 1){
+                                        txtCilindrajevalor1.setText(dato);
+                                        controlador_Imagenes1= 1;
+                                    } else if (contadorimgView == 2) {
+                                        txtCilindrajevalor2.setText(dato);
+                                        controlador_Imagenes2= 1;
+                                    }else if (contadorimgView == 3) {
+                                        txtCilindrajevalor3.setText(dato);
+                                        controlador_Imagenes3= 1;
+                                    }
+                                }
+                                if (documentSnapshot.contains("tipo")) {
+                                    if (contadorimgView == 1){
+                                        txtMotorvalor1.setText(documentSnapshot.getString("tipo"));
+                                    } else if (contadorimgView == 2) {
+                                        txtMotorvalor2.setText(documentSnapshot.getString("tipo"));
+                                    }else if (contadorimgView == 3) {
+                                        txtMotorvalor3.setText(documentSnapshot.getString("tipo"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("torquemaximo")) {
+                                    if (contadorimgView == 1){
+                                        txtTorqueValor1.setText(documentSnapshot.getString("torquemaximo"));
+                                    } else if (contadorimgView == 2) {
+                                        txtTorqueValor2.setText(documentSnapshot.getString("torquemaximo"));
+                                    }else if (contadorimgView == 3) {
+                                        txtTorqueValor3.setText(documentSnapshot.getString("torquemaximo"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("sistemadealimentacion")) {
+                                    if (contadorimgView == 1){
+                                        txtAlimentacionValor1.setText(documentSnapshot.getString("sistemadealimentacion"));
+                                    } else if (contadorimgView == 2) {
+                                        txtAlimentacionValor2.setText(documentSnapshot.getString("sistemadealimentacion"));
+                                    }else if (contadorimgView == 3) {
+                                        txtAlimentacionValor3.setText(documentSnapshot.getString("sistemadealimentacion"));
+                                    }
+                                }else {
+                                    if (contadorimgView == 1){
+                                        txtAlimentacionValor1.setText("N/A");
+                                    } else if (contadorimgView == 2) {
+                                        txtAlimentacionValor2.setText("N/A");
+                                    }else if (contadorimgView == 3) {
+                                        txtAlimentacionValor3.setText("N/A");
+                                    }
+                                }
+                                if (documentSnapshot.contains("transmision")) {
+                                    if (contadorimgView == 1){
+                                        txtTransmisionValor1.setText(documentSnapshot.getString("transmision"));
+                                    } else if (contadorimgView == 2) {
+                                        txtTransmisionValor2.setText(documentSnapshot.getString("transmision"));
+                                    }else if (contadorimgView == 3) {
+                                        txtTransmisionValor3.setText(documentSnapshot.getString("transmision"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("refrigeracion")) {
+
+                                }else {
+                                    if (contadorimgView == 1){
+                                        txtRefrigeracionValor1.setText("N/A");
+                                    } else if (contadorimgView == 2) {
+                                        txtRefrigeracionValor2.setText("N/A");
+                                    }else if (contadorimgView == 3) {
+                                        txtRefrigeracionValor3.setText("N/A");
+                                    }
+                                }
+                                if (documentSnapshot.contains("suspensiondelantera")) {
+                                    if (contadorimgView == 1){
+                                        txtSuspensionDelanValor1.setText(documentSnapshot.getString("suspensiondelantera"));
+                                    } else if (contadorimgView == 2) {
+                                        txtSuspensionDelanValor2.setText(documentSnapshot.getString("suspensiondelantera"));
+                                    }else if (contadorimgView == 3) {
+                                        txtSuspensionDelanValor3.setText(documentSnapshot.getString("suspensiondelantera"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("suspensiontrasera")) {
+                                    if (contadorimgView == 1){
+                                        txtSuspensionTrasValor1.setText(documentSnapshot.getString("suspensiontrasera"));
+                                    } else if (contadorimgView == 2) {
+                                        txtSuspensionTrasValor2.setText(documentSnapshot.getString("suspensiontrasera"));
+                                    }else if (contadorimgView == 3) {
+                                        txtSuspensionTrasValor3.setText(documentSnapshot.getString("suspensiontrasera"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("frenodelantero")) {
+                                    if (contadorimgView == 1){
+                                        txtFrenoDelanValor1.setText(documentSnapshot.getString("frenodelantero"));
+                                    } else if (contadorimgView == 2) {
+                                        txtFrenoDelanValor2.setText(documentSnapshot.getString("frenodelantero"));
+                                    }else if (contadorimgView == 3) {
+                                        txtFrenoDelanValor3.setText(documentSnapshot.getString("frenodelantero"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("frenotrasero")) {
+                                    if (contadorimgView == 1){
+                                        txtFrenoTrasValor1.setText(documentSnapshot.getString("frenotrasero"));
+                                    } else if (contadorimgView == 2) {
+                                        txtFrenoTrasValor2.setText(documentSnapshot.getString("frenotrasero"));
+                                    }else if (contadorimgView == 3) {
+                                        txtFrenoTrasValor3.setText(documentSnapshot.getString("frenotrasero"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("capacidaddetanque")) {
+                                    if (contadorimgView == 1){
+                                        txtTanqueValor1.setText(documentSnapshot.getString("capacidaddetanque"));
+                                    } else if (contadorimgView == 2) {
+                                        txtTanqueValor2.setText(documentSnapshot.getString("capacidaddetanque"));
+                                    }else if (contadorimgView == 3) {
+                                        txtTanqueValor3.setText(documentSnapshot.getString("capacidaddetanque"));
+                                    }
+                                }
+                                if (documentSnapshot.contains("pesoenseco")) {
+                                    if (contadorimgView == 1){
+                                        txtPesoValor1.setText(documentSnapshot.getString("pesoenseco"));
+                                    } else if (contadorimgView == 2) {
+                                        txtPesoValor2.setText(documentSnapshot.getString("pesoenseco"));
+                                    }else if (contadorimgView == 3) {
+                                        txtPesoValor3.setText(documentSnapshot.getString("pesoenseco"));
+                                    }
+                                }
+
                                 if (documentSnapshot.contains("nuevoValorDescuento")) {
                                     int precio = Integer.parseInt(documentSnapshot.get("nuevoValorDescuento").toString());
                                     DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());

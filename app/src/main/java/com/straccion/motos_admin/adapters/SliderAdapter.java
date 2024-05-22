@@ -29,10 +29,11 @@ public class SliderAdapter extends SliderViewAdapter<SliderAdapter.SliderAdapter
     private Context context;
     private List<SliderItem> mSliderItems = new ArrayList<>();
     int heigth = 0;
-
-    public SliderAdapter(Context context, List<SliderItem> sliderItems) {
+    String fabricante = "";
+    public SliderAdapter(Context context, List<SliderItem> sliderItems, String Fabricante) {
         this.context = context;
         mSliderItems = sliderItems;
+        fabricante = Fabricante;
     }
     @Override
     public SliderAdapterVH onCreateViewHolder(ViewGroup parent) {
@@ -45,7 +46,11 @@ public class SliderAdapter extends SliderViewAdapter<SliderAdapter.SliderAdapter
         SliderItem sliderItem = mSliderItems.get(position);
         if (sliderItem.getImageurl() != null){
             if (!sliderItem.getImageurl().isEmpty()){
-                Picasso.get().load(sliderItem.getImageurl()).into(viewHolder.imageViewSlider);
+                if (fabricante.equals("BAJAJ")){
+                    Picasso.get().load(sliderItem.getImageurl()).fit().into(viewHolder.imageViewSlider);
+                }else {
+                    Picasso.get().load(sliderItem.getImageurl()).resize(1024, 1020).into(viewHolder.imageViewSlider);
+                }
             }
         }
     }

@@ -1,8 +1,11 @@
 package com.straccion.motos_admin.models;
 
+import com.google.firebase.firestore.PropertyName;
+
 import java.util.ArrayList;
 
 public class PostAuteco {
+
     private String id;
     private int precio;
     private String nombreMoto;
@@ -16,8 +19,12 @@ public class PostAuteco {
     private ArrayList<String>imagenesColores4;
     private ArrayList<String>imagenesColores5;
     private ArrayList<String>imagenesColores6;
+
+    @PropertyName("cilindrada")
     private String cilindraje;
+    @PropertyName("tipo")
     private String motor;
+    @PropertyName("maxpotencia")
     private String torqueMaximo;
     private String potenciaMaxima;
     private String relacionCompresion;
@@ -27,13 +34,16 @@ public class PostAuteco {
     private String combustible;
     private String arranque;
     private String transmision;
+    @PropertyName("suspensiondelantera")
     private String suspensionDelantera;
+    @PropertyName("suspensiontrasera")
     private String suspensionTrasera;
     private String frenoDelantero;
     private String frenoTrasero;
     private String llantaDelantera;
     private String llantaTrasera;
     private String rines;
+    @PropertyName("capacidadtanque")
     private String capacidadTanque;
     private String sistemaEncendido;
     private String largoTotal;

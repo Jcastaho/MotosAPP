@@ -2,6 +2,8 @@ package com.straccion.motos_admin.ui.inicio;
 
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -20,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -128,72 +131,82 @@ public class HomeFragment extends Fragment implements MaterialSearchBar.OnSearch
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.length() == 0) {
-                    int tiempoMostrandoProgressBar = 1500;
-                    Query query = mpostProvider.getAll();
-
-                    FirestoreRecyclerOptions<PostAuteco> options = new FirestoreRecyclerOptions.Builder<PostAuteco>().setQuery(query, PostAuteco.class).build();
-
-                    NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
-                    String busqueda = edtBuscar.getText().toString();
-                    mPostsAdapters = new PostsAdapters(options, getContext(), navController, 0, busqueda);
-                    mRecyclerView.setAdapter(mPostsAdapters);
-                    mPostsAdapters.startListening();
-
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            lnlProgressBar.setVisibility(View.GONE);
-                        }
-                    }, tiempoMostrandoProgressBar);
-                } else {
-                    String valorBuscar = edtBuscar.getText().toString();
-                    if (!valorBuscar.isEmpty()) {
+                    if (isNetworkAvailable()){
                         int tiempoMostrandoProgressBar = 1500;
-                        Query query2 = mpostProvider.getAllConsulta2(valorBuscar.toUpperCase());
+                        Query query = mpostProvider.getAll();
 
-                        query2.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        FirestoreRecyclerOptions<PostAuteco> options = new FirestoreRecyclerOptions.Builder<PostAuteco>().setQuery(query, PostAuteco.class).build();
+
+                        NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
+                        String busqueda = edtBuscar.getText().toString();
+                        mPostsAdapters = new PostsAdapters(options, getContext(), navController, 0, busqueda);
+                        mRecyclerView.setAdapter(mPostsAdapters);
+                        mPostsAdapters.startListening();
+
+                        new Handler().postDelayed(new Runnable() {
                             @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    QuerySnapshot querySnapshot = task.getResult();
-                                    if (!querySnapshot.isEmpty()) {
-                                        FirestoreRecyclerOptions<PostAuteco> options2 = new FirestoreRecyclerOptions.Builder<PostAuteco>().setQuery(query2, PostAuteco.class).build();
-                                        NavController navController2 = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
+                            public void run() {
+                                lnlProgressBar.setVisibility(View.GONE);
+                            }
+                        }, tiempoMostrandoProgressBar);
+                    }else {
+                        Toast.makeText(getContext(), "Debes de conectarte a internet", Toast.LENGTH_SHORT).show();
+                    }
 
-                                        String busqueda = edtBuscar.getText().toString();
-                                        mPostsAdapters = new PostsAdapters(options2, getContext(), navController2, 0, busqueda);
-                                        mRecyclerView.setAdapter(mPostsAdapters);
-                                        mPostsAdapters.startListening();
+                } else {
+                    if (isNetworkAvailable()){
+                        String valorBuscar = edtBuscar.getText().toString();
+                        if (!valorBuscar.isEmpty()) {
+                            int tiempoMostrandoProgressBar = 1500;
+                            Query query2 = mpostProvider.getAllConsulta2(valorBuscar.toUpperCase());
 
-                                        new Handler().postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                lnlProgressBar.setVisibility(View.GONE);
+                            query2.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        QuerySnapshot querySnapshot = task.getResult();
+                                        if (!querySnapshot.isEmpty()) {
+                                            FirestoreRecyclerOptions<PostAuteco> options2 = new FirestoreRecyclerOptions.Builder<PostAuteco>().setQuery(query2, PostAuteco.class).build();
+                                            NavController navController2 = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
 
-                                            }
-                                        }, tiempoMostrandoProgressBar);
-                                    } else {
-                                        Query query3 = mpostProvider.getAllConsulta(valorBuscar.toUpperCase());
-                                        FirestoreRecyclerOptions<PostAuteco> options3 = new FirestoreRecyclerOptions.Builder<PostAuteco>().setQuery(query3, PostAuteco.class).build();
-                                        NavController navController3 = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
+                                            String busqueda = edtBuscar.getText().toString();
+                                            mPostsAdapters = new PostsAdapters(options2, getContext(), navController2, 0, busqueda);
+                                            mRecyclerView.setAdapter(mPostsAdapters);
+                                            mPostsAdapters.startListening();
 
-                                        String busqueda = edtBuscar.getText().toString();
-                                        mPostsAdapters = new PostsAdapters(options3, getContext(), navController3, 0, busqueda);
-                                        mRecyclerView.setAdapter(mPostsAdapters);
-                                        mPostsAdapters.startListening();
+                                            new Handler().postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    lnlProgressBar.setVisibility(View.GONE);
 
-                                        new Handler().postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                lnlProgressBar.setVisibility(View.GONE);
+                                                }
+                                            }, tiempoMostrandoProgressBar);
+                                        } else {
+                                            Query query3 = mpostProvider.getAllConsulta(valorBuscar.toUpperCase());
+                                            FirestoreRecyclerOptions<PostAuteco> options3 = new FirestoreRecyclerOptions.Builder<PostAuteco>().setQuery(query3, PostAuteco.class).build();
+                                            NavController navController3 = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
 
-                                            }
-                                        }, tiempoMostrandoProgressBar);
+                                            String busqueda = edtBuscar.getText().toString();
+                                            mPostsAdapters = new PostsAdapters(options3, getContext(), navController3, 0, busqueda);
+                                            mRecyclerView.setAdapter(mPostsAdapters);
+                                            mPostsAdapters.startListening();
+
+                                            new Handler().postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    lnlProgressBar.setVisibility(View.GONE);
+
+                                                }
+                                            }, tiempoMostrandoProgressBar);
+                                        }
                                     }
                                 }
-                            }
-                        });
+                            });
+                        }
+                    }else {
+                        Toast.makeText(getContext(), "Debes de conectarte a internet", Toast.LENGTH_SHORT).show();
                     }
+
                 }
             }
         });
@@ -206,30 +219,35 @@ public class HomeFragment extends Fragment implements MaterialSearchBar.OnSearch
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         final int opcion1 = R.id.opcion1;
-                        if (item.getItemId() == opcion1){
-                            int tiempoMostrandoProgressBar = 1500;
-                            Query query = mpostProvider.getAllDescuento();
+                        if (isNetworkAvailable()){
+                            if (item.getItemId() == opcion1){
 
-                            FirestoreRecyclerOptions<PostAuteco> options = new FirestoreRecyclerOptions.Builder<PostAuteco>().setQuery(query, PostAuteco.class).build();
+                                int tiempoMostrandoProgressBar = 1500;
+                                Query query = mpostProvider.getAllDescuento();
 
-                            NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
-                            String busqueda = edtBuscar.getText().toString();
-                            mPostsAdapters = new PostsAdapters(options, getContext(), navController, 0, busqueda);
-                            mRecyclerView.setAdapter(mPostsAdapters);
-                            mPostsAdapters.startListening();
-                            botonFiltros.setVisibility(View.GONE);
-                            botonQuitarFiltros.setVisibility(View.VISIBLE);
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    lnlProgressBar.setVisibility(View.GONE);
-                                }
-                            }, tiempoMostrandoProgressBar);
-                            return true;
+                                FirestoreRecyclerOptions<PostAuteco> options = new FirestoreRecyclerOptions.Builder<PostAuteco>().setQuery(query, PostAuteco.class).build();
+
+                                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
+                                String busqueda = edtBuscar.getText().toString();
+                                mPostsAdapters = new PostsAdapters(options, getContext(), navController, 0, busqueda);
+                                mRecyclerView.setAdapter(mPostsAdapters);
+                                mPostsAdapters.startListening();
+                                botonFiltros.setVisibility(View.GONE);
+                                botonQuitarFiltros.setVisibility(View.VISIBLE);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        lnlProgressBar.setVisibility(View.GONE);
+                                    }
+                                }, tiempoMostrandoProgressBar);
+                                return true;
+                            }else {
+                                return false;
+                            }
                         }else {
+                            Toast.makeText(getContext(), "Debes de conectarte a internet", Toast.LENGTH_SHORT).show();
                             return false;
                         }
-
                     }
                 });
                 popupMenu.show();
@@ -278,7 +296,11 @@ public class HomeFragment extends Fragment implements MaterialSearchBar.OnSearch
         return mview;
     }
 
-
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(getContext().CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
     @Override
     public void onStart() {
         super.onStart();

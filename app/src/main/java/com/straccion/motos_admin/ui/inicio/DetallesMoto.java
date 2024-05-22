@@ -235,7 +235,6 @@ public class DetallesMoto extends Fragment {
         txtTituloDescripcionMoto.setVisibility(View.VISIBLE);
         txtModelo2.setVisibility(View.GONE);
 
-        //Query  = mPostProvider.getAll();
         fichaTecnicaAdapters = new FichaTecnicaAdapters(getContext(), idDocument);
         fichaTecnicaAdapters.showData(lnlDatos);
 
@@ -600,7 +599,7 @@ public class DetallesMoto extends Fragment {
     }
 
     private void instanceSlider() {
-        mSliderAdapter = new SliderAdapter(getContext(), mSliderItems);
+        mSliderAdapter = new SliderAdapter(getContext(), mSliderItems, fabricante);
         mSliderView.setSliderAdapter(mSliderAdapter);
         mSliderView.setIndicatorAnimation(IndicatorAnimationType.THIN_WORM);//animacion del punto
         mSliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);//transiscion
@@ -611,15 +610,19 @@ public class DetallesMoto extends Fragment {
         mSliderView.setAutoCycle(true);//se le dice si quiere cambiar automaticamente
         mSliderView.startAutoCycle();
 
+
         //CASO ESPECIAL PARA EL TAMAÑO DE ESTAS MOTOS
-        if (fabricante.equals("SUZUKI") || fabricante.equals("HONDA")){
+        if (fabricante.equals("HONDA")){
             modificarTamanoVistaMotos();
         }
         if (fabricante.equals("YAMAHA")){
-            modificarTamanoVistaMotos2(0);
-        }
-        if (nombre.contains("FZ")){
             modificarTamanoVistaMotos2(100);
+        }
+        if (fabricante.equals("SUZUKI")){
+            modificarTamanoVistaMotos2(110);
+        }
+        if (fabricante.equals("HERO")){
+            modificarTamanoVistaMotos2(0);
         }
 
         //imagenes caractreristicas adicionales
@@ -814,6 +817,9 @@ public class DetallesMoto extends Fragment {
             Map<String, Integer> colorMap = new HashMap<>();
             colorMap.put("ROJO", R.color.red);
             colorMap.put("ROJA", R.color.red);
+            colorMap.put("ROJO RACING", R.color.red);
+            colorMap.put("RED", R.color.red);
+            colorMap.put("ROJOBLANCO", R.color.red);
             colorMap.put("NEGRO NEBULOSA - GRIS ROJO", R.color.rojoNegro);
             colorMap.put("NEGRA - ROJA", R.color.rojoNegro);
             colorMap.put("NEGRO - GRIS ROJO", R.color.rojoNegro);
@@ -821,21 +827,35 @@ public class DetallesMoto extends Fragment {
             colorMap.put("NEGRO NEBULOSA - ROJO GRIS PLATA", R.color.rojoNegro);
             colorMap.put("AZUL PETROLEO - ROJO", R.color.rojoNegro);
             colorMap.put("ROJO-NEGRO", R.color.rojoNegro);
+            colorMap.put("ROJONEGRO", R.color.rojoNegro);
+            colorMap.put("NEGRO-ROJO", R.color.rojoNegro);
+            colorMap.put("NEGROROJO", R.color.rojoNegro);
+            colorMap.put("NEGRAROJA", R.color.rojoNegro);
+            colorMap.put("TRICOLOR", R.color.rojoNegro);
+            colorMap.put("ROJOGRISMATE", R.color.rojoNegro);
 
             colorMap.put("NEGRA", R.color.black);
+            colorMap.put("BLACK", R.color.black);
             colorMap.put("NEGRO", R.color.black);
             colorMap.put("NEGRO NEBULOSA - GRIS DORADO", R.color.black);
             colorMap.put("NEGRO NEBULOSA", R.color.black);
+            colorMap.put("NEGRA NEBULOSA", R.color.black);
             colorMap.put("NEGRO NEBULOSA - ROJO", R.color.black);
             colorMap.put("NEGRO NEBULOSA - VERDE", R.color.black);
             colorMap.put("NEGRO NEBULOSA - DORADO", R.color.black);
+            colorMap.put("BLACK-RED", R.color.black);
+            colorMap.put("ECOBLACK", R.color.black);
+            colorMap.put("NEGRO GRIS", R.color.black);
+            colorMap.put("NEGROGRIS", R.color.black);
 
             colorMap.put("AMARILLA", R.color.amarillo);
             colorMap.put("AMARILLO", R.color.amarillo);
+            colorMap.put("YELLOW", R.color.amarillo);
             colorMap.put("NEGRO - VERDE", R.color.amarilloVerde);
             colorMap.put("GRIS CARBONO - VERDE", R.color.amarillo);
 
             colorMap.put("NEGRO NEBULOSA - CAMALEÓN", R.color.morado);
+            colorMap.put("MORADO", R.color.morado);
 
             colorMap.put("AZUL PETROLEO - GRIS DORADO", R.color.azulPetroleo);
             colorMap.put("AZUL PETROLEO", R.color.azulPetroleo);
@@ -844,8 +864,12 @@ public class DetallesMoto extends Fragment {
             colorMap.put("AZUL PETRÓLEO - GRIS ROJO", R.color.azulPetroleo);
             colorMap.put("NEGRAAZUL", R.color.azulPetroleo);
             colorMap.put("NEGRA - AZUL", R.color.azulPetroleo);
+            colorMap.put("NEGROAZUL", R.color.azulPetroleo);
+            colorMap.put("AZULMATE", R.color.azulPetroleo);
+            colorMap.put("AZUL-ANTARTICA", R.color.azulPetroleo);
 
             colorMap.put("GRIS", R.color.grisOscuro);
+            colorMap.put("GRAY", R.color.grisOscuro);
             colorMap.put("GRIS MATE", R.color.grisOscuro);
             colorMap.put("TOP FROST", R.color.grisOscuro);
             colorMap.put("TOP FROST - ROJO", R.color.grisOscuro);
@@ -854,19 +878,38 @@ public class DetallesMoto extends Fragment {
             colorMap.put("TOP FROST/NEGRO NEB - GRIS", R.color.grisOscuro);
             colorMap.put("GRIS CARBONO - NEGRO DORADO", R.color.grisOscuro);
             colorMap.put("NEGRAGRIS", R.color.grisOscuro);
+            colorMap.put("GRIS CALIFORNIA", R.color.grisOscuro);
+            colorMap.put("NEGRO-GRIS", R.color.grisOscuro);
+            colorMap.put("GRISMATE", R.color.grisOscuro);
+            colorMap.put("AZULGRISMATE", R.color.grisOscuro);
+            colorMap.put("GRIS PIEDRA", R.color.grisOscuro);
 
+
+
+
+            colorMap.put("NARANJA", R.color.naranja);
+            colorMap.put("REPSOL", R.color.naranja);
+
+            colorMap.put("GRAY-GRAFITO", R.color.grisclaro);
             colorMap.put("TOP FROST - GRIS METALIZADO", R.color.grisclaro);
+            colorMap.put("PLATA", R.color.grisclaro);
 
             colorMap.put("DORADO", R.color.dorado);
             colorMap.put("DORADA", R.color.dorado);
+            colorMap.put("NEGRODORADO", R.color.dorado);
             colorMap.put("NEGRA MATE - DORADO", R.color.dorado);
 
             colorMap.put("VERDE", R.color.verde);
             colorMap.put("AZUL METALICO - GRIS VERDE", R.color.verde);
             colorMap.put("NEGRO MATE VERDE NEON", R.color.verde);
+            colorMap.put("GREEN", R.color.verde);
+            colorMap.put("GRISLIMA", R.color.verde);
+            colorMap.put("VERDE-NEGRO", R.color.verde);
 
 
             colorMap.put("AZUL", R.color.azul);
+            colorMap.put("BLUE", R.color.azul);
+            colorMap.put("AZUL ARLEQUIN", R.color.azul);
             colorMap.put("AZUL MATE", R.color.azul);
             colorMap.put("NEGRO MATE AZUL MATE", R.color.azul);
             colorMap.put("AZUL MATE - GRIS VERDE", R.color.azul);
@@ -878,6 +921,7 @@ public class DetallesMoto extends Fragment {
             colorMap.put("BLANCO", R.color.white);
             colorMap.put("BLANCA", R.color.white);
             colorMap.put("BLANCO-AZUL", R.color.white);
+            colorMap.put("WHITE-BLUE", R.color.white);
             lnlTextoColores.setVisibility(View.VISIBLE);
 
             Integer colorCirculo = colorMap.get(elemento);
@@ -1029,7 +1073,6 @@ public class DetallesMoto extends Fragment {
         frameContenedor.requestLayout();
         nestedScrollView.requestLayout();
     }
-
     private void mostrarManuales() {
         if (lnlInformacionAdd1.getVisibility() == View.VISIBLE) {
             lnlInformacionAdd1.setVisibility(View.GONE);

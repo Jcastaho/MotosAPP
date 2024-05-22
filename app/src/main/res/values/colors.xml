@@ -25,6 +25,8 @@
     <color name="azulClaro">#0B3AE2</color>
     <color name="transparent">#00000000</color>
     <color name="colorprimarys">#000000</color>
+    <color name="naranja">#FF5722</color>
     <color name="color_gris_claro">#E0E0E0</color>
+    <color name="newcolor">#00E0E0E0</color>
 
 </resources>

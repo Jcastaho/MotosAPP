@@ -630,8 +630,108 @@ public class FichaTecnicaAdapters {
                                 txt1.add("Tipo de Suspensión Trasera");
                                 txt2.add(documentSnapshot.getString("tipodesuspensiontrasera"));
                             }
-
-
+                            break;
+                        case "BAJAJ":
+                            if (documentSnapshot.getString("cilindrada") != null) {
+                                txt1.add("Cilindraje");
+                                txt2.add(documentSnapshot.getString("cilindrada"));
+                            }
+                            if (documentSnapshot.getString("tipo") != null) {
+                                txt1.add("Motor");
+                                txt2.add(documentSnapshot.getString("tipo"));
+                            }
+                            if (documentSnapshot.getString("potenciamaxima") != null) {
+                                txt1.add("Potencia Maxima");
+                                txt2.add(documentSnapshot.getString("potenciamaxima"));
+                            }
+                            if (documentSnapshot.getString("torquemaximo") != null) {
+                                txt1.add("Torque Maximo");
+                                txt2.add(documentSnapshot.getString("torquemaximo"));
+                            }
+                            if (documentSnapshot.getString("diametroxcarrera") != null) {
+                                txt1.add("Diametro de Carrera");
+                                txt2.add(documentSnapshot.getString("diametroxcarrera"));
+                            }
+                            if (documentSnapshot.getString("arranque") != null) {
+                                txt1.add("Arranque");
+                                txt2.add(documentSnapshot.getString("arranque"));
+                            }
+                            if (documentSnapshot.getString("transmision") != null) {
+                                txt1.add("Transmisión");
+                                txt2.add(documentSnapshot.getString("transmision"));
+                            }
+                            if (documentSnapshot.getString("clutch") != null) {
+                                txt1.add("Clutch");
+                                txt2.add(documentSnapshot.getString("clutch"));
+                            }
+                            if (documentSnapshot.getString("distanciaentreejes") != null) {
+                                txt1.add("Distancia Entre Ejes");
+                                txt2.add(documentSnapshot.getString("distanciaentreejes"));
+                            }
+                            if (documentSnapshot.getString("frametype") != null) {
+                                txt1.add("Frame Type");
+                                txt2.add(documentSnapshot.getString("frametype"));
+                            }
+                            if (documentSnapshot.getString("largoxanchoxalto\n") != null) {
+                                txt1.add("Largo, Ancho y Alto");
+                                txt2.add(documentSnapshot.getString("largoxanchoxalto\n"));
+                            }
+                            if (documentSnapshot.getString("distanciaminalsuelo") != null) {
+                                txt1.add("Distancia min. al suelo");
+                                txt2.add(documentSnapshot.getString("distanciaminalsuelo"));
+                            }
+                            if (documentSnapshot.getString("suspensiondelantera") != null) {
+                                txt1.add("Suspensión Delantera");
+                                txt2.add(documentSnapshot.getString("suspensiondelantera"));
+                            }
+                            if (documentSnapshot.getString("suspensiontrasera") != null) {
+                                txt1.add("Suspensión Trasera");
+                                txt2.add(documentSnapshot.getString("suspensiontrasera"));
+                            }
+                            if (documentSnapshot.getString("capacidaddetanque") != null) {
+                                txt1.add("Capacidad de Tanque");
+                                txt2.add(documentSnapshot.getString("capacidaddetanque"));
+                            }
+                            if (documentSnapshot.getString("pesoenseco") != null) {
+                            txt1.add("Peso en Seco");
+                            txt2.add(documentSnapshot.getString("pesoenseco"));
+                            }
+                            if (documentSnapshot.getString("frenodelantero") != null) {
+                                txt1.add("Freno Delantero");
+                                txt2.add(documentSnapshot.getString("frenodelantero"));
+                            }
+                            if (documentSnapshot.getString("frenotrasero") != null) {
+                                txt1.add("Freno Trasero");
+                                txt2.add(documentSnapshot.getString("frenotrasero"));
+                            }
+                            if (documentSnapshot.getString("llantadelantera") != null) {
+                                txt1.add("Llanta Delantera");
+                                txt2.add(documentSnapshot.getString("llantadelantera"));
+                            }
+                            if (documentSnapshot.getString("llantatrasera") != null) {
+                                txt1.add("Llanta Trasera");
+                                txt2.add(documentSnapshot.getString("llantatrasera"));
+                            }
+                            if (documentSnapshot.getString("luzposicion") != null) {
+                                txt1.add("Luz Posición");
+                                txt2.add(documentSnapshot.getString("luzposicion"));
+                            }
+                            if (documentSnapshot.getString("farola") != null) {
+                                txt1.add("Farola");
+                                txt2.add(documentSnapshot.getString("farola"));
+                            }
+                            if (documentSnapshot.getString("bateria") != null) {
+                                txt1.add("Bateria");
+                                txt2.add(documentSnapshot.getString("bateria"));
+                            }
+                            if (documentSnapshot.getString("stop") != null) {
+                                txt1.add("Stop");
+                                txt2.add(documentSnapshot.getString("stop"));
+                            }
+                            if (documentSnapshot.getString("direccionales") != null) {
+                                txt1.add("Direccionales");
+                                txt2.add(documentSnapshot.getString("direccionales"));
+                            }
                             break;
 
 
