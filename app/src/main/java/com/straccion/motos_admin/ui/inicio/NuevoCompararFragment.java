@@ -317,7 +317,7 @@ public class NuevoCompararFragment extends Fragment {
                                 if (documentSnapshot.contains("imagenes")) {
                                     listaImagenes = (List<String>) documentSnapshot.get("imagenes");
                                     String imagen = listaImagenes.get(0);
-                                    Picasso.get().load(imagen).into(imgMoto1);
+                                    Picasso.get().load(imagen).fit().into(imgMoto1);
                                     imgMoto1.setPadding(0,0,0,0);
                                 }
                                 if (documentSnapshot.contains("arranque")) {
@@ -420,7 +420,7 @@ public class NuevoCompararFragment extends Fragment {
                                 if (documentSnapshot.contains("imagenes")) {
                                     listaImagenes = (List<String>) documentSnapshot.get("imagenes");
                                     String imagen = listaImagenes.get(0);
-                                    Picasso.get().load(imagen).into(imgMoto1);
+                                    Picasso.get().load(imagen).fit().into(imgMoto1);
                                     imgMoto1.setPadding(18,18,18,18);
                                 }
                                 if (documentSnapshot.contains("arranque")) {
@@ -513,7 +513,7 @@ public class NuevoCompararFragment extends Fragment {
                                 if (documentSnapshot.contains("imagenes")) {
                                     listaImagenes = (List<String>) documentSnapshot.get("imagenes");
                                     String imagen = listaImagenes.get(0);
-                                    Picasso.get().load(imagen).into(imgMoto1);
+                                    Picasso.get().load(imagen).fit().into(imgMoto1);
                                     imgMoto1.setPadding(18,18,18,18);
                                 }
                                 if (documentSnapshot.contains("arranque")) {
@@ -603,7 +603,7 @@ public class NuevoCompararFragment extends Fragment {
                                 if (documentSnapshot.contains("imagenes")) {
                                     listaImagenes = (List<String>) documentSnapshot.get("imagenes");
                                     String imagen = listaImagenes.get(0);
-                                    Picasso.get().load(imagen).into(imgMoto1);
+                                    Picasso.get().load(imagen).fit().into(imgMoto1);
                                     imgMoto1.setPadding(18,18,18,18);
                                 }
                                 if (documentSnapshot.contains("sistemadearranque")) {
@@ -693,7 +693,7 @@ public class NuevoCompararFragment extends Fragment {
                                 if (documentSnapshot.contains("imagenes")) {
                                     listaImagenes = (List<String>) documentSnapshot.get("imagenes");
                                     String imagen = listaImagenes.get(0);
-                                    Picasso.get().load(imagen).into(imgMoto1);
+                                    Picasso.get().load(imagen).fit().into(imgMoto1);
                                     imgMoto1.setPadding(18,18,18,18);
                                 }
                                 if (documentSnapshot.contains("tipodearranque")) {
@@ -703,6 +703,93 @@ public class NuevoCompararFragment extends Fragment {
                                 if (documentSnapshot.contains("nuevoValorDescuento")) {
                                     valor1 = Integer.parseInt(documentSnapshot.get("nuevoValorDescuento").toString());
                                 }
+                            }
+                        }
+                        if (fabricante.equals("BAJAJ")){
+                            if (documentSnapshot.contains("nombreMoto")) {
+                                nombre1 = documentSnapshot.get("nombreMoto").toString();
+                                txtNombreMoto1.setText(nombre1);
+                                btnMotoNombre1.setText(nombre1);
+                                ABS1 = ABSoSisAlimen(nombre2);
+                            }
+                            if (documentSnapshot.contains("carpeta3")) {
+                                especialidad1 = documentSnapshot.get("carpeta3").toString();
+                            }
+                            if (documentSnapshot.contains("frenodelantero")) {
+                                String TipoFreno = documentSnapshot.get("frenodelantero").toString();
+                                boolean disco = tipoDeFreno(TipoFreno);
+                                if (disco){
+                                    frenodelantero1 = "Disco";
+                                }else {
+                                    frenodelantero1 = "Tambor";
+                                }
+                                if (!ABS1){
+                                    ABS1 = ABSoSisAlimen(TipoFreno);
+                                }
+                            }
+                            if (documentSnapshot.contains("frenotrasero")) {
+                                String TipoFreno = documentSnapshot.get("frenotrasero").toString();
+                                boolean disco = tipoDeFreno(TipoFreno);
+                                ABSLlantaTrasera1 = ABSoSisAlimen(TipoFreno); // abs en la llanta trasera
+                                if (disco){
+                                    frenotrasero1 = "Disco";
+                                }else {
+                                    frenotrasero1 = "Tambor";
+                                }
+                                if (!ABS1){
+                                    ABS1 = ABSoSisAlimen(TipoFreno);
+                                }
+                            }
+                            if (documentSnapshot.contains("potenciamaxima")) {
+                                potencia = documentSnapshot.get("potenciamaxima").toString();
+                                potencia1 = buscarNumero(potencia);
+                                txtPotencia1.setText(potencia1 + " HP");
+                            }
+                            if (documentSnapshot.contains("cilindrada")) {
+                                cilindraje1 = documentSnapshot.get("cilindrada").toString();
+                                cilindrajeValor1 = buscarNumero(cilindraje1);
+                                Pattern patron = Pattern.compile(".*[a-zA-Z].*");
+                                Matcher matcher = patron.matcher(cilindraje1);
+                                if (matcher.find()) {
+                                    txtCilindraje1.setText(cilindraje1.toUpperCase());
+                                } else {
+                                    txtCilindraje1.setText(cilindraje1 + " CC");
+                                }
+                            }
+                            if (documentSnapshot.contains("torquemaximo")) {
+                                torque = documentSnapshot.get("torquemaximo").toString();
+                                torque1 = buscarNumero(torque);
+                                txtTorque1.setText(torque2 + " Nm");
+                            }
+                            if (documentSnapshot.contains("pesoenseco")) {
+                                peso = documentSnapshot.get("pesoenseco").toString();
+                                peso1 = buscarNumero(peso);
+                                txtPeso1.setText(peso2 + " KG");
+                            }
+                            if (documentSnapshot.contains("sistemadealimentacion")) {
+                                sistemaAlimentacion1 = documentSnapshot.get("sistemadealimentacion").toString();
+                                Fi1 = ABSoSisAlimen(sistemaAlimentacion1);
+                            }
+                            if (documentSnapshot.contains("consumoPorGalon")) {
+                                consumoPorGalon1 = Integer.parseInt(documentSnapshot.get("consumoPorGalon").toString());
+                            }
+//                                if (documentSnapshot.contains("velocidadMaxima")) {
+//                                    double dato = Double.parseDouble(documentSnapshot.get("velocidadMaxima").toString());
+//                                    velocidadMaxima2 = (int) dato;
+//                                    //txtVelMaxima2.setText(velocidadMaxima2 + " KM/H");
+//                                }
+                            if (documentSnapshot.contains("imagenes")) {
+                                listaImagenes = (List<String>) documentSnapshot.get("imagenes");
+                                String imagen = listaImagenes.get(0);
+                                Picasso.get().load(imagen).fit().into(imgMoto1);
+                                imgMoto1.setPadding(-28,-28,-28,-28);
+                            }
+                            if (documentSnapshot.contains("arranque")) {
+                                arranque1 = documentSnapshot.get("arranque").toString();
+                                arranqueElectrico2 = tipoArranque(arranque1);
+                            }
+                            if (documentSnapshot.contains("nuevoValorDescuento")) {
+                                valor1 = Integer.parseInt(documentSnapshot.get("nuevoValorDescuento").toString());
                             }
                         }
                     }else {
@@ -788,7 +875,7 @@ public class NuevoCompararFragment extends Fragment {
                                 if (documentSnapshot.contains("imagenes")) {
                                     listaImagenes = (List<String>) documentSnapshot.get("imagenes");
                                     String imagen = listaImagenes.get(0);
-                                    Picasso.get().load(imagen).into(imgMoto2);
+                                    Picasso.get().load(imagen).fit().into(imgMoto2);
                                     imgMoto2.setPadding(0,0,0,0);
                                 }
                                 if (documentSnapshot.contains("arranque")) {
@@ -888,7 +975,7 @@ public class NuevoCompararFragment extends Fragment {
                                 if (documentSnapshot.contains("imagenes")) {
                                     listaImagenes = (List<String>) documentSnapshot.get("imagenes");
                                     String imagen = listaImagenes.get(0);
-                                    Picasso.get().load(imagen).into(imgMoto2);
+                                    Picasso.get().load(imagen).fit().into(imgMoto2);
                                     imgMoto2.setPadding(18,18,18,18);
                                 }
                                 if (documentSnapshot.contains("arranque")) {
@@ -979,7 +1066,7 @@ public class NuevoCompararFragment extends Fragment {
                                 if (documentSnapshot.contains("imagenes")) {
                                     listaImagenes = (List<String>) documentSnapshot.get("imagenes");
                                     String imagen = listaImagenes.get(0);
-                                    Picasso.get().load(imagen).into(imgMoto2);
+                                    Picasso.get().load(imagen).fit().into(imgMoto2);
                                     imgMoto2.setPadding(18,18,18,18);
                                 }
                                 if (documentSnapshot.contains("arranque")) {
@@ -1066,7 +1153,7 @@ public class NuevoCompararFragment extends Fragment {
                                 if (documentSnapshot.contains("imagenes")) {
                                     listaImagenes = (List<String>) documentSnapshot.get("imagenes");
                                     String imagen = listaImagenes.get(0);
-                                    Picasso.get().load(imagen).into(imgMoto2);
+                                    Picasso.get().load(imagen).fit().into(imgMoto2);
                                     imgMoto2.setPadding(18,18,18,18);
                                 }
                                 if (documentSnapshot.contains("sistemadearranque")) {
@@ -1153,7 +1240,7 @@ public class NuevoCompararFragment extends Fragment {
                                 if (documentSnapshot.contains("imagenes")) {
                                     listaImagenes = (List<String>) documentSnapshot.get("imagenes");
                                     String imagen = listaImagenes.get(0);
-                                    Picasso.get().load(imagen).into(imgMoto2);
+                                    Picasso.get().load(imagen).fit().into(imgMoto2);
                                     imgMoto2.setPadding(18,18,18,18);
                                 }
                                 if (documentSnapshot.contains("tipodearranque")) {
@@ -1226,8 +1313,8 @@ public class NuevoCompararFragment extends Fragment {
                                     txtPeso2.setText(peso2 + " KG");
                                 }
                                 if (documentSnapshot.contains("sistemadealimentacion")) {
-                                    sistemaAlimentacion1 = documentSnapshot.get("sistemadealimentacion").toString();
-                                    Fi2 = ABSoSisAlimen(sistemaAlimentacion1);
+                                    sistemaAlimentacion2 = documentSnapshot.get("sistemadealimentacion").toString();
+                                    Fi2 = ABSoSisAlimen(sistemaAlimentacion2);
                                 }
                                 if (documentSnapshot.contains("consumoPorGalon")) {
                                     consumoPorGalon2 = Integer.parseInt(documentSnapshot.get("consumoPorGalon").toString());
@@ -1240,8 +1327,8 @@ public class NuevoCompararFragment extends Fragment {
                                 if (documentSnapshot.contains("imagenes")) {
                                     listaImagenes = (List<String>) documentSnapshot.get("imagenes");
                                     String imagen = listaImagenes.get(0);
-                                    Picasso.get().load(imagen).into(imgMoto2);
-                                    imgMoto2.setPadding(18,18,18,18);
+                                    Picasso.get().load(imagen).fit().fit().into(imgMoto2);
+                                    imgMoto2.setPadding(-28,-28,-28,-28);
                                 }
                                 if (documentSnapshot.contains("arranque")) {
                                     arranque2 = documentSnapshot.get("arranque").toString();

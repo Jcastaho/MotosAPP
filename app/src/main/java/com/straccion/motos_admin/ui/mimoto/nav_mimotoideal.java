@@ -236,10 +236,10 @@ public class nav_mimotoideal extends Fragment {
         btnRespuesta4.setVisibility(View.VISIBLE);
         if (contador == 1) {
             txtPregunta.setText(pregunta1);
-            btnRespuesta1.setText("Menos de $7.000.0000");
-            btnRespuesta2.setText("Entre $7.000.000 y $12.000.000");
-            btnRespuesta3.setText("Entre $12.000.000 y $18.000.000");
-            btnRespuesta4.setText("Mas de $18.000.000");
+            btnRespuesta1.setText("Menos de $8.000.0000");
+            btnRespuesta2.setText("Entre $8.000.000 y $14.000.000");
+            btnRespuesta3.setText("Entre $14.000.000 y $20.000.000");
+            btnRespuesta4.setText("Mas de $20.000.000");
         } else if (contador == 2) {
             txtPregunta.setText(pregunta2);
             btnRespuesta1.setText("Uso cotidiano en ciudad");
@@ -277,16 +277,16 @@ public class nav_mimotoideal extends Fragment {
     private void analisis() {
         trabajo.clear();
         Map<String, Integer> prioridadesPreguntas = new HashMap<>();
-        if (respuestas.contains("Menos de $7.000.0000")) {
-            precioFiltro2 = 6999999;
-        } else if (respuestas.contains("Entre $7.000.000 y $12.000.000")) {
-            precioFiltro1 = 7000000;
-            precioFiltro2 = 11999999;
-        } else if (respuestas.contains("Entre $12.000.000 y $18.000.000")) {
-            precioFiltro1 = 12000000;
-            precioFiltro2 = 17999999;
-        } else if (respuestas.contains("Mas de $18.000.000")) {
-            precioFiltro1 = 18000000;
+        if (respuestas.contains("Menos de $8.000.0000")) {
+            precioFiltro2 = 7999999;
+        } else if (respuestas.contains("Entre $8.000.000 y $14.000.000")) {
+            precioFiltro1 = 8000000;
+            precioFiltro2 = 13999999;
+        } else if (respuestas.contains("Entre $14.000.000 y $20.000.000")) {
+            precioFiltro1 = 14000000;
+            precioFiltro2 = 19999999;
+        } else if (respuestas.contains("Mas de 20.000.000")) {
+            precioFiltro1 = 20000000;
             precioFiltro2 = 999999999;
         }
 
@@ -464,11 +464,6 @@ public class nav_mimotoideal extends Fragment {
                     } else {
                         txtTitulo1.setVisibility(View.GONE);
                     }
-                    if (reciclerViewMiMoto2.getAdapter() != null || reciclerViewMiMoto2.getAdapter().getItemCount() != 0) {
-                        txtTitulo2.setVisibility(View.VISIBLE);
-                    } else {
-                        txtTitulo2.setVisibility(View.GONE);
-                    }
                     if (reciclerViewMiMoto3.getAdapter() != null && reciclerViewMiMoto3.getAdapter().getItemCount() != 0) {
                         txtTitulo3.setVisibility(View.VISIBLE);
                     } else {
@@ -532,18 +527,22 @@ public class nav_mimotoideal extends Fragment {
         if (1==1) {
 
             txtTitulo3.setText("MOTOS QUE TE PUEDEN INTERESAR");
-            if (precioMin == 7000000) {
-                precioMin = 12000000;
-                precioMax = 17999999;
-            } else if (precioMin == 12000000) {
-                precioMin = 7000000;
-                precioMax = 11999999;
-            } else if (precioMin == 18000000) {
-                precioMin = 12000000;
-                precioMax = 17999999;
+            if (precioFiltro2 == 7999999) {
+                precioMin = 8000000;
+                precioMax = 13999999;
+                txtTitulo2.setVisibility(View.GONE);
+            } else if (precioFiltro2 == 13999999) {
+                precioMin = 0;
+                precioMax = 7999999;
+                txtTitulo2.setVisibility(View.VISIBLE);
+            } else if (precioFiltro2 == 19999999) {
+                precioMin = 20000000;
+                precioMax = 999999999;
+                txtTitulo2.setVisibility(View.VISIBLE);
             } else {
-                precioMin = 7000000;
-                precioMax = 11999999;
+                precioMin = 8000000;
+                precioMax = 13999999;
+                txtTitulo2.setVisibility(View.VISIBLE);
             }
 
 
